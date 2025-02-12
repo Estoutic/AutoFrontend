@@ -1,0 +1,189 @@
+:root {
+
+  width: 100vw;
+  font-family: monospace;
+  line-height: 1.5;
+  font-weight: 400;
+
+  min-height: 100vh;
+
+  color-scheme: light dark;
+  color: $primary-color;
+  background-color: #212121;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: $ruler;
+  line-height: 1.1;
+  color: $primary-color;
+  font-weight: 400;
+  padding: 10px 20px;
+}
+
+h2 {
+  font-size: $ruler;
+  line-height: 1.1;
+  color: $primary-color;
+  font-weight: 400;
+  padding: 10px 20px;
+
+  // @include threeDBorder;
+
+}
+
+h3 {
+  font-size: $ruler;
+  line-height: 1.1;
+  color: $primary-color;
+  font-weight: 400;
+  padding: 10px 20px;
+
+  // @include threeDBorder;
+}
+
+p {
+  font-size: $ruler;
+}
+
+a {
+  text-decoration: none;
+  font-size: $ruler;
+  color: $primary-color;
+  padding: 5px;
+
+
+}
+
+input {
+  width: 250px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid $main-color;
+  background-color: $bg-color;
+  box-shadow: 4px 4px $main-color;
+  font-size: 15px;
+  font-weight: 600;
+  color: $font-color;
+  padding: 5px 10px;
+  outline: none;
+}
+
+.input::placeholder {
+  color: $font-color-sub;
+  opacity: 0.8;
+}
+
+.input:focus {
+  border: 2px solid $input-focus;
+}
+
+form {
+  padding: $ruler;
+  width: $ruler*20;
+  margin: 0 auto;
+}
+
+
+button {
+  background-color: white;
+  color: $primary-color;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: $ruler;
+
+  // border-color: #213547 transparent transparent #213547;
+  border-top-color: $border-color;
+  border-left-color: $border-color;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.textAreaContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+
+  label {
+    min-height: 300px;
+    font-size: $ruler;
+    color: rgb(255, 255, 255);
+  }
+}
+
+.textAreaField {
+  background: transparent;
+  color: $primary-color;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  min-height: 300px;
+  width: 100%;
+  font-size: $ruler;
+
+
+  resize: none;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:focus {
+
+    outline: none;
+  }
+}
+
+.conflictCard {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 40px;
+  padding-bottom: 20px;
+
+}
+
+.formContainer {
+
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  button {
+    max-width: 350px;
+  }
+}
+
+@media screen and (max-width: $mobile-width) {
+  .conflictCard {
+    flex-direction: column;
+    margin-top: 150px;
+
+  }
+
+  // .formContainer {
+  //   margin-top: 200px;
+
+  // }
+}
+
+@media screen and (max-width: 450px) {
+  .conflictFormContainer {
+
+    width: 90%;
+
+  }
+}
