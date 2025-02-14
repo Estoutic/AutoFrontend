@@ -1,0 +1,41 @@
+@use "@/styles/_variables" as vars;
+
+.header {
+  background-color: vars.$primary-color;
+  padding: 15px 0;
+}
+
+.container {
+  max-width: vars.$container-width;
+  margin: 0 auto;
+  padding: 0 40px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 50px;  
+  }
+}
+
+.nav {
+  display: flex;
+  gap: 50px; 
+
+  a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 400;
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+      color: vars.$secondary-color;
+    }
+  }
+}

@@ -1,29 +1,17 @@
-import './App.css'
-import React, { useEffect } from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { } from 'react-router';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import React from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./providers/routes";
+import "@/styles/index.scss";  
 
-function App() {
+const queryClient = new QueryClient();
 
-  const queryClient = new QueryClient();
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <h1>Home</h1>,
-      errorElement: <h1>error</h1>
-    },
-
-  ])
-
+export const App = () => {
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </>
-  )
-}
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
+};
 
-export default App
+export default App;
