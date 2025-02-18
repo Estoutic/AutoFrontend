@@ -1,0 +1,12 @@
+@use "@/styles/_variables" as vars;
+
+.input {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    border: 2px solid vars.$primary-color;
+    border-radius: 5px;
+    background: white;
+    font-size: 16px;
+    color: vars.$primary-color;
+  }

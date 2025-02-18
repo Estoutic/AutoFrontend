@@ -1,0 +1,44 @@
+@use "@/styles/_variables" as vars;
+@use "sass:color"; // Импортируем модуль Sass для работы с цветами
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+  outline: none;
+
+  &.primary {
+    background: vars.$primary-color;
+    color: white;
+
+    &:hover {
+      background: color.adjust(vars.$primary-color, $lightness: -10%);
+    }
+
+    &:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+  }
+
+  &.secondary {
+    background: white;
+    color: vars.$primary-color;
+    border: 2px solid vars.$primary-color;
+
+    &:hover {
+      background: vars.$primary-color;
+      color: white;
+    }
+
+    &:disabled {
+      border-color: gray;
+      color: gray;
+      cursor: not-allowed;
+    }
+  }
+}

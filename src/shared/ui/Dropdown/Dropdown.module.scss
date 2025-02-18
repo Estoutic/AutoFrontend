@@ -1,0 +1,38 @@
+@use "@/styles/_variables" as vars;
+
+.dropdownWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 100%; /* Убираем выход за границы */
+  }
+  
+  .dropdown {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    padding-right: 40px;
+    border: 2px solid vars.$primary-color;
+    border-radius: 5px;
+    background: white;
+    font-size: 16px;
+    color: vars.$primary-color;
+    appearance: none;
+    cursor: pointer;
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Добавляем "..." для длинных названий */
+  
+    &:focus {
+      outline: none;
+    }
+  }
+
+.arrowIcon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 12px;  
+  height: auto;
+}
