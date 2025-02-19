@@ -47,7 +47,7 @@ const CarFilter = () => {
 
   return (
     <div className={styles.filterContainer}>
-      <h2 className={styles.title}>
+      <h2>
         Каталог автомобилей: <br /> технические характеристики
       </h2>
 

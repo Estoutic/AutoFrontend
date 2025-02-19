@@ -1,0 +1,35 @@
+.tableContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.calculationTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: solid;
+  tr {
+    border-bottom: 1px solid #ccd;
+    border-color: inherit;
+  }
+
+  td {
+    padding: 8px 12px;
+    vertical-align: middle;
+    
+
+    &:nth-child(2){
+      width: 40%;
+      color: #555;
+      font-weight: 500;
+      border-left: 1px solid rgb(0, 0, 0); 
+      width: 40%;
+    }
+  }
+}
+
+/* Дополнительно можно стилизовать "последнюю" строку, если нужно:
+  .calculationTable tr:last-child td {
+    border-bottom: none;
+  }
+  */

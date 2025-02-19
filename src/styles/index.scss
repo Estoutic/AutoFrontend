@@ -56,7 +56,10 @@ h1 {
 }
 
 h2 {
-  font-size: 28px;
+  font-size: vars.$font-size-base;
+  font-weight: bold;
+  line-height: 1;
+  color: vars.$primary-color;
 }
 
 h3 {

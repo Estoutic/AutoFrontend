@@ -1,0 +1,40 @@
+.tableContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tableTitle {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .customsFeesTable {
+    width: 100%;
+    border-collapse: collapse; 
+    border: solid;
+    thead {
+      th {
+        text-align: left;
+        padding: 8px 12px;
+        border: 1px solid rgb(0, 0, 0); 
+      }
+    }
+  
+    tbody {
+      tr {
+        border-bottom: 1px solid rgb(0, 0, 0); 
+      }
+  
+      td {
+        padding: 8px 12px;
+        border: 1px solid rgb(0, 0, 0); 
+        vertical-align: middle;
+      }
+    }
+  
+    .tableFooter {
+      background-color: #fff8e6;  
+      font-weight: 600;         
+    }
+  }

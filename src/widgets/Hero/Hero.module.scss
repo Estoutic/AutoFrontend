@@ -24,17 +24,23 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    
 
     h1 {
       text-wrap: nowrap;
+    }
+
+    @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: flex-start;
     }
   }
 
   .secondText {
     gap: 20px;
     max-width: 380px;
-    padding-top: 20px;
-
+    padding-top: 20px
+   
   }
 
   .text {
@@ -64,6 +70,11 @@
       white-space: nowrap;
       margin-left: 20px;
       white-space: nowrap;
+
+      @media (max-width: 900px) {
+        margin-left: 0px;
+
+    }
     }
 
     p {

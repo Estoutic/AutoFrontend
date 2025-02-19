@@ -4,14 +4,15 @@ import styles from "./Button.module.scss";
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "secondary"; // Можно добавить разные стили
+  variant?: "primary" | "secondary"; 
   disabled?: boolean;
+  classname?: string;
 }
 
-const Button = ({ children, onClick, variant = "primary", disabled = false }: ButtonProps) => {
+const Button = ({ children, onClick, variant = "primary", disabled = false, classname = "" }: ButtonProps) => {
   return (
     <button 
-      className={`${styles.button} ${styles[variant]}`} 
+      className={`${styles.button} ${styles[variant]} ${styles[classname]}`} 
       onClick={onClick} 
       disabled={disabled}
     >

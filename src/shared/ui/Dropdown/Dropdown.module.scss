@@ -4,6 +4,7 @@
     position: relative;
     width: 100%;
     max-width: 100%; /* Убираем выход за границы */
+    flex: 1;
   }
   
   .dropdown {

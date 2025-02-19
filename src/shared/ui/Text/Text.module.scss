@@ -1,0 +1,18 @@
+@use "@/styles/_variables.scss" as vars;
+
+.text {
+  display: inline-flex;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  border: 2px solid vars.$primary-color;
+  border-radius: 5px;
+  background: vars.$primary-color;
+  font-size: vars.$font-size-paragraph;
+  color: white;
+  white-space: nowrap;
+}
+
+.white {
+  color: vars.$primary-color;
+  background: white;
+}

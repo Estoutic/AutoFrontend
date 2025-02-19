@@ -1,0 +1,49 @@
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  > :last-child{
+    justify-content: space-between;
+  }
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+
+  // flex-wrap: wrap;
+}
+
+.flagIcon {
+  font-size: 30px;
+}
+
+.inputContainer {
+  flex: 1;
+  display: flex;
+  width: 200px;
+}
+.faceContainer{
+    display: flex;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+  .flexRow {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .inputContainer {
+    width: 100%;
+  }
+}

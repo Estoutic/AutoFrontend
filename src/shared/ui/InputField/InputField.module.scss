@@ -1,6 +1,7 @@
 @use "@/styles/_variables" as vars;
 
 .input {
+    display: inline-flex;
     width: 100%;
     max-width: 100%;
     padding: 10px;
