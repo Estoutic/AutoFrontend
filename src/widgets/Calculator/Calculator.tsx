@@ -84,7 +84,6 @@ const Calculator = () => {
           />
         </div>
 
-        {/* 3-я строка (3 элемента) */}
         <div className={styles.flexRow}>
           <Dropdown
             options={ENGINE_OPTIONS}
@@ -110,7 +109,6 @@ const Calculator = () => {
           </div>
         </div>
 
-        {/* 4-я строка (3 элемента) */}
         <div className={styles.flexRow}>
           <div className={styles.faceContainer}>
             <Text>Расчет при ввозе</Text>

@@ -8,7 +8,6 @@ export const Hero = () => {
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.text}>
-          <div className={styles.title}>
               <h1>
                 АВТОМОБИЛИ <br />
               </h1>
@@ -19,7 +18,6 @@ export const Hero = () => {
               <span className={styles.label}>
                 <i>в наличии и под заказ</i>
               </span>
-            </div>
           </div>
         </div>
 

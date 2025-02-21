@@ -1,3 +1,5 @@
+@use "@/styles/_variables" as vars;
+
 .sliderContainer {
     display: flex;
     align-items: center;
@@ -22,7 +24,7 @@
     }
   }
   
-  @media (max-width: 1024px) {
+  @media (max-width: vars.$desktop-width) {
     .slider {
       justify-content: center;
     }

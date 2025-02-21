@@ -8,3 +8,10 @@
 
     gap: 50px;
 }
+
+@media (max-width: vars.$mobile-width) {
+    
+    .home{
+        padding: 0 5%;
+    }
+}

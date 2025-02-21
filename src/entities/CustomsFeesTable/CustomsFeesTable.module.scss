@@ -1,40 +1,62 @@
+@use "@/styles/_variables.scss" as vars;
+
 .tableContainer {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  // На мобильных устройствах включаем горизонтальный скролл, если таблица шире экрана
+  @media (max-width: vars.$mobile-width) {
+    overflow-x: auto;
   }
-  
-  .tableTitle {
-    margin-bottom: 10px;
-    font-size: 18px;
+}
+
+.tableTitle {
+  margin-bottom: 10px;
+  font-size: 18px;
+  @media (max-width: vars.$mobile-width) {
+    font-size: 16px;
   }
-  
-  .customsFeesTable {
-    width: 100%;
-    border-collapse: collapse; 
-    border: solid;
-    thead {
-      th {
-        text-align: left;
-        padding: 8px 12px;
-        border: 1px solid rgb(0, 0, 0); 
+}
+
+.customsFeesTable {
+  width: 100%;
+  // Минимальная ширина таблицы, чтобы не сжималась слишком сильно
+  min-width: 600px;
+  border-collapse: collapse; 
+  border: solid;
+
+  thead {
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      border: 1px solid rgb(0, 0, 0); 
+      
+      @media (max-width: vars.$mobile-width) {
+        padding: 6px 8px;
+        font-size: 14px;
       }
     }
-  
-    tbody {
-      tr {
-        border-bottom: 1px solid rgb(0, 0, 0); 
-      }
-  
-      td {
-        padding: 8px 12px;
-        border: 1px solid rgb(0, 0, 0); 
-        vertical-align: middle;
-      }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid rgb(0, 0, 0); 
     }
   
-    .tableFooter {
-      background-color: #fff8e6;  
-      font-weight: 600;         
+    td {
+      padding: 8px 12px;
+      border: 1px solid rgb(0, 0, 0); 
+      vertical-align: middle;
+      
+      @media (max-width: vars.$mobile-width) {
+        padding: 6px 8px;
+        font-size: 14px;
+      }
     }
   }
+
+  .tableFooter {
+    background-color: #fff8e6;  
+    font-weight: 600;         
+  }
+}

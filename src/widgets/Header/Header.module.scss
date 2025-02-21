@@ -7,11 +7,10 @@
 
 .container {
   max-width: vars.$container-width;
-  margin: 0 auto;
   padding: 0 10%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .logo {
@@ -25,17 +24,25 @@
 
 .nav {
   display: flex;
-  gap: 50px;
+  gap: clamp(10px, 50px, 100px);
 
   a {
     color: white;
     text-decoration: none;
-    font-size: 20px;
     font-weight: 400;
     transition: 0.3s ease-in-out;
 
     &:hover {
       color: vars.$secondary-color;
     }
+  }
+}
+
+@media (max-width: vars.$mobile-width) {
+  .nav {
+    display: none;
+  }
+  .container{
+    justify-content: center;
   }
 }
