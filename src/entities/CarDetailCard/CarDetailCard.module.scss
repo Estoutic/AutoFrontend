@@ -1,105 +1,140 @@
 @use "@/styles/_variables.scss" as vars;
 
 .carCard {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    max-width: 550px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
-    background-color: #fff;
-    border: 2px solid vars.$primary-color;
-    border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 550px;
+  border: 2px solid vars.$primary-color;
+  border-radius: 5px;
+  background-color: #fff;
+  overflow: hidden;
 
- 
-    @media (max-width: vars.$desktop-width) {
-        max-width: 100%;
-      }
+  @media (max-width: vars.$desktop-width) {
+    max-width: 100%;
+  }
 
-    @media (max-width: vars.$mobile-width) {
-      flex-direction: column;
-      max-width: 100%;
-    }
-  }
-  
-  .imageWrapper {
-    
-    display: flex;
-    padding: 16px;
-    flex: 1 1 auto;
-    min-width: 150px;
-  
-   
-  }
-  
-  .carImage {
-    border: 2px solid vars.$primary-color;
-    border-radius: 5px;
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-  }
-  
-  .infoWrapper {
-    flex: 2 1 auto;
-    padding: 16px;
-    display: flex;
+  @media (max-width: vars.$mobile-width) {
     flex-direction: column;
-    justify-content: space-between;
-    @media (max-width: vars.$desktop-width) {
-        font-size: vars.$font-size-paragraph !important;
-      }
+    max-width: 100%;
   }
-  
-  .title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 4px;
+}
+
+.imageWrapper {
+  position: relative; /* для позиционирования кнопок */
+  flex: 1 1 auto;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden; /* скрываем то, что выходит за пределы блока */
+}
+
+/* Кнопки переключения */
+.sliderButton {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: none;
+  font-size: 24px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  z-index: 2;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
   }
-  
-  .condition {
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: #777;
+
+  /* Кнопка "Назад" слева */
+  &:first-of-type {
+    left: 8px;
   }
-  
-  .details {
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 8px;
-   
+
+  /* Кнопка "Вперёд" справа */
+  &:last-of-type {
+    right: 8px;
   }
-  
-  .locationAndPrice {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+
+  /* Для мобильной версии можно добавить медиа-запрос, 
+     если нужно уменьшить размер кнопок или их перенести */
+}
+
+/* Обёртка для всех слайдов */
+.slider {
+  display: flex;
+  transition: transform 0.4s ease-in-out;
+  /* ширина равна количеству слайдов в %, если хотим плавную 
+     прокрутку по ширине контейнера. Но в данном примере 
+     управляем translateX из компонента */
+  width: 100%;
+}
+
+/* Каждый отдельный слайд */
+.slide {
+  min-width: 100%; /* Каждый слайд занимает всю ширину контейнера */
+  opacity: 0;      /* По умолчанию скрыты */
+  transition: opacity 0.4s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Активный слайд будет показан */
+.active {
+  opacity: 1;
+}
+
+/* Изображение в слайде */
+.carImage {
+  border: 2px solid vars.$primary-color;
+  border-radius: 5px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Информация о машине */
+.infoWrapper {
+  flex: 2 1 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media (max-width: vars.$desktop-width) {
+    font-size: vars.$font-size-paragraph !important;
   }
-  
-  .location {
-    font-weight: 500;
-    color: #555;
-  }
-  
-  .price {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000;
-  }
-  
-  .submitButton {
-    background-color: #2a75f7;
-    color: #fff;
-    padding: 8px 16px;
-    font-size: 14px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  
-    &:hover {
-      background-color: #1953b8;
-    }
-  }
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.condition {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #777;
+}
+
+.details {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.locationAndPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+}

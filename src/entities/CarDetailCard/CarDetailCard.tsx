@@ -1,59 +1,81 @@
-import React from 'react';
-import styles from './CarDetailCard.module.scss';
-import carImage from "@/assets/bmw.png";
-import Button from '@/shared/ui/Button/Button';
-
-interface CarData {
-    title: string;        // Например: "BMW X3 25i xDrive III (G01) Рестайлинг 2024"
-    condition: string;    // Например: "Новый"
-    engine: string;       // Например: "2.0 л / 245 л.с. / Бензин / Полный"
-    transmission: string; // Например: "Автомат"
-    color: string;        // Например: "Белый"
-    type: string;         // Например: "Внедорожник 5дв."
-    location: string;     // Например: "Москва"
-    price: number;        // Например: 9500000
-    imageUrl: string;     // Ссылка или путь к картинке
-  }
+import React, { useState } from "react";
+import styles from "./CarDetailCard.module.scss";
+import Button from "@/shared/ui/Button/Button";
+import { CarResponseDto } from "@/shared/api/car/types";
+import bmwFallback from "@/assets/bmw.png";
 
 interface CarCardProps {
-  car: CarData;
-  onSubmit?: () => void; // обработчик клика по кнопке "Оставить заявку"
+  car: CarResponseDto;
+  onSubmit?: () => void;
 }
 
 const CarDetailCard: React.FC<CarCardProps> = ({ car, onSubmit }) => {
-  const {
-    title,
-    condition,
-    engine,
-    transmission,
-    color,
-    type,
-    location,
-    price,
-    imageUrl,
-  } = car;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const images = car.images && car.images.length > 0 ? car.images : [bmwFallback];
+  console.log("Links:", JSON.stringify(images, null, 2));
+  
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => 
+      prev === 0 ? images.length - 1 : prev - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => 
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  };
 
   return (
     <div className={styles.carCard}>
       <div className={styles.imageWrapper}>
-        <img src={carImage} alt={title} className={styles.carImage} />
+        {/* Кнопка "Назад" */}
+        {images.length > 1 && (
+          <button className={styles.sliderButton} onClick={handlePrev}>
+            &lt;
+          </button>
+        )}
+
+        {/* Сами слайды */}
+        <div className={styles.slider}>
+          {images.map((imgUrl, index) => (
+            <div
+              key={index}
+              className={`${styles.slide} ${
+                index === currentIndex ? styles.active : ""
+              }`}
+            >
+              <img src={imgUrl} alt={car.name} className={styles.carImage} />
+            </div>
+          ))}
+        </div>
+
+        {/* Кнопка "Вперёд" */}
+        {images.length > 1 && (
+          <button className={styles.sliderButton} onClick={handleNext}>
+            &gt;
+          </button>
+        )}
       </div>
+
       <div className={styles.infoWrapper}>
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.condition}>{condition}</p>
+        <h3 className={styles.title}>{car.name}</h3>
+        <p className={styles.condition}>Новый</p>
         <p className={styles.details}>
-          {engine} / {transmission}<br />
-          {color} / {type}
+          {car.engineCapacity} л / {car.enginePower} л.с. / {car.engineType} /{" "}
+          {car.transmissionType}
+          <br />
+          {car.color}
+          <br /> {car.bodyType}
         </p>
         <div className={styles.locationAndPrice}>
-          <span className={styles.location}>{location}</span>
           <span className={styles.price}>
-            {price.toLocaleString('ru-RU')} руб.
+            {car.price ? car.price.toLocaleString("ru-RU") : 0} руб.
           </span>
         </div>
-        <Button  onClick={onSubmit}>
-          Оставить заявку
-        </Button>
+        <Button onClick={onSubmit}>Оставить заявку</Button>
       </div>
     </div>
   );
