@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./CarDetailCard.module.scss";
-import Button from "@/shared/ui/Button/Button";
 import { CarResponseDto } from "@/shared/api/car/types";
+import Button from "@/shared/ui/Button/Button";
 import bmwFallback from "@/assets/bmw.png";
 
 interface CarCardProps {
@@ -12,70 +12,65 @@ interface CarCardProps {
 const CarDetailCard: React.FC<CarCardProps> = ({ car, onSubmit }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const images = car.images && car.images.length > 0 ? car.images : [bmwFallback];
-  console.log("Links:", JSON.stringify(images, null, 2));
-  
+  const images = car.images?.length ? car.images : [bmwFallback];
+  // Если хотим ограничить количество картинок (для рисинок):
+  const maxCount = 10;
+  const displayedImages = images.slice(0, maxCount);
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => 
-      prev === 0 ? images.length - 1 : prev - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => 
-      prev === images.length - 1 ? 0 : prev + 1
-    );
+  // При наведении/клике на полосы (если надо)
+  const handleHover = (index: number) => {
+    setCurrentIndex(index);
   };
 
   return (
     <div className={styles.carCard}>
+      {/* Верхняя часть: блок под фото/слайдер */}
       <div className={styles.imageWrapper}>
-        {/* Кнопка "Назад" */}
-        {images.length > 1 && (
-          <button className={styles.sliderButton} onClick={handlePrev}>
-            &lt;
-          </button>
-        )}
+        {/* Главное изображение */}
+        <img
+          src={images[currentIndex]}
+          alt={car.name}
+          className={styles.mainImage}
+        />
 
-        {/* Сами слайды */}
-        <div className={styles.slider}>
-          {images.map((imgUrl, index) => (
+        {/* Если есть стрелки-переключалки < >, можно добавить их */}
+        {/* <button className={styles.sliderButton} onClick={handlePrev}>&lt;</button>
+        <button className={styles.sliderButton} onClick={handleNext}>&gt;</button> */}
+
+        {/* Если используете «рисинки» (hoverZones) */}
+        <div className={styles.hoverZones}>
+          {displayedImages.map((_, index) => (
             <div
               key={index}
-              className={`${styles.slide} ${
-                index === currentIndex ? styles.active : ""
-              }`}
+              className={styles.hoverZone}
+              onMouseEnter={() => handleHover(index)}
             >
-              <img src={imgUrl} alt={car.name} className={styles.carImage} />
+              <div
+                className={
+                  index === currentIndex
+                    ? `${styles.risinka} ${styles.active}`
+                    : styles.risinka
+                }
+              />
             </div>
           ))}
         </div>
-
-        {/* Кнопка "Вперёд" */}
-        {images.length > 1 && (
-          <button className={styles.sliderButton} onClick={handleNext}>
-            &gt;
-          </button>
-        )}
       </div>
 
       <div className={styles.infoWrapper}>
-        <h3 className={styles.title}>{car.name}</h3>
-        <p className={styles.condition}>Новый</p>
-        <p className={styles.details}>
-          {car.engineCapacity} л / {car.enginePower} л.с. / {car.engineType} /{" "}
-          {car.transmissionType}
-          <br />
-          {car.color}
-          <br /> {car.bodyType}
-        </p>
-        <div className={styles.locationAndPrice}>
-          <span className={styles.price}>
-            {car.price ? car.price.toLocaleString("ru-RU") : 0} руб.
-          </span>
+        <h3 className={styles.title}>{car.name || "Без названия"}</h3>
+        <div className={styles.details}>
+          {car.engineCapacity} л / {car.mileage} км / {car.enginePower} л.с. /{" "}
+          {car.engineType}
         </div>
-        <Button onClick={onSubmit}>Оставить заявку</Button>
+        <div className={styles.price}>
+          {car.price ? car.price.toLocaleString("ru-RU") : 0} руб.
+        </div>
+        {/* {car.city && <div className={styles.location}>{car.city}</div>} */}
+
+        <div className={styles.actions}>
+          <Button onClick={onSubmit}>Оставить заявку</Button>
+        </div>
       </div>
     </div>
   );

@@ -188,7 +188,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
 
         <div></div>
         <Button onClick={() => console.log("Текущий фильтр:", filter)}>
-          Показать (отправлено на сервер)
+          Показать
         </Button>
       </div>
     </div>

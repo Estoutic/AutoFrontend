@@ -15,7 +15,6 @@ const CarCatalogPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Каталог автомобилей</h1>
       <CarFilter
         filter={filter}
         onChange={(newFilter) => setFilter(newFilter)}
