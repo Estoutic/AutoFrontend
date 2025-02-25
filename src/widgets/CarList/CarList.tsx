@@ -1,23 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import CarDetailCard from "@/entities/CarDetailCard/CarDetailCard";
 import styles from "./CarList.module.scss";
 import { CarResponseDto } from "@/shared/api/car/types";
+import CarRequestModal from "@/features/CarRequestModal/CarRequestModal";
 
 interface CarListProps {
   cars: CarResponseDto[];
 }
 
 const CarList: React.FC<CarListProps> = ({ cars }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCar, setSelectedCar] = useState<CarResponseDto | null>(null);
+
+  const handleOpenModal = (car: CarResponseDto) => {
+    setSelectedCar(car);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedCar(null);
+  };
+
+  const handleSubmitForm = (data: any) => {
+    console.log("Форма отправлена:", data);
+  };
   console.log(cars);
-  
+
   return (
     <div className={styles.listContainer}>
       <h2>Найдено {cars.length} автомобилей</h2>
       <div className={styles.cardList}>
         {cars.map((car) => (
-          <CarDetailCard key={car.id} car={car} onSubmit={() => {}} />
+          <CarDetailCard key={car.id} car={car}  onSubmit={() => handleOpenModal(car)} />
         ))}
       </div>
+      <CarRequestModal
+        isOpen={showModal}
+        car={selectedCar}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitForm}
+      />
     </div>
   );
 };
