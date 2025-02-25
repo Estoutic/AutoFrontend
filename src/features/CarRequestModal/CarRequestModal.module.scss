@@ -46,11 +46,38 @@
 
 .carPreview {
   img {
-    max-height: 300px;  
+    max-height: 300px;
     width: 100%;
-    object-fit: cover; 
+    object-fit: cover;
+  }
+}
+
+.carModalPreview {
+  padding: 30px;
+  img {
+    max-height: 300px;
+    width: 100%;
+    object-fit: cover;
   }
 }
 .infoContainer {
   display: flex;
+  flex-direction: column;
+}
+
+.thanksContainer {
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.successContainer {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
 }
