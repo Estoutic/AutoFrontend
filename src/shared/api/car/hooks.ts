@@ -46,7 +46,6 @@ export const useGetCarById = (carId: string, locale: string = "EU") => {
 
 /**
  * Получение списка машин (GET /car/all)
- * Допустим, бэкенд возвращает Page<CarResponseDto> или массив
  */
 export const useGetAllCars = (filterDto?: CarFilterDto, page = 0, size = 10, sortBy = "id", sortOrder = "asc", locale = "EU") => {
   console.log(filterDto);

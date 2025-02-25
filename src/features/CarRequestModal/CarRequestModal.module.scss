@@ -46,9 +46,9 @@
 
 .carPreview {
   img {
-    max-height: 300px; /* ограничиваем высоту */
+    max-height: 300px;  
     width: 100%;
-    object-fit: cover; /* обрезается, если пропорции не совпадают */
+    object-fit: cover; 
   }
 }
 .infoContainer {

@@ -1,4 +1,3 @@
-// src/components/CalculationTable/CalculationTable.tsx
 import React from 'react';
 import styles from './CalculationTable.module.scss';
 

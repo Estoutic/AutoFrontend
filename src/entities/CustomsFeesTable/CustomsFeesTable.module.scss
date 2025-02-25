@@ -1,12 +1,11 @@
 @use "@/styles/_variables.scss" as vars;
 
 .tableContainer {
-  // gap: 15px;
 
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  @media (max-width: vars.$mobile-width) {
+  @media (max-width: 700px) {
     overflow-x: auto;
   }
 }
@@ -21,8 +20,7 @@
 
 .customsFeesTable {
   width: 100%;
-  // Минимальная ширина таблицы, чтобы не сжималась слишком сильно
-  min-width: 600px;
+  min-width: 300px;
   border-collapse: collapse; 
   border: solid;
 

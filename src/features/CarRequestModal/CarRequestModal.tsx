@@ -6,9 +6,10 @@ import InputField from "@/shared/ui/InputField/InputField";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Button from "@/shared/ui/Button/Button";
 import CarDetailCard from "@/entities/CarDetailCard/CarDetailCard";
+import { useAddApplication } from "@/shared/api/application/hooks"; // <-- импорт хука
+import { ApplicationCreationDto } from "@/shared/api/application/types"; // <-- DTO интерфейс
 
-// Подгоняем по вашей enum ContactType (CALL, EMAIL, WHATSAPP, TELEGRAM).
-// Чтобы Drodown мог подхватить, делаем массив опций:
+// Варианты контакта
 const CONTACT_TYPE_OPTIONS = [
   { value: "CALL", labelKey: "Звонок" },
   { value: "EMAIL", labelKey: "Email" },
@@ -16,22 +17,18 @@ const CONTACT_TYPE_OPTIONS = [
   { value: "TELEGRAM", labelKey: "Telegram" },
 ];
 
+// Тип пропсов
 interface CarRequestModalProps {
   isOpen: boolean;
   car: CarResponseDto | null;
-  branchId?: string;
-  onClose: () => void;
-  onSubmit?: (data: FormDataType) => void;
+  branchId?: string;     
+  onClose: () => void;  // Закрыть модалку
+  // Если хотите, оставьте onSubmit для доп. логики у родителя
+  onSubmit?: (data: ApplicationCreationDto) => void; 
 }
 
-interface FormDataType {
-  firstName: string;
-  lastName: string;
-  contact: string;
-  contactDetails: string;
-  carId?: string;
-  branchId?: string;
-}
+// Локальный интерфейс формы (совпадает с ApplicationCreationDto)
+interface FormDataType extends ApplicationCreationDto {}
 
 const CarRequestModal: React.FC<CarRequestModalProps> = ({
   isOpen,
@@ -40,30 +37,38 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  // Локальный стейт полей формы
   const [formData, setFormData] = useState<FormDataType>({
     firstName: "",
     lastName: "",
-    contact: "",
+    contact: null,
     contactDetails: "",
     carId: car?.id,
     branchId: branchId,
   });
+  // Наш хук из react-query, для создания заявки
+  const { mutate: addApplication, isLoading } = useAddApplication();
 
   if (!isOpen || !car) return null;
 
   const handleChange = (key: keyof FormDataType, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    onSubmit?.(formData);
+    addApplication(formData, {
+      onSuccess: (newAppId) => {
+        console.log("Заявка успешно создана:", newAppId);
+        onSubmit?.(formData);
 
-    onClose();
+        onClose();
+      },
+      onError: (error) => {
+        console.error("Ошибка при создании заявки:", error);
+      },
+    });
   };
 
   return (
@@ -97,6 +102,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
             onChange={(val) => handleChange("contact", val)}
             placeholder="Выберите способ связи"
           />
+
           <div className={styles.infoContainer}>
             <InputField
               type="text"
@@ -105,15 +111,17 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
               placeholder="Введите контакт (телефон, email, ...)"
             />
           </div>
+
           <div className={styles.carPreview}>
             <CarDetailCard
-              hideSubmitButton={true}
               car={car}
-              onSubmit={() => {}} // пустая, чтобы не всплывало второе окно :)
+              hideSubmitButton
             />
           </div>
 
-          <Button type="submit">Отправить</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Отправка..." : "Отправить"}
+          </Button>
         </form>
       </div>
     </div>
