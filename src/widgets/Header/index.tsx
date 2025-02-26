@@ -11,7 +11,7 @@ export const Header = () => {
             <img src={logo} alt="Дружба Народов" />
           </Link>
           <nav className={styles.nav}>
-            <Link to="/about">О нас</Link>
+            <Link to="/">О нас</Link>
             <Link to="/catalog">Каталог</Link>
             <Link to="/calculator">Калькулятор</Link>
             <Link to="/contacts">Контакты</Link>

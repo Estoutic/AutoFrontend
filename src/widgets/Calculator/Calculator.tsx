@@ -37,9 +37,7 @@ const Calculator = () => {
         платежей за автомобиль
       </h2>
 
-      {/* Контейнер для всех строк */}
       <div className={styles.flexContainer}>
-        {/* 1-я строка (3 элемента) */}
         <div className={styles.flexRow}>
           <Text>Рассчитать для</Text>
           <Button

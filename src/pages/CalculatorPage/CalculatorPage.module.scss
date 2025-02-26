@@ -1,0 +1,11 @@
+@use "@/styles/_variables" as vars;
+
+.calculator{
+    padding: 0 10%;
+    color: vars.$primary-color !important;
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 40px;
+    gap: 50px;
+}

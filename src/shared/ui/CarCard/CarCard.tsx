@@ -4,7 +4,7 @@ import styles from "./CarCard.module.scss";
 interface CarCardProps {
   image: string;
   name: string;
-  price: string;
+  price: number;
 }
 
 const CarCard = ({ image, name, price }: CarCardProps) => {
@@ -15,7 +15,7 @@ const CarCard = ({ image, name, price }: CarCardProps) => {
       </div>
       <div className={styles.details}>
         <span className={styles.name}>{name}</span>
-        <span className={styles.price}>{price}</span>
+        <span className={styles.price}>{price} руб.</span>
       </div>
     </div>
   );
