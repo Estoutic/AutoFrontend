@@ -12,11 +12,7 @@ import {
   OWNERS_COUNT,
 } from "@/shared/constants/carOptions";
 import { CarFilterDto } from "@/shared/api/car/types";
-
-const CITY_OPTIONS = [
-  { value: "moscow", labelKey: "Москва" },
-  { value: "spb", labelKey: "Санкт-Петербург" },
-];
+import { useTranslation } from "react-i18next";
 
 interface CarFilterProps {
   filter: CarFilterDto;
@@ -24,6 +20,8 @@ interface CarFilterProps {
 }
 
 const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
+  const { t } = useTranslation();
+
   const handleChange = (key: keyof CarFilterDto, value: string | number) => {
     onChange({
       ...filter,
@@ -34,7 +32,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
   return (
     <div className={styles.filterContainer}>
       <h2>
-        Каталог автомобилей: <br /> технические характеристики
+        {t("carFilter.titleLine1")} <br /> {t("carFilter.titleLine2")}
       </h2>
 
       <div className={styles.filterGrid}>
@@ -43,7 +41,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="text"
             value={filter.brand || ""}
             onChange={(val) => handleChange("brand", val)}
-            placeholder="Марка"
+            placeholder={t("carFilter.brandPlaceholder")}
           />
         </div>
         <div className={styles.inputContainer}>
@@ -51,7 +49,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="text"
             value={filter.model || ""}
             onChange={(val) => handleChange("model", val)}
-            placeholder="Модель"
+            placeholder={t("carFilter.modelPlaceholder")}
           />
         </div>
         <div className={styles.inputContainer}>
@@ -59,7 +57,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="text"
             value={filter.generation || ""}
             onChange={(val) => handleChange("generation", val)}
-            placeholder="Поколение"
+            placeholder={t("carFilter.generationPlaceholder")}
           />
         </div>
 
@@ -68,13 +66,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="number"
             value={filter.priceFrom ?? ""}
             onChange={(val) => handleChange("priceFrom", +val)}
-            placeholder="Цена от, ₽"
+            placeholder={t("carFilter.priceFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.priceTo ?? ""}
             onChange={(val) => handleChange("priceTo", +val)}
-            placeholder="Цена до, ₽"
+            placeholder={t("carFilter.priceToPlaceholder")}
           />
         </div>
 
@@ -83,13 +81,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="number"
             value={filter.yearFrom ?? ""}
             onChange={(val) => handleChange("yearFrom", +val)}
-            placeholder="Год от"
+            placeholder={t("carFilter.yearFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.yearTo ?? ""}
             onChange={(val) => handleChange("yearTo", +val)}
-            placeholder="Год до"
+            placeholder={t("carFilter.yearToPlaceholder")}
           />
         </div>
 
@@ -97,20 +95,20 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
           options={TRANSMISSION_OPTIONS}
           value={filter.transmission || ""}
           onChange={(val) => handleChange("transmission", val)}
-          placeholder="Тип коробки передач"
+          placeholder={t("carFilter.transmissionPlaceholder")}
         />
         <Dropdown
           options={BODY_OPTIONS}
           value={filter.bodyType || ""}
           onChange={(val) => handleChange("bodyType", val)}
-          placeholder="Тип кузова"
+          placeholder={t("carFilter.bodyTypePlaceholder")}
         />
 
         <Dropdown
           options={ENGINE_OPTIONS}
           value={filter.engineType || ""}
           onChange={(val) => handleChange("engineType", val)}
-          placeholder="Тип двигателя"
+          placeholder={t("carFilter.engineTypePlaceholder")}
         />
 
         <div className={styles.intervalContainer}>
@@ -118,13 +116,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="number"
             value={filter.enginePowerFrom ?? ""}
             onChange={(val) => handleChange("enginePowerFrom", +val)}
-            placeholder="Мощность от, л.с."
+            placeholder={t("carFilter.enginePowerFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.enginePowerTo ?? ""}
             onChange={(val) => handleChange("enginePowerTo", +val)}
-            placeholder="Мощность до, л.с."
+            placeholder={t("carFilter.enginePowerToPlaceholder")}
           />
         </div>
 
@@ -132,7 +130,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
           options={DRIVE_OPTIONS}
           value={filter.drive || ""}
           onChange={(val) => handleChange("drive", val)}
-          placeholder="Тип привода"
+          placeholder={t("carFilter.drivePlaceholder")}
         />
 
         <div className={styles.intervalContainer}>
@@ -140,13 +138,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
             type="number"
             value={filter.engineCapacityFrom ?? ""}
             onChange={(val) => handleChange("engineCapacityFrom", +val)}
-            placeholder="Объем двигателя от, л"
+            placeholder={t("carFilter.engineCapacityFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.engineCapacityTo ?? ""}
             onChange={(val) => handleChange("engineCapacityTo", +val)}
-            placeholder="Объем двигателя до, л"
+            placeholder={t("carFilter.engineCapacityToPlaceholder")}
           />
         </div>
 
@@ -154,41 +152,26 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
           options={STEERING_OPTIONS}
           value={filter.steeringPosition || ""}
           onChange={(val) => handleChange("steeringPosition", val)}
-          placeholder="Расположение руля"
+          placeholder={t("carFilter.steeringPositionPlaceholder")}
         />
-
-        {/* <Dropdown
-          options={OWNERS_COUNT}
-          value={filter.ownersCountFrom}
-          onChange={(val) => handleChange("ownersCountFrom", +val)}
-          placeholder="Количество владельцев (минимум)"
-        /> */}
 
         <div className={styles.intervalContainer}>
           <InputField
             type="number"
             value={filter.mileageFrom ?? ""}
             onChange={(val) => handleChange("mileageFrom", +val)}
-            placeholder="Пробег от, км"
+            placeholder={t("carFilter.mileageFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.mileageTo ?? ""}
             onChange={(val) => handleChange("mileageTo", +val)}
-            placeholder="Пробег до, км"
+            placeholder={t("carFilter.mileageToPlaceholder")}
           />
         </div>
 
-        <Dropdown
-          options={CITY_OPTIONS}
-          value={filter.city || ""}
-          onChange={(val) => handleChange("city", val)}
-          placeholder="Город"
-        />
-
-        <div></div>
         <Button onClick={() => console.log("Текущий фильтр:", filter)}>
-          Показать
+          {t("carFilter.showButton")}
         </Button>
       </div>
     </div>

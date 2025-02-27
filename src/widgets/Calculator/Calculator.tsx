@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./Calculator.module.scss";
 import Text from "@/shared/ui/Text/Text";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import InputField from "@/shared/ui/InputField/InputField";
-
 import {
   CAR_AGE,
   CURRNECY_CODE,
@@ -13,8 +12,11 @@ import {
 } from "@/shared/constants/calculatorOptions";
 import { ENGINE_OPTIONS } from "@/shared/constants/carOptions";
 import CalculatorCalculations from "../CalculatorCalculations/CalculatorCalculations";
+import { useTranslation } from "react-i18next";
 
 const Calculator = () => {
+  const { t } = useTranslation();
+  const [visible, setVisible] = useState(false);
   const [filters, setFilters] = useState({
     country: "",
     age: "",
@@ -30,22 +32,26 @@ const Calculator = () => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
+  const onClick = () => {
+    setVisible(!visible);
+  };
+
   return (
     <div className={styles.calculator}>
       <h2>
-        Калькулятор таможенных <br />
-        платежей за автомобиль
+        {t("calculator.titleLine1")} <br />
+        {t("calculator.titleLine2")}
       </h2>
 
       <div className={styles.flexContainer}>
         <div className={styles.flexRow}>
-          <Text>Рассчитать для</Text>
+          <Text>{t("calculator.calculateFor")}</Text>
           <Button
             variant="secondary"
             classname={filters["country"] === "russia" ? "active" : ""}
             onClick={() => handleChange("country", "russia")}
           >
-            Российская Федерация
+            {t("calculator.russianFederation")}
             <span className={styles.flagIcon}>{getUnicodeFlagIcon("RU")}</span>
           </Button>
           <Button
@@ -53,7 +59,7 @@ const Calculator = () => {
             classname={filters["country"] === "belarus" ? "active" : ""}
             onClick={() => handleChange("country", "belarus")}
           >
-            Республика Беларусь
+            {t("calculator.belarusRepublic")}
             <span className={styles.flagIcon}>{getUnicodeFlagIcon("BY")}</span>
           </Button>
         </div>
@@ -64,21 +70,21 @@ const Calculator = () => {
             options={CAR_AGE}
             value={filters.age}
             onChange={(value) => handleChange("age", value)}
-            placeholder="Возраст"
+            placeholder={t("calculator.agePlaceholder")}
           />
           <div className={styles.inputContainer}>
             <InputField
               type="number"
               value={filters.price}
               onChange={(value) => handleChange("price", value)}
-              placeholder="Цена"
+              placeholder={t("calculator.pricePlaceholder")}
             />
           </div>
           <Dropdown
             options={CURRNECY_CODE}
             value={filters.currency}
             onChange={(value) => handleChange("currency", value)}
-            placeholder="Валюта"
+            placeholder={t("calculator.currencyPlaceholder")}
           />
         </div>
 
@@ -87,14 +93,14 @@ const Calculator = () => {
             options={ENGINE_OPTIONS}
             value={filters.engineType}
             onChange={(value) => handleChange("engineType", value)}
-            placeholder="Тип двигателя"
+            placeholder={t("calculator.engineTypePlaceholder")}
           />
           <div className={styles.inputContainer}>
             <InputField
               type="number"
               value={filters.volume}
               onChange={(value) => handleChange("volume", value)}
-              placeholder="Объем двигателя"
+              placeholder={t("calculator.volumePlaceholder")}
             />
           </div>
           <div className={styles.inputContainer}>
@@ -102,25 +108,25 @@ const Calculator = () => {
               type="number"
               value={filters.power}
               onChange={(value) => handleChange("power", value)}
-              placeholder="Мощность двигателя"
+              placeholder={t("calculator.powerPlaceholder")}
             />
           </div>
         </div>
 
         <div className={styles.flexRow}>
           <div className={styles.faceContainer}>
-            <Text>Расчет при ввозе</Text>
+            <Text>{t("calculator.importCalculation")}</Text>
             <Dropdown
               options={PERSON}
               value={filters.person}
               onChange={(value) => handleChange("person", value)}
-              placeholder="Лицо"
+              placeholder={t("calculator.personPlaceholder")}
             />
           </div>
-          <Button onClick={() => console.log(filters)}>Рассчитать</Button>
+          <Button onClick={onClick}>{t("calculator.calculateButton")}</Button>
         </div>
       </div>
-      <CalculatorCalculations/>
+      {visible ? <CalculatorCalculations /> : <></>}
     </div>
   );
 };

@@ -3,12 +3,14 @@ import CarDetailCard from "@/entities/CarDetailCard/CarDetailCard";
 import styles from "./CarList.module.scss";
 import { CarResponseDto } from "@/shared/api/car/types";
 import CarRequestModal from "@/features/CarRequestModal/CarRequestModal";
+import { useTranslation } from "react-i18next";
 
 interface CarListProps {
   cars: CarResponseDto[];
 }
 
 const CarList: React.FC<CarListProps> = ({ cars }) => {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [selectedCar, setSelectedCar] = useState<CarResponseDto | null>(null);
 
@@ -29,7 +31,7 @@ const CarList: React.FC<CarListProps> = ({ cars }) => {
 
   return (
     <div className={styles.listContainer}>
-      <h2>Найдено {cars.length} автомобилей</h2>
+      <h2>{t("carList.foundCars", { count: cars.length })}</h2>
       <div className={styles.cardList}>
         {cars.map((car) => (
           <CarDetailCard key={car.id} car={car}  onSubmit={() => handleOpenModal(car)} />

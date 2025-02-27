@@ -1,5 +1,5 @@
 import createHttpClient from "./apiClient";
-import { ApplicationApi } from "./application/applicationApi";
+import { ApplicationApi } from "./application/ApplicationApi";
 import { CarApi } from "./car/CarApi";
 
 

@@ -1,0 +1,164 @@
+{
+  "hero": {
+    "mainTitle": "汽车",
+    "subTitle": "来自中国",
+    "label": "现货及定制",
+    "description": "“民族友谊”有限责任公司提供从中国进口汽车的服务。我们公司负责报关、物流管理，并确保快速、便捷的手续办理和商品接收。",
+    "phone": "+7-(915)-018-28-37",
+    "email": "drujba_narodov1@mail.ru",
+    "altImage": "汽车"
+  },
+  "header": {
+    "aboutUs": "关于我们",
+    "catalog": "目录",
+    "calculator": "计算器",
+    "contacts": "联系方式"
+  },
+  "carOptions": {
+    "transmission": {
+      "automatic": "自动挡",
+      "variator": "无级变速",
+      "mechanical": "手动挡",
+      "robot": "机器人变速"
+    },
+    "body": {
+      "suv3Doors": "三门SUV",
+      "suv5Doors": "五门SUV",
+      "sedan": "轿车",
+      "coupe": "双门轿跑",
+      "hatchback3Doors": "三门掀背车",
+      "hatchback5Doors": "五门掀背车",
+      "pickupDoubleCab": "双排座皮卡",
+      "pickupSingleCab": "单排座皮卡",
+      "van": "厢型车",
+      "minivan": "小型厢型车"
+    },
+    "engine": {
+      "gasoline": "汽油",
+      "hybrid": "混合动力",
+      "diesel": "柴油",
+      "electric": "电动"
+    },
+    "drive": {
+      "fwd": "前轮驱动",
+      "rwd": "后轮驱动",
+      "awd": "全轮驱动"
+    },
+    "steering": {
+      "left": "左舵",
+      "right": "右舵"
+    },
+    "owners": {
+      "oneOwner": "1位车主",
+      "twoOwner": "2位车主",
+      "threeMoreOwner": "3位及以上车主"
+    }
+  },
+  "carFilter": {
+    "titleLine1": "汽车目录：",
+    "titleLine2": "技术参数",
+    "brandPlaceholder": "品牌",
+    "modelPlaceholder": "型号",
+    "generationPlaceholder": "代",
+    "priceFromPlaceholder": "价格从, ₽",
+    "priceToPlaceholder": "价格到, ₽",
+    "yearFromPlaceholder": "年份从",
+    "yearToPlaceholder": "年份到",
+    "transmissionPlaceholder": "变速箱类型",
+    "bodyTypePlaceholder": "车身类型",
+    "engineTypePlaceholder": "发动机类型",
+    "enginePowerFromPlaceholder": "功率从, 马力",
+    "enginePowerToPlaceholder": "功率到, 马力",
+    "drivePlaceholder": "驱动类型",
+    "engineCapacityFromPlaceholder": "发动机排量从, L",
+    "engineCapacityToPlaceholder": "发动机排量到, L",
+    "steeringPositionPlaceholder": "方向盘位置",
+    "mileageFromPlaceholder": "里程从, km",
+    "mileageToPlaceholder": "里程到, km",
+    "showButton": "显示"
+  },
+  "carList": {
+    "foundCars": "找到 {{count}} 辆汽车",
+    "formSubmitted": "表单已提交："
+  },
+  "carDetail": {
+    "liter": "升",
+    "kilometer": "公里",
+    "horsepower": "马力",
+    "untitled": "无标题",
+    "submitButton": "提交申请",
+    "currency": "卢布"
+  },
+  "carRequestModal": {
+    "contactType": {
+        "call": "电话",
+        "email": "电子邮件",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
+      },
+    "enterYourData": "请提供您的联系方式！",
+    "firstNamePlaceholder": "您的名字",
+    "lastNamePlaceholder": "您的姓氏",
+    "contactTypePlaceholder": "选择联系方式",
+    "contactDetailsPlaceholder": "输入联系方式（电话，电子邮件等）",
+    "sending": "发送中...",
+    "submitButton": "提交",
+    "applicationCreated": "申请已创建：",
+    "error": "错误：",
+    "thankYou1": "谢谢，",
+    "thankYou2": "我们会尽快与您联系！",
+    "returnToCatalog": "返回目录"
+  },
+  "calculator": {
+    "titleLine1": "汽车关税计算器",
+    "titleLine2": "",
+    "calculateFor": "计算适用于",
+    "russianFederation": "俄罗斯联邦",
+    "belarusRepublic": "白俄罗斯共和国",
+    "agePlaceholder": "车龄",
+    "pricePlaceholder": "价格",
+    "currencyPlaceholder": "货币",
+    "engineTypePlaceholder": "发动机类型",
+    "volumePlaceholder": "发动机排量",
+    "powerPlaceholder": "发动机功率",
+    "importCalculation": "进口计算",
+    "personPlaceholder": "身份",
+    "calculateButton": "计算",
+    "carAge": {
+      "newUnder3Years": "新车，车龄不足3年",
+      "from3to5Years": "车龄3至5年",
+      "from5to7Years": "车龄5至7年",
+      "over7Years": "车龄超过7年"
+    },
+    "currency": {
+      "dollar": "USD",
+      "euro": "EUR",
+      "yen": "CNY",
+      "rub": "RUB"
+    },
+    "person": {
+      "phys": "个人",
+      "legal": "企业"
+    }
+  },
+  "footer": {
+    "logoAlt": "民族友谊",
+    "social": {
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "vk": "VK"
+    },
+    "nav": {
+      "about": "关于我们",
+      "catalog": "目录",
+      "calculator": "计算器",
+      "contacts": "联系方式"
+    },
+    "contact": {
+      "phoneAlt": "电话",
+      "emailAlt": "电子邮件",
+      "address": "莫斯科, Skladocnaya 大街, 1号, 13号楼"
+    }
+  }
+}

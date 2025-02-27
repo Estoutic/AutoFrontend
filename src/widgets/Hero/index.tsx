@@ -1,52 +1,47 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./Hero.module.scss";
 import carImage from "@/assets/car.png";
 import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
-import React from "react";
 
 export const Hero = () => {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.text}>
-              <h1>
-                АВТОМОБИЛИ <br />
-              </h1>
-            <div className={styles.secondLine}>
-              <h1>
-              ИЗ КИТАЯ
-              </h1>
-              <span className={styles.label}>
-                <i>в наличии и под заказ</i>
-              </span>
+          <h1>
+            {t("hero.mainTitle")} <br />
+          </h1>
+          <div className={styles.secondLine}>
+            <h1>{t("hero.subTitle")}</h1>
+            <span className={styles.label}>
+              <i>{t("hero.label")}</i>
+            </span>
           </div>
         </div>
 
         <div className={styles.body}>
           <div className={[styles.text, styles.secondText].join(" ")}>
-            <p>
-              ООО «Дружба Народов» занимается услугами по импорту машин из
-              Китая. Наша компания ведет процесс растаможивания, следит за
-              логистикой и обеспечивает комфортное и быстрое оформление и
-              получение товара.
-            </p>
+            <p>{t("hero.description")}</p>
             <div className={styles.contacts}>
               <div>
                 <FaPhoneAlt />
-                <span>+7-(915)-018-28-37</span>
+                <span>{t("hero.phone")}</span>
               </div>
               <div>
                 <FaEnvelope />
-                <span>drujba_narodov1@mail.ru</span>
+                <span>{t("hero.email")}</span>
               </div>
             </div>
           </div>
 
           <div className={styles.image}>
-            <img src={carImage} alt="Автомобиль" />
+            <img src={carImage} alt={t("hero.altImage")} />
           </div>
         </div>
       </div>
-      {/* </div> */}
     </section>
   );
 };

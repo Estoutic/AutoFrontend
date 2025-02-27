@@ -1,6 +1,8 @@
 
 {
   "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "useDefineForClassFields": true,
     "outDir": "./dist/",
     "sourceMap": true,
@@ -18,7 +20,6 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "typeRoots": ["./node_modules/@types"],
-    "esModuleInterop": true,
     "baseUrl": "./src",
     "paths": {
        "@/*": ["*"],

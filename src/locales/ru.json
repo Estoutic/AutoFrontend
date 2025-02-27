@@ -1,0 +1,163 @@
+{
+  "hero": {
+    "mainTitle": "АВТОМОБИЛИ",
+    "subTitle": "ИЗ КИТАЯ",
+    "label": "в наличии и под заказ",
+    "description": "ООО «Дружба Народов» занимается услугами по импорту машин из Китая. Наша компания ведет процесс растаможивания, следит за логистикой и обеспечивает комфортное и быстрое оформление и получение товара.",
+    "phone": "+7-(915)-018-28-37",
+    "email": "drujba_narodov1@mail.ru",
+    "altImage": "Автомобиль"
+  },
+  "header": {
+    "aboutUs": "О нас",
+    "catalog": "Каталог",
+    "calculator": "Калькулятор",
+    "contacts": "Контакты"
+  },
+  "carOptions": {
+    "transmission": {
+      "automatic": "Автоматическая",
+      "variator": "Вариатор",
+      "mechanical": "Механическая",
+      "robot": "Роботизированная"
+    },
+    "body": {
+      "suv3Doors": "Внедорожник 3 двери",
+      "suv5Doors": "Внедорожник 5 дверей",
+      "sedan": "Седан",
+      "coupe": "Купе",
+      "hatchback3Doors": "Хэтчбек 3 двери",
+      "hatchback5Doors": "Хэтчбек 5 дверей",
+      "pickupDoubleCab": "Пикап с двойной кабиной",
+      "pickupSingleCab": "Пикап с одинарной кабиной",
+      "van": "Фургон",
+      "minivan": "Минивэн"
+    },
+    "engine": {
+      "gasoline": "Бензиновый",
+      "hybrid": "Гибридный",
+      "diesel": "Дизельный",
+      "electric": "Электрический"
+    },
+    "drive": {
+      "fwd": "Передний привод",
+      "rwd": "Задний привод",
+      "awd": "Полный привод"
+    },
+    "steering": {
+      "left": "Левостороннее",
+      "right": "Правостороннее"
+    },
+    "owners": {
+      "oneOwner": "1 владелец",
+      "twoOwner": "2 владельца",
+      "threeMoreOwner": "3 и более владельца"
+    }
+  },
+  "carFilter": {
+    "titleLine1": "Каталог автомобилей:",
+    "titleLine2": "технические характеристики",
+    "brandPlaceholder": "Марка",
+    "modelPlaceholder": "Модель",
+    "generationPlaceholder": "Поколение",
+    "priceFromPlaceholder": "Цена от, ₽",
+    "priceToPlaceholder": "Цена до, ₽",
+    "yearFromPlaceholder": "Год от",
+    "yearToPlaceholder": "Год до",
+    "transmissionPlaceholder": "Тип коробки передач",
+    "bodyTypePlaceholder": "Тип кузова",
+    "engineTypePlaceholder": "Тип двигателя",
+    "enginePowerFromPlaceholder": "Мощность от, л.с.",
+    "enginePowerToPlaceholder": "Мощность до, л.с.",
+    "drivePlaceholder": "Тип привода",
+    "engineCapacityFromPlaceholder": "Объем двигателя от, л",
+    "engineCapacityToPlaceholder": "Объем двигателя до, л",
+    "steeringPositionPlaceholder": "Расположение руля",
+    "mileageFromPlaceholder": "Пробег от, км",
+    "mileageToPlaceholder": "Пробег до, км",
+    "showButton": "Показать"
+  },
+  "carList": {
+    "foundCars": "Найдено {{count}} автомобилей",
+    "formSubmitted": "Форма отправлена:"
+  },
+  "carDetail": {
+    "liter": "л",
+    "kilometer": "км",
+    "horsepower": "л.с.",
+    "untitled": "Без названия",
+    "submitButton": "Оставить заявку",
+    "currency": "руб."
+  },
+  "carRequestModal": {
+    "contactType": {
+      "call": "Звонок",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
+    },
+    "enterYourData": "Укажите ваши данные для обратной связи!",
+    "firstNamePlaceholder": "Ваше имя",
+    "lastNamePlaceholder": "Ваша фамилия",
+    "contactTypePlaceholder": "Выберите способ связи",
+    "contactDetailsPlaceholder": "Введите контакт (телефон, email, ...)",
+    "sending": "Отправка...",
+    "submitButton": "Отправить",
+    "applicationCreated": "Заявка создана:",
+    "error": "Ошибка:",
+    "thankYou1": "Спасибо,",
+    "thankYou2": "мы с вами свяжемся в ближайшее время!",
+    "returnToCatalog": "Вернуться к каталогу"
+  },
+  "calculator": {
+    "titleLine1": "Калькулятор таможенных",
+    "titleLine2": "платежей за автомобиль",
+    "calculateFor": "Рассчитать для",
+    "russianFederation": "Российская Федерация",
+    "belarusRepublic": "Республика Беларусь",
+    "agePlaceholder": "Возраст",
+    "pricePlaceholder": "Цена",
+    "currencyPlaceholder": "Валюта",
+    "engineTypePlaceholder": "Тип двигателя",
+    "volumePlaceholder": "Объем двигателя",
+    "powerPlaceholder": "Мощность двигателя",
+    "importCalculation": "Расчет при ввозе",
+    "personPlaceholder": "Лицо",
+    "calculateButton": "Рассчитать",
+    "carAge": {
+      "newUnder3Years": "Новые, менее 3-х лет",
+      "from3to5Years": "От 3-х до 5-ти лет",
+      "from5to7Years": "От 5-ти до 7-ми лет",
+      "over7Years": "Старше 7-ми лет"
+    },
+    "currency": {
+      "dollar": "USD",
+      "euro": "EUR",
+      "yen": "CNY",
+      "rub": "RUB"
+    },
+    "person": {
+      "phys": "Физическое лицо",
+      "legal": "Юридическое лицо"
+    }
+  },"footer": {
+    "logoAlt": "Дружба Народов",
+    "social": {
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "vk": "ВКонтакте"
+    },
+    "nav": {
+      "about": "О нас",
+      "catalog": "Каталог",
+      "calculator": "Калькулятор",
+      "contacts": "Контакты"
+    },
+    "contact": {
+      "phoneAlt": "Телефон",
+      "emailAlt": "Электронная почта",
+      "address": "г. Москва, ул. Складочная, д.1, стр. 13"
+    }
+  }
+}

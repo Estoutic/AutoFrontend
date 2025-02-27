@@ -1,0 +1,164 @@
+{
+  "hero": {
+    "mainTitle": "CARS",
+    "subTitle": "FROM CHINA",
+    "label": "available and custom ordered",
+    "description": "LLC 'Friendship of Nations' provides car import services from China. Our company handles customs clearance, logistics, and ensures fast and comfortable processing and delivery.",
+    "phone": "+7-(915)-018-28-37",
+    "email": "drujba_narodov1@mail.ru",
+    "altImage": "Car"
+  },
+  "header": {
+    "aboutUs": "About Us",
+    "catalog": "Catalog",
+    "calculator": "Calculator",
+    "contacts": "Contacts"
+  },
+  "carOptions": {
+    "transmission": {
+      "automatic": "Automatic",
+      "variator": "Variator",
+      "mechanical": "Manual",
+      "robot": "Automated"
+    },
+    "body": {
+      "suv3Doors": "SUV 3 doors",
+      "suv5Doors": "SUV 5 doors",
+      "sedan": "Sedan",
+      "coupe": "Coupe",
+      "hatchback3Doors": "Hatchback 3 doors",
+      "hatchback5Doors": "Hatchback 5 doors",
+      "pickupDoubleCab": "Pickup with double cab",
+      "pickupSingleCab": "Pickup with single cab",
+      "van": "Van",
+      "minivan": "Minivan"
+    },
+    "engine": {
+      "gasoline": "Gasoline",
+      "hybrid": "Hybrid",
+      "diesel": "Diesel",
+      "electric": "Electric"
+    },
+    "drive": {
+      "fwd": "Front-wheel drive",
+      "rwd": "Rear-wheel drive",
+      "awd": "All-wheel drive"
+    },
+    "steering": {
+      "left": "Left-hand drive",
+      "right": "Right-hand drive"
+    },
+    "owners": {
+      "oneOwner": "1 owner",
+      "twoOwner": "2 owners",
+      "threeMoreOwner": "3 or more owners"
+    }
+  },
+  "carFilter": {
+    "titleLine1": "Car Catalog:",
+    "titleLine2": "Technical Specifications",
+    "brandPlaceholder": "Brand",
+    "modelPlaceholder": "Model",
+    "generationPlaceholder": "Generation",
+    "priceFromPlaceholder": "Price from, ₽",
+    "priceToPlaceholder": "Price to, ₽",
+    "yearFromPlaceholder": "Year from",
+    "yearToPlaceholder": "Year to",
+    "transmissionPlaceholder": "Transmission Type",
+    "bodyTypePlaceholder": "Body Type",
+    "engineTypePlaceholder": "Engine Type",
+    "enginePowerFromPlaceholder": "Power from, hp",
+    "enginePowerToPlaceholder": "Power to, hp",
+    "drivePlaceholder": "Drive Type",
+    "engineCapacityFromPlaceholder": "Engine Capacity from, L",
+    "engineCapacityToPlaceholder": "Engine Capacity to, L",
+    "steeringPositionPlaceholder": "Steering Position",
+    "mileageFromPlaceholder": "Mileage from, km",
+    "mileageToPlaceholder": "Mileage to, km",
+    "showButton": "Show"
+  },
+  "carList": {
+    "foundCars": "{{count}} Cars found",
+    "formSubmitted": "Form submitted:"
+  },
+  "carDetail": {
+    "liter": "L",
+    "kilometer": "km",
+    "horsepower": "hp",
+    "untitled": "Untitled",
+    "submitButton": "Submit Application",
+    "currency": "RUB"
+  },
+  "carRequestModal": {
+    "contactType": {
+        "call": "Call",
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
+      },
+    "enterYourData": "Please provide your contact details!",
+    "firstNamePlaceholder": "Your first name",
+    "lastNamePlaceholder": "Your last name",
+    "contactTypePlaceholder": "Select contact method",
+    "contactDetailsPlaceholder": "Enter contact (phone, email, ...)",
+    "sending": "Sending...",
+    "submitButton": "Submit",
+    "applicationCreated": "Application created:",
+    "error": "Error:",
+    "thankYou1": "Thank you,",
+    "thankYou2": "we will contact you shortly!",
+    "returnToCatalog": "Return to catalog"
+  },
+  "calculator": {
+    "titleLine1": "Customs Duty Calculator",
+    "titleLine2": "for Cars",
+    "calculateFor": "Calculate for",
+    "russianFederation": "Russian Federation",
+    "belarusRepublic": "Republic of Belarus",
+    "agePlaceholder": "Age",
+    "pricePlaceholder": "Price",
+    "currencyPlaceholder": "Currency",
+    "engineTypePlaceholder": "Engine Type",
+    "volumePlaceholder": "Engine Volume",
+    "powerPlaceholder": "Engine Power",
+    "importCalculation": "Import Calculation",
+    "personPlaceholder": "Person",
+    "calculateButton": "Calculate",
+    "carAge": {
+      "newUnder3Years": "New, under 3 years",
+      "from3to5Years": "From 3 to 5 years",
+      "from5to7Years": "From 5 to 7 years",
+      "over7Years": "Over 7 years"
+    },
+    "currency": {
+      "dollar": "USD",
+      "euro": "EUR",
+      "yen": "CNY",
+      "rub": "RUB"
+    },
+    "person": {
+      "phys": "Individual",
+      "legal": "Legal Entity"
+    }
+  },"footer": {
+    "logoAlt": "Druzhba Narodov",
+    "social": {
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "vk": "VK"
+    },
+    "nav": {
+      "about": "About Us",
+      "catalog": "Catalog",
+      "calculator": "Calculator",
+      "contacts": "Contacts"
+    },
+    "contact": {
+      "phoneAlt": "Phone",
+      "emailAlt": "Email",
+      "address": "Moscow, Skladocnaya St., 1, building 13"
+    }
+  }
+  
+}

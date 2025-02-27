@@ -11,12 +11,13 @@ import {
   ApplicationCreationDto,
   ContactType,
 } from "@/shared/api/application/types";
+import { useTranslation } from "react-i18next";
 
 const CONTACT_TYPE_OPTIONS = [
-  { value: "CALL", labelKey: "Звонок" },
-  { value: "EMAIL", labelKey: "Email" },
-  { value: "WHATSAPP", labelKey: "WhatsApp" },
-  { value: "TELEGRAM", labelKey: "Telegram" },
+  { value: "CALL", labelKey: "carRequestModal.contactType.call" },
+  { value: "EMAIL", labelKey: "carRequestModal.contactType.email" },
+  { value: "WHATSAPP", labelKey: "carRequestModal.contactType.whatsapp" },
+  { value: "TELEGRAM", labelKey: "carRequestModal.contactType.telegram" },
 ];
 
 interface CarRequestModalProps {
@@ -26,14 +27,13 @@ interface CarRequestModalProps {
   onSubmit?: (data: ApplicationCreationDto) => void;
 }
 
-interface FormDataType extends ApplicationCreationDto {}
-
 const CarRequestModal: React.FC<CarRequestModalProps> = ({
   isOpen,
   car,
   onClose,
   onSubmit,
 }) => {
+  const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState<ApplicationCreationDto>({
     firstName: "",
@@ -50,6 +50,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
       setViewMode("form");
     }
   }, [isOpen]);
+
   if (!isOpen || !car) return null;
 
   const handleChange = (key: keyof ApplicationCreationDto, value: string) => {
@@ -63,11 +64,11 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
       { ...formData, carId: car.id },
       {
         onSuccess: (newId) => {
-          console.log("Заявка создана:", newId);
+          console.log(t("carRequestModal.applicationCreated"), newId);
           setViewMode("success");
         },
         onError: (err) => {
-          console.log("Ошибка:", err);
+          console.log(t("carRequestModal.error"), err);
         },
       },
     );
@@ -76,6 +77,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   const handleReturnToCatalog = () => {
     onClose();
   };
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -84,7 +86,9 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
         </button>
         {viewMode === "form" ? (
           <>
-            <Text variant="blue">Укажите ваши данные для обратной связи!</Text>
+            <Text variant="blue">
+              {t("carRequestModal.enterYourData")}
+            </Text>
 
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.row}>
@@ -92,13 +96,13 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
                   type="text"
                   value={formData.firstName}
                   onChange={(val) => handleChange("firstName", val)}
-                  placeholder="Ваше имя"
+                  placeholder={t("carRequestModal.firstNamePlaceholder")}
                 />
                 <InputField
                   type="text"
                   value={formData.lastName}
                   onChange={(val) => handleChange("lastName", val)}
-                  placeholder="Ваша фамилия"
+                  placeholder={t("carRequestModal.lastNamePlaceholder")}
                 />
               </div>
 
@@ -106,7 +110,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
                 options={CONTACT_TYPE_OPTIONS}
                 value={formData.contact}
                 onChange={(val) => handleChange("contact", val)}
-                placeholder="Выберите способ связи"
+                placeholder={t("carRequestModal.contactTypePlaceholder")}
               />
 
               <div className={styles.infoContainer}>
@@ -114,7 +118,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
                   type="text"
                   value={formData.contactDetails}
                   onChange={(val) => handleChange("contactDetails", val)}
-                  placeholder="Введите контакт (телефон, email, ...)"
+                  placeholder={t("carRequestModal.contactDetailsPlaceholder")}
                 />
               </div>
 
@@ -123,15 +127,17 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
               </div>
 
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Отправка..." : "Отправить"}
+                {isLoading
+                  ? t("carRequestModal.sending")
+                  : t("carRequestModal.submitButton")}
               </Button>
             </form>
           </>
         ) : (
           <div className={styles.successContainer}>
             <div className={styles.thanksContainer}>
-              <h3>Спасибо,</h3>
-              <h3>мы с вами свяжемся в ближайшее время!</h3>
+              <h3>{t("carRequestModal.thankYou1")}</h3>
+              <h3>{t("carRequestModal.thankYou2")}</h3>
             </div>
 
             <div className={styles.carModalPreview}>
@@ -140,7 +146,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
 
             <div className={styles.actions}>
               <Button onClick={handleReturnToCatalog}>
-                Вернуться к каталогу
+                {t("carRequestModal.returnToCatalog")}
               </Button>
             </div>
           </div>

@@ -1,15 +1,17 @@
 import React from "react";
 import styles from "./Dropdown.module.scss";
 import arrowIcon from "@/assets/arrow.svg"; // Импорт SVG-иконки
+import { useTranslation } from "react-i18next";
 
 interface DropdownProps {
-  options: { value: string; labelKey: string }[];  
+  options: { value: string; labelKey: string }[];
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
 }
 
 const Dropdown = ({ options, value, onChange, placeholder }: DropdownProps) => {
+  const { t } = useTranslation();
   return (
     <div className={styles.dropdownWrapper}>
       <select
@@ -20,7 +22,7 @@ const Dropdown = ({ options, value, onChange, placeholder }: DropdownProps) => {
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.labelKey}
+            {t(option.labelKey)}
           </option>
         ))}
       </select>
