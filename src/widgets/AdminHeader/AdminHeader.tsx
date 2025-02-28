@@ -14,7 +14,7 @@ export const AdminHeader = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <Link to="/admin" className={styles.logo}>
+        <Link to="/" className={styles.logo}>
           <img src={logo} alt="Admin Panel" />
         </Link>
 

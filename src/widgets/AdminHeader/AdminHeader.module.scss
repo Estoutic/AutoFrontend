@@ -27,13 +27,38 @@
   align-items: center;
 
   a {
+    position: relative;
+    cursor: pointer;
+    border: 2px solid white;
+    overflow: hidden;
+    transition: color 0.5s;
+    z-index: 1;
+    border-radius: 6px;
+    padding: 5px 10px;
     color: #fff;
     text-decoration: none;
     font-weight: 400;
-    transition: color 0.3s ease;
+    // transition: color 0.3s ease;
 
     &:hover {
-      color: vars.$secondary-color;
+      color: vars.$primary-color;
+      &::before {
+        top: -30px;
+        left: -30px;
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      background-color: white;
+      height: 100px;
+      width: 300px;
+      border-radius: 50%;
+      top: 100%;
+      left: 100%;
+      transition: all 0.7s;
     }
   }
 }
@@ -63,8 +88,11 @@
   border-radius: 2px;
   background: #fff;
   opacity: 1;
-  transition: transform 0.35s cubic-bezier(0.5, -0.35, 0.35, 1.5),
-              top 0.35s, bottom 0.35s, opacity 0.35s;
+  transition:
+    transform 0.35s cubic-bezier(0.5, -0.35, 0.35, 1.5),
+    top 0.35s,
+    bottom 0.35s,
+    opacity 0.35s;
 }
 
 .barTop {
@@ -93,13 +121,39 @@
   box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.3);
 
   a {
+    position: relative;
+    cursor: pointer;
+    border: 2px solid white;
+    overflow: hidden;
+    transition: color 0.5s;
+    z-index: 1;
+    border-radius: 6px;
+    padding: 5px 10px;
     color: #fff;
     text-decoration: none;
     font-weight: 400;
-    transition: color 0.3s ease;
+    // transition: color 0.3s ease;
 
     &:hover {
-      color: vars.$secondary-color;
+      color: vars.$primary-color;
+      &::before {
+        right: 50px;
+        top: -20px;
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      background-color: white;
+      height: 300px;
+      width: 500px;
+      right: 100%;
+      border-radius: 30%;
+      top: 50%;
+
+      transition: all 0.7s;
     }
   }
 }
@@ -129,5 +183,16 @@
   }
   .hamburgerWrapper {
     display: block;
+  }
+}
+
+@media (max-width: vars.$mobile-width) {
+  .mobileNav {
+    a {
+      &:hover:before {
+        right: -100px;
+        top: -100px;
+      }
+    }
   }
 }
