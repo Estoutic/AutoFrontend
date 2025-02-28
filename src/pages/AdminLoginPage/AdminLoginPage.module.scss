@@ -1,0 +1,81 @@
+@use "@/styles/_variables" as vars;
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: vars.$primary-color; // или любой нужный цвет
+  }
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  gap: 20px;
+
+  button {
+    width: 100%;
+    align-self: flex-end;
+    background-color: vars.$primary-color;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken(vars.$primary-color, 10%);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: vars.$primary-color;
+  }
+
+  input {
+    display: block;
+    // width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: vars.$primary-color;
+    background-color: #fff;
+    border: 2px solid vars.$primary-color;
+    border-radius: 4px;
+    outline: none;
+    
+
+    // &::placeholder {
+    // //   color: lighten(vars.$primary-color, 30%); 
+    //   /* или просто #999, если хотите более светлый текст */
+    // }
+
+    &:focus {
+      border-color: darken(vars.$primary-color, 10%);
+    }
+  }
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}

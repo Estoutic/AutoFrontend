@@ -4,6 +4,8 @@ import { HomePage } from "@/pages/HomePage";
 import React from "react";
 import CarCatalogPage from "@/pages/CarCatalogPage/CarCatalogPage";
 import { CalculatorPage } from "@/pages/CalculatorPage/CalculatorPage";
+import { AdminLoginPage } from "@/pages/AdminLoginPage/AdminLoginPage";
+import { AdminLayout } from "@/shared/layouts/AdminLayout/AdminLayout";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +20,15 @@ export const router = createBrowserRouter([
     //   { path: "/car/:id", element: <CarDetailsPage /> },
     //   { path: "/login", element: <LoginPage /> },
     //   { path: "/admin", element: <AdminPage /> },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      // { path: "/admin", element: <AdminPage /> },
+      { path: "/admin/login", element: <AdminLoginPage /> },
+      // ... другие админ-маршруты
     ],
   },
 ]);

@@ -1,0 +1,133 @@
+@use "@/styles/_variables" as vars;
+
+.header {
+  background-color: vars.$primary-color;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.container {
+  max-width: vars.$container-width;
+  margin: 0 auto;
+  padding: 0 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+}
+
+.desktopNav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: vars.$secondary-color;
+    }
+  }
+}
+
+.hamburgerWrapper {
+  display: none;
+  position: relative;
+}
+
+.checkbox {
+  display: none;
+}
+
+.toggle {
+  position: relative;
+  width: 40px;
+  height: calc(4px * 3 + 11px * 2);
+  cursor: pointer;
+  display: block;
+}
+
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: #fff;
+  opacity: 1;
+  transition: transform 0.35s cubic-bezier(0.5, -0.35, 0.35, 1.5),
+              top 0.35s, bottom 0.35s, opacity 0.35s;
+}
+
+.barTop {
+  bottom: calc(50% + 11px + 2px);
+}
+
+.barMiddle {
+  top: calc(50% - 2px);
+}
+
+.barBottom {
+  top: calc(50% + 11px + 2px);
+}
+
+.mobileNav {
+  display: none;
+  flex-direction: column;
+  background-color: vars.$primary-color;
+  position: absolute;
+  width: 40vw; // Можно изменить ширину
+  top: 60px;
+  right: 0;
+  padding: 20px;
+  gap: 20px;
+  border-radius: 8px;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.3);
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: vars.$secondary-color;
+    }
+  }
+}
+
+.checkbox:checked + .toggle .barTop {
+  bottom: calc(45%);
+  transform: rotate(45deg);
+}
+
+.checkbox:checked + .toggle .barMiddle {
+  top: calc(50% + 11px);
+  opacity: 0;
+}
+
+.checkbox:checked + .toggle .barBottom {
+  top: calc(50% - 2px);
+  transform: rotate(-45deg);
+}
+
+.checkbox:checked ~ .mobileNav {
+  display: flex;
+}
+
+@media (max-width: vars.$desktop-width) {
+  .desktopNav {
+    display: none;
+  }
+  .hamburgerWrapper {
+    display: block;
+  }
+}
