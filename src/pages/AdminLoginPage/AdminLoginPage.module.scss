@@ -68,9 +68,9 @@
     //   /* или просто #999, если хотите более светлый текст */
     // }
 
-    &:focus {
-      border-color: darken(vars.$primary-color, 10%);
-    }
+    // &:focus {
+    //   border-color: darken(vars.$primary-color, 10%);
+    // }
   }
 }
 

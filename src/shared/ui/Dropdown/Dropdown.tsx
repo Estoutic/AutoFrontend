@@ -8,9 +8,16 @@ interface DropdownProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  disabled?: boolean; // Добавляем опциональное свойство disabled
 }
 
-const Dropdown = ({ options, value, onChange, placeholder }: DropdownProps) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  value,
+  onChange,
+  placeholder,
+  disabled,
+}) => {
   const { t } = useTranslation();
   return (
     <div className={styles.dropdownWrapper}>
@@ -18,6 +25,7 @@ const Dropdown = ({ options, value, onChange, placeholder }: DropdownProps) => {
         className={styles.dropdown}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        disabled={disabled} // Передаем свойство disabled
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (

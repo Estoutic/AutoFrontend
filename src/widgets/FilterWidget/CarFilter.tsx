@@ -13,6 +13,7 @@ import {
 } from "@/shared/constants/carOptions";
 import { CarFilterDto } from "@/shared/api/car/types";
 import { useTranslation } from "react-i18next";
+import { useGetAllFilters } from "@/shared/api/carModel/hooks";
 
 interface CarFilterProps {
   filter: CarFilterDto;
@@ -21,6 +22,7 @@ interface CarFilterProps {
 
 const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
   const { t } = useTranslation();
+  const { data: filterData, isLoading } = useGetAllFilters();
 
   const handleChange = (key: keyof CarFilterDto, value: string | number) => {
     onChange({
@@ -37,27 +39,53 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
 
       <div className={styles.filterGrid}>
         <div className={styles.inputContainer}>
-          <InputField
-            type="text"
+          <Dropdown
+            options={
+              filterData
+                ? filterData.brands.map((brand) => ({ value: brand, labelKey: brand }))
+                : []
+            }
             value={filter.brand || ""}
-            onChange={(val) => handleChange("brand", val)}
+            onChange={(val) => {
+              console.log(val);
+              
+              handleChange("brand", val);
+              // handleChange("model", "");
+              // handleChange("generation", "");
+            }}
             placeholder={t("carFilter.brandPlaceholder")}
+            disabled={isLoading}
           />
         </div>
         <div className={styles.inputContainer}>
-          <InputField
-            type="text"
+          <Dropdown
+            options={
+              filterData && filter.brand
+                ? filterData.models[filter.brand]?.map((model) => ({ value: model, labelKey: model })) ||
+                  []
+                : []
+            }
             value={filter.model || ""}
-            onChange={(val) => handleChange("model", val)}
+            onChange={(val) => {
+              handleChange("model", val);
+              // handleChange("generation", "");
+            }}
             placeholder={t("carFilter.modelPlaceholder")}
+            disabled={isLoading || !filter.brand}
           />
         </div>
         <div className={styles.inputContainer}>
-          <InputField
-            type="text"
+          <Dropdown
+            options={
+              filterData && filter.model
+                ? filterData.generations[filter.model]?.map((gen) => ({ value: gen, labelKey: gen })) ||
+                  []
+                : []
+            }
             value={filter.generation || ""}
             onChange={(val) => handleChange("generation", val)}
             placeholder={t("carFilter.generationPlaceholder")}
+            disabled={isLoading || !filter.model}
           />
         </div>
 

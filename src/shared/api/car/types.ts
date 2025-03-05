@@ -49,7 +49,7 @@ export interface CarUpdateDto {
 export interface CarResponseDto {
   id: string;
   carModelId?: string;
-  name: string;
+  city: string;
   year?: number;
   description?: string;
   color?: string;
@@ -72,7 +72,6 @@ export interface CarResponseDto {
 export interface CarFilterDto {
   mileageFrom?: number;
   mileageTo?: number;
-  city?: string;
   brand?: string;
   model?: string;
   generation?: string;

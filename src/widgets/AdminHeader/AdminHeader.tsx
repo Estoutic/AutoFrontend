@@ -23,7 +23,7 @@ export const AdminHeader = () => {
           <Link to="/admin/reports">Отчёты</Link>
           <Link to="/admin/users">Локализация</Link>
           <Link to="/admin/warehouse">Автомобили</Link>
-          <Link to="/admin/warehouse">Модели автомобилей</Link>
+          <Link to="/admin/models">Модели автомобилей</Link>
           <Link to="/admin/warehouse">Сотрудники</Link>
         </nav>
 
@@ -51,7 +51,7 @@ export const AdminHeader = () => {
             <Link to="/admin/warehouse" onClick={closeMenu}>
               Автомобили
             </Link>
-            <Link to="/admin/warehouse" onClick={closeMenu}>
+            <Link to="/admin/models" onClick={closeMenu}>
               Модели автомобилей
             </Link>
             <Link to="/admin/warehouse" onClick={closeMenu}>
