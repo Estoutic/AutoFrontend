@@ -1,6 +1,6 @@
-import { useMutation, useQuery, UseMutationResult, useQueryClient } from "react-query";
+import { useMutation, useQuery, UseMutationResult, useQueryClient, UseQueryResult } from "react-query";
 import { AxiosError } from "axios";
-import { CarModelDto } from "./types";
+import { CarModelDto, FilterDataDto } from "./types";
 import { carModelApi } from "../client";
 import carModelKeys from "./carModelKeys";
 
@@ -24,11 +24,11 @@ export const useCreateModel = (): UseMutationResult<string, AxiosError, CarModel
 };
 
 /** Удаление модели (DELETE /car/model/{id}) */
-export const useDeleteModel = (): UseMutationResult<void, AxiosError, string> => {
+export const useDeleteModel = (): UseMutationResult<void, AxiosError, CarModelDto> => {
   const queryClient = useQueryClient();
 
-  const mutationFn = async (id: string) => {
-    await carModelApi.deleteModel(id);
+  const mutationFn = async (carModel: CarModelDto) => {
+    await carModelApi.deleteModel(carModel);
   };
 
   return useMutation({
@@ -122,4 +122,14 @@ export const useGetAllFilters = (): UseQueryResult<FilterDataDto, AxiosError> =>
         console.error("Ошибка при загрузке фильтров:", err);
       },
     });
+  };
+
+  export const useGetCarModel = (dto: CarModelDto): UseQueryResult<CarModelDto, AxiosError> => {
+    return useQuery<CarModelDto, AxiosError>(
+      ["carModel", "detail", dto],
+      () => carModelApi.getCarModel(dto),
+      {
+        enabled: !!dto.brand && !!dto.model && !!dto.generation,  
+      }
+    );
   };

@@ -13,7 +13,7 @@ function onRefreshed(newToken: string) {
 }
 
 function getAccessToken() {
-  return localStorage.getItem("jwtToken");
+  return localStorage.getItem("accessToken");
 }
 
 function getRefreshToken() {
@@ -21,12 +21,12 @@ function getRefreshToken() {
 }
 
 function setTokens(accessToken: string, refreshToken: string) {
-  localStorage.setItem("jwtToken", accessToken);
+  localStorage.setItem("accessToken", accessToken);
   localStorage.setItem("refreshToken", refreshToken);
 }
 
 function removeTokens() {
-  localStorage.removeItem("jwtToken");
+  localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
 }
 
@@ -38,7 +38,7 @@ const createHttpClient = (baseUrl: string) => {
 
   httpClient.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem("accessToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

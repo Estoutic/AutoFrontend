@@ -2,28 +2,30 @@ import { AxiosInstance } from "axios";
 import CustomClient from "../CustomApiClient";
 import { CarModelDto } from "../../car/types";
 import { FilterDataDto } from "../../carModel/types";
-
+import { an } from "react-router/dist/development/route-data-Cq_b5feC";
 
 export interface ICarModelApi {
   createModel: string;
-  deleteModel: (id: string) => string;
+  deleteModel: string;
   updateModel: (id: string) => string;
   getBrands: string;
   getModels: string;
   getGenerations: string;
   getAllFilters: string;
+  getCarModel: string;
 }
 
 export class CarModelApi extends CustomClient<ICarModelApi> {
   constructor(mainHttpClient: AxiosInstance) {
     super(mainHttpClient, {
       createModel: "/car/model",
-      deleteModel: (id: string) => `/car/model/${id}`,
+      deleteModel: "/car/model",
       updateModel: (id: string) => `/car/model/${id}`,
       getBrands: "/car/model/brands",
       getModels: "/car/model/models",
       getGenerations: "/car/model/generations",
       getAllFilters: "/car/model/allFilters",
+      getCarModel: "/car/model",
     });
   }
 
@@ -34,12 +36,17 @@ export class CarModelApi extends CustomClient<ICarModelApi> {
       .then((res) => res.data);
   }
 
-  // DELETE /car/model/{id}
-  deleteModel(id: string): Promise<void> {
-    return this.client
-      .delete<void>(this.methods.deleteModel(id))
-      .then((res) => res.data);
-  }
+  // DELETE /car/model
+  deleteModel(carModel: CarModelDto): Promise<void | any> {
+    return this.client.delete<void | any>(this.methods.deleteModel, {
+        params: {
+            carModelId: carModel.carModelId,
+            brand: carModel.brand,
+            model: carModel.model,
+            generation: carModel.generation
+        }
+    });
+}
 
   // PATCH /car/model/{id}
   updateModel(id: string, dto: CarModelDto): Promise<void> {
@@ -76,6 +83,16 @@ export class CarModelApi extends CustomClient<ICarModelApi> {
   getAllFilters(): Promise<FilterDataDto> {
     return this.client
       .get<FilterDataDto>(this.methods.getAllFilters)
+      .then((res) => res.data);
+  }
+
+  getCarModel(dto: CarModelDto): Promise<CarModelDto> {
+    return this.client
+      .request<CarModelDto>({
+        url: this.methods.getCarModel,
+        method: "GET",
+        data: dto,
+      })
       .then((res) => res.data);
   }
 }
