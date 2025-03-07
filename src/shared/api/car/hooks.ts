@@ -12,17 +12,16 @@ import { CarCreationDto, CarFilterDto, CarResponseDto, CarUpdateDto } from "./ty
 export const useAddCar = (): UseMutationResult<string, AxiosError, CarCreationDto> => {
   const queryClient = useQueryClient();
 
-  const mutationFn = async (carData: CarCreationDto) => {
-    const newCarId = await carApi.addCar(carData); 
-    return newCarId; // на бэке это UUID, в клиенте - string
-  };
-
   return useMutation({
-    mutationFn,
+    mutationFn: async (carData: CarCreationDto) => {
+      const newCarId = await carApi.addCar(carData);
+      return newCarId;
+    },
     onSuccess: (newCarId) => {
       console.log("Создана машина, ID =", newCarId);
-    //   todo invalidateQueries, чтобы список машин обновился:
-      queryClient.invalidateQueries(keys.lists());
+      queryClient.invalidateQueries("cars");  
+      queryClient.invalidateQueries(keys.detail(newCarId));  
+      queryClient.refetchQueries("cars");  
     },
   });
 };
@@ -72,16 +71,15 @@ export const useGetAllCars = (filterDto?: CarFilterDto, page = 0, size = 10, sor
 export const useUpdateCar = (): UseMutationResult<void, AxiosError, { id: string; data: CarUpdateDto }> => {
   const queryClient = useQueryClient();
 
-  const mutationFn = async ({ id, data }: { id: string; data: CarUpdateDto }) => {
-    await carApi.updateCar(id, data);
-  };
-
   return useMutation({
-    mutationFn,
+    mutationFn: async ({ id, data }: { id: string; data: CarUpdateDto }) => {
+      await carApi.updateCar(id, data);
+    },
     onSuccess: (_, variables) => {
       console.log(`Машина ${variables.id} обновлена`);
-      queryClient.invalidateQueries(keys.detail(variables.id));
-      // queryClient.invalidateQueries(carKeys.lists());
+      queryClient.invalidateQueries(keys.detail(variables.id));  
+      queryClient.invalidateQueries("cars");  
+      queryClient.refetchQueries("cars");  
     },
   });
 };
@@ -93,15 +91,15 @@ export const useUpdateCar = (): UseMutationResult<void, AxiosError, { id: string
 export const useDeleteCar = (): UseMutationResult<void, AxiosError, string> => {
   const queryClient = useQueryClient();
 
-  const mutationFn = async (carId: string) => {
-    await carApi.deleteCar(carId);
-  };
-
   return useMutation({
-    mutationFn,
+    mutationFn: async (carId: string) => {
+      await carApi.deleteCar(carId);
+    },
     onSuccess: (_, carId) => {
       console.log(`Машина удалена: ${carId}`);
-      queryClient.invalidateQueries(keys.lists());
+      queryClient.invalidateQueries(keys.detail(carId)); 
+      queryClient.invalidateQueries("cars"); 
+      queryClient.refetchQueries("cars"); 
     },
   });
 };

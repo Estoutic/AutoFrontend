@@ -1,11 +1,20 @@
-import { useMutation, useQuery, UseMutationResult, useQueryClient, UseQueryResult } from "react-query";
+import {
+  useMutation,
+  useQuery,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "react-query";
 import { AxiosError } from "axios";
 import { CarModelDto, FilterDataDto } from "./types";
 import { carModelApi } from "../client";
 import carModelKeys from "./carModelKeys";
 
-
-export const useCreateModel = (): UseMutationResult<string, AxiosError, CarModelDto> => {
+export const useCreateModel = (): UseMutationResult<
+  string,
+  AxiosError,
+  CarModelDto
+> => {
   const queryClient = useQueryClient();
 
   const mutationFn = async (dto: CarModelDto) => {
@@ -17,14 +26,18 @@ export const useCreateModel = (): UseMutationResult<string, AxiosError, CarModel
     mutationFn,
     onSuccess: (newId) => {
       console.log("CarModel создан, ID =", newId);
-     
+
       // queryClient.invalidateQueries(carModelKeys.lists());
     },
   });
 };
 
 /** Удаление модели (DELETE /car/model/{id}) */
-export const useDeleteModel = (): UseMutationResult<void, AxiosError, CarModelDto> => {
+export const useDeleteModel = (): UseMutationResult<
+  void,
+  AxiosError,
+  CarModelDto
+> => {
   const queryClient = useQueryClient();
 
   const mutationFn = async (carModel: CarModelDto) => {
@@ -41,7 +54,11 @@ export const useDeleteModel = (): UseMutationResult<void, AxiosError, CarModelDt
 };
 
 /** Обновление модели (PATCH /car/model/{id}) */
-export const useUpdateModel = (): UseMutationResult<void, AxiosError, { id: string; dto: CarModelDto }> => {
+export const useUpdateModel = (): UseMutationResult<
+  void,
+  AxiosError,
+  { id: string; dto: CarModelDto }
+> => {
   const queryClient = useQueryClient();
 
   const mutationFn = async ({ id, dto }) => {
@@ -78,14 +95,14 @@ export const useGetModels = (brand?: string) => {
   const queryKey = carModelKeys.list({ brand });
 
   const queryFn = () => {
-    if (!brand) return Promise.resolve([]); 
+    if (!brand) return Promise.resolve([]);
     return carModelApi.getModels(brand);
   };
 
   return useQuery<string[], AxiosError>({
     queryKey,
     queryFn,
-    enabled: !!brand, 
+    enabled: !!brand,
     refetchOnWindowFocus: false,
     onError: (err) => {
       console.log("Ошибка при получении списка моделей:", err);
@@ -113,23 +130,29 @@ export const useGetGenerations = (model?: string) => {
   });
 };
 
-export const useGetAllFilters = (): UseQueryResult<FilterDataDto, AxiosError> => {
-    return useQuery<FilterDataDto, AxiosError>({
-      queryKey: carModelKeys.allFilters(),
-      queryFn: () => carModelApi.getAllFilters(),
-      refetchOnWindowFocus: false,
-      onError: (err) => {
-        console.error("Ошибка при загрузке фильтров:", err);
-      },
-    });
-  };
+export const useGetAllFilters = (): UseQueryResult<
+  FilterDataDto,
+  AxiosError
+> => {
+  return useQuery<FilterDataDto, AxiosError>({
+    queryKey: carModelKeys.allFilters(),
+    queryFn: () => carModelApi.getAllFilters(),
+    keepPreviousData: false,
+    refetchOnWindowFocus: false,
+    onError: (err) => {
+      console.error("Ошибка при загрузке фильтров:", err);
+    },
+  });
+};
 
-  export const useGetCarModel = (dto: CarModelDto): UseQueryResult<CarModelDto, AxiosError> => {
-    return useQuery<CarModelDto, AxiosError>(
-      ["carModel", "detail", dto],
-      () => carModelApi.getCarModel(dto),
-      {
-        enabled: !!dto.brand && !!dto.model && !!dto.generation,  
-      }
-    );
-  };
+export const useGetCarModel = (
+  dto: CarModelDto,
+): UseQueryResult<CarModelDto, AxiosError> => {
+  return useQuery<CarModelDto, AxiosError>(
+    ["carModel", "detail", dto],
+    () => carModelApi.getCarModel(dto),
+    {
+      enabled: !!dto.brand && !!dto.model && !!dto.generation,
+    },
+  );
+};

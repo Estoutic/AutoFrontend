@@ -12,7 +12,8 @@
     "experimentalDecorators": true,
     "target": "es5",
     "jsx": "react",
-    "lib": ["es5", "es6", "dom"],
+    "lib": ["es5", "es6", "es2019", "dom"],
+    
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,

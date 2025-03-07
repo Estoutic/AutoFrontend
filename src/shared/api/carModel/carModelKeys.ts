@@ -4,7 +4,7 @@ const carModelKeys = {
     list: (params?: unknown) => [...carModelKeys.lists(), { params }] as const,
     details: () => [...carModelKeys.all(), "detail"] as const,
     detail: (id: string) => [...carModelKeys.details(), id] as const,
-    allFilters: () => ['carModel', 'allFilters'],
+    allFilters: () => ['allFilters']
   };
   
   export default carModelKeys;

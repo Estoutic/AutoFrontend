@@ -1,24 +1,15 @@
-// src/pages/AdminCarModelsPage/AdminCarModelsPage.tsx
-
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { carModelApi } from "@/shared/api/client";  
 import {
   useCreateModel,
   useDeleteModel,
   useUpdateModel,
-  useGetAllFilters,  
+  useGetAllFilters,
+  useGetCarModel,
 } from "@/shared/api/carModel/hooks";
 import { CarModelDto } from "@/shared/api/car/types";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import styles from "./AdminCarModelsPage.module.scss";
-
-interface CarModelRow {
-  brand: string;
-  model: string;
-  generation: string;
-//   id?: string;
-}
 
 export const AdminCarModelsPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -28,21 +19,28 @@ export const AdminCarModelsPage: React.FC = () => {
   const [filterBrand, setFilterBrand] = useState<string>("");
   const [filterModel, setFilterModel] = useState<string>("");
 
-  const [carModels, setCarModels] = useState<CarModelRow[]>([]);
-  const [selectedModel, setSelectedModel] = useState<CarModelRow>();
+  const [carModels, setCarModels] = useState<CarModelDto[]>([]);
+  const [selectedModel, setSelectedModel] = useState<CarModelDto>();
+
+  const {
+    data: currentModel,
+    isLoading,
+    isError,
+  } = useGetCarModel(selectedModel ? selectedModel : {});
 
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [createForm, setCreateForm] = useState<boolean>(true);
+
   const [newBrand, setNewBrand] = useState<string>("");
   const [newModel, setNewModel] = useState<string>("");
   const [newGeneration, setNewGeneration] = useState<string>("");
 
   const loadAllCarModels = () => {
     if (!filterData) return;
-    const result: CarModelRow[] = [];
+    const result: CarModelDto[] = [];
     filterData.brands.forEach((b) => {
       (filterData.models[b] || []).forEach((m) => {
         (filterData.generations[m] || [""]).forEach((g) => {
-        //   const id = `${b}-${m}-${g}`.trim();
           result.push({ brand: b, model: m, generation: g });
         });
       });
@@ -72,6 +70,10 @@ export const AdminCarModelsPage: React.FC = () => {
   const { mutate: updateModel } = useUpdateModel();
 
   const handleCreateModel = () => {
+    if (!newBrand.trim() || !newModel.trim() || !newGeneration.trim()) {
+      alert("Пожалуйста, заполните все поля");
+      return;
+    }
     const dto: CarModelDto = {
       brand: newBrand,
       model: newModel,
@@ -80,7 +82,8 @@ export const AdminCarModelsPage: React.FC = () => {
     createModel(dto, {
       onSuccess: () => {
         console.log("Модель успешно создана!");
-        loadAllCarModels();
+        queryClient.invalidateQueries("allFilters");
+        queryClient.refetchQueries("allFilters");
         setNewBrand("");
         setNewModel("");
         setNewGeneration("");
@@ -92,16 +95,61 @@ export const AdminCarModelsPage: React.FC = () => {
     });
   };
 
+  const handleEditModel = () => {
+    if (!selectedModel) {
+      alert("Сначала выберите модель");
+      return;
+    }
+
+    if (isLoading) {
+      console.log("Загрузка данных...");
+      return;
+    }
+
+    if (isError || !currentModel) {
+      console.error("Ошибка загрузки модели!");
+      return;
+    }
+
+    const dto: CarModelDto = {
+      brand: newBrand != "" ? newBrand : currentModel.brand,
+      model: newModel != "" ? newModel : currentModel.model,
+      generation: newGeneration != "" ? newGeneration : currentModel.generation,
+    };
+
+    console.log("Текущая модель:", currentModel);
+    if (currentModel.carModelId) {
+      updateModel(
+        { id: currentModel.carModelId, dto: dto },
+        {
+          onSuccess: () => {
+            console.log("Модель успешно обновлена!");
+            queryClient.invalidateQueries("allFilters");
+            queryClient.refetchQueries("allFilters");
+            setNewBrand("");
+            setNewModel("");
+            setNewGeneration("");
+            setShowForm(false);
+          },
+          onError: (err) => {
+            console.error("Ошибка при создании модели:", err);
+          },
+        },
+      );
+    }
+  };
+
   const handleDeleteModel = () => {
     if (!selectedModel) {
       alert("Сначала выберите модель");
       return;
     }
-   
+
     deleteModel(selectedModel, {
       onSuccess: () => {
         console.log("Модель удалена:", selectedModel);
-        loadAllCarModels();
+        queryClient.invalidateQueries("allFilters");
+        queryClient.refetchQueries("allFilters");
         setSelectedModel(undefined);
       },
       onError: (err) => {
@@ -114,16 +162,23 @@ export const AdminCarModelsPage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Список моделей автомобиля</h2>
-        <button className={styles.addButton} onClick={() => setShowForm(true)}>
+        <button
+          className={styles.addButton}
+          onClick={() => {
+            setShowForm(true);
+            setCreateForm(true);
+          }}
+        >
           Добавить
         </button>
       </div>
 
-      {/* Фильтры: используем данные из filterData */}
       <div className={styles.filterContainer}>
         <Dropdown
           options={
-            filterData ? filterData.brands.map((b) => ({ value: b, labelKey: b })) : []
+            filterData
+              ? filterData.brands.map((b) => ({ value: b, labelKey: b }))
+              : []
           }
           value={filterBrand}
           onChange={(value) => {
@@ -160,7 +215,7 @@ export const AdminCarModelsPage: React.FC = () => {
         </thead>
         <tbody>
           {filteredModels.map((item, idx) => (
-            <tr key={item.id || `${item.brand}-${item.model}-${idx}`}>
+            <tr key={`${item.brand} ${item.model} ${item.generation}`}>
               <td>
                 <div className={styles.brandContainer}>
                   {item.brand}
@@ -181,18 +236,28 @@ export const AdminCarModelsPage: React.FC = () => {
         </tbody>
       </table>
       <div className={styles.actionButtons}>
-        <button className={styles.editButton} disabled={!selectedModel}>
+        <button
+          className={styles.editButton}
+          disabled={!selectedModel}
+          onClick={() => {
+            setShowForm(true);
+            setCreateForm(false);
+          }}
+        >
           Изменить
         </button>
-        <button className={styles.deleteButton} disabled={!selectedModel} onClick={handleDeleteModel}>
+        <button
+          className={styles.deleteButton}
+          disabled={!selectedModel}
+          onClick={handleDeleteModel}
+        >
           Удалить
         </button>
       </div>
 
-      {/* Форма добавления модели */}
       {showForm && (
         <div className={styles.formContainer}>
-          <h3>Добавить модель</h3>
+          {createForm ? <h3>Добавить модель</h3> : <h3>Обновить модель</h3>}
           <div className={styles.formGroup}>
             <input
               type="text"
@@ -218,7 +283,11 @@ export const AdminCarModelsPage: React.FC = () => {
             />
           </div>
           <div className={styles.formActions}>
-            <button onClick={handleCreateModel}>Создать</button>
+            {createForm ? (
+              <button onClick={handleCreateModel}>Создать</button>
+            ) : (
+              <button onClick={handleEditModel}>Обновить</button>
+            )}
             <button onClick={() => setShowForm(false)}>Отмена</button>
           </div>
         </div>

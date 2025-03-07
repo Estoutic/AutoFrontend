@@ -3,6 +3,7 @@ import CustomClient from "../CustomApiClient";
 import { CarModelDto } from "../../car/types";
 import { FilterDataDto } from "../../carModel/types";
 import { an } from "react-router/dist/development/route-data-Cq_b5feC";
+import { D } from "react-router/dist/development/fog-of-war-CCAcUMgB";
 
 export interface ICarModelApi {
   createModel: string;
@@ -25,7 +26,7 @@ export class CarModelApi extends CustomClient<ICarModelApi> {
       getModels: "/car/model/models",
       getGenerations: "/car/model/generations",
       getAllFilters: "/car/model/allFilters",
-      getCarModel: "/car/model",
+      getCarModel: "/car/model/info",
     });
   }
 
@@ -39,14 +40,14 @@ export class CarModelApi extends CustomClient<ICarModelApi> {
   // DELETE /car/model
   deleteModel(carModel: CarModelDto): Promise<void | any> {
     return this.client.delete<void | any>(this.methods.deleteModel, {
-        params: {
-            carModelId: carModel.carModelId,
-            brand: carModel.brand,
-            model: carModel.model,
-            generation: carModel.generation
-        }
+      params: {
+        carModelId: carModel.carModelId,
+        brand: carModel.brand,
+        model: carModel.model,
+        generation: carModel.generation,
+      },
     });
-}
+  }
 
   // PATCH /car/model/{id}
   updateModel(id: string, dto: CarModelDto): Promise<void> {
@@ -88,11 +89,7 @@ export class CarModelApi extends CustomClient<ICarModelApi> {
 
   getCarModel(dto: CarModelDto): Promise<CarModelDto> {
     return this.client
-      .request<CarModelDto>({
-        url: this.methods.getCarModel,
-        method: "GET",
-        data: dto,
-      })
+      .post<CarModelDto>(this.methods.getCarModel, dto)
       .then((res) => res.data);
   }
 }
