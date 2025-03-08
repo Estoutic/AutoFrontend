@@ -24,7 +24,7 @@ export const AdminHeader = () => {
           <Link to="/admin/users">Локализация</Link>
           <Link to="/admin/warehouse">Автомобили</Link>
           <Link to="/admin/models">Модели автомобилей</Link>
-          <Link to="/admin/warehouse">Сотрудники</Link>
+          <Link to="/admin/users">Сотрудники</Link>
         </nav>
 
         <div className={styles.hamburgerWrapper}>
@@ -54,7 +54,7 @@ export const AdminHeader = () => {
             <Link to="/admin/models" onClick={closeMenu}>
               Модели автомобилей
             </Link>
-            <Link to="/admin/warehouse" onClick={closeMenu}>
+            <Link to="/admin/users" onClick={closeMenu}>
               Сотрудники
             </Link>
           </nav>

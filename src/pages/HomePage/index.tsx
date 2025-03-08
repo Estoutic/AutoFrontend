@@ -14,7 +14,7 @@ export const HomePage = () => {
     <main className={styles.home}>
       <Hero />
       {/* <CarCard image={carImage} name="BMW X3" price="9 000 000 руб." /> */}
-      <CarSlider cars={[]} />
+      <CarSlider />
       <CarCatalog></CarCatalog>
       <Calculator></Calculator>
     </main>

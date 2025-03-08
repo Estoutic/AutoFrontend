@@ -32,7 +32,6 @@ const CarDetailCard: React.FC<CarCardProps> = ({
       <div className={styles.imageWrapper}>
         <img
           src={images[currentIndex]}
-          alt={car.name}
           className={styles.mainImage}
         />
 
@@ -56,7 +55,7 @@ const CarDetailCard: React.FC<CarCardProps> = ({
       </div>
 
       <div className={styles.infoWrapper}>
-        <h3 className={styles.title}>{car.name || t("carDetail.untitled")}</h3>
+        {/* <h3 className={styles.title}>{car. || t("carDetail.untitled")}</h3> */}
         <div className={styles.details}>
           {car.engineCapacity} {t("carDetail.liter")} / {car.mileage}{" "}
           {t("carDetail.kilometer")} / {car.enginePower}{" "}

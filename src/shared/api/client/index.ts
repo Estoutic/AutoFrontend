@@ -1,3 +1,4 @@
+import { AdminApi } from "./admin/AdminApi";
 import createHttpClient from "./apiClient";
 import { ApplicationApi } from "./application/ApplicationApi";
 import { CarApi } from "./car/CarApi";
@@ -15,5 +16,8 @@ export const carModelApi = new CarModelApi(httpClient);
 export const applicationApi = new ApplicationApi(httpClient);
 
 export const userApi = new UserApi(httpClient);
+
+export const adminApi = new AdminApi(httpClient);
+
 
 export { default as CustomApiClient } from './CustomApiClient'
