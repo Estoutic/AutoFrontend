@@ -14,4 +14,5 @@ export interface RefreshTokenDto {
     email: string;
     password: string;
     roles?: string[]; 
+    isActive?: boolean;
   }

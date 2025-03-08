@@ -24,12 +24,14 @@ export const router = createBrowserRouter([
       //   { path: "/admin", element: <AdminPage /> },
     ],
   },
+  { path: "/admin/login", element: <AdminLoginPage /> },
   {
+    
     path: "/admin",
     element: <AdminLayout />,
     children: [
       // { path: "/admin", element: <AdminPage /> },
-      { path: "/admin/login", element: <AdminLoginPage /> },
+
       {
         path: "/admin/models",
         element: <AdminCarModelsPage />,

@@ -118,3 +118,68 @@
     }
   }
 }
+
+.customCheckbox {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border: 2px solid #d9d9d9;
+    border-radius: 5px;
+    transition:
+      background-color 0.3s,
+      border-color 0.3s;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+  }
+
+  input:checked ~ .checkmark {
+    background-color: black;
+    border-color: transparent;
+  }
+
+  .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  input:checked ~ .checkmark::after {
+    display: block;
+  }
+
+  .checkmark::after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}
+
+.emailContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: vars.$mobile-width) {
+  .container {
+    padding: 0 5%;
+  }
+}

@@ -1,82 +1,76 @@
 import React, { useState } from "react";
-import { useGetAllUsers, useDeactivateUser, useCreateUser } from "../../shared/api/admin/hooks";
 import { UserDto } from "@/shared/api/auth/types";
 import styles from "./AdminUsersPage.module.scss";
+import {
+  haveSuperAdminRights,
+  haveAdminRights,
+  haveManagerRights,
+} from "@/utils/authUtils";
+import {
+  useCreateUser,
+  useDeactivateUser,
+  useGetAllUsers,
+} from "@/shared/api/admin/hooks";
 
-// Функции для декодирования JWT (описаны выше)
-function parseJwt(token: string): any {
-  try {
-    const base64Payload = token.split(".")[1];
-    const payload = atob(base64Payload);
-    return JSON.parse(payload);
-  } catch (e) {
-    console.error("Ошибка декодирования JWT:", e);
-    return null;
-  }
-}
-
-function getUserRoles(): string[] {
-  const token = localStorage.getItem("accessToken");
-  if (!token) return [];
-  const decoded = parseJwt(token);
-  if (!decoded || !decoded.roles) return [];
-  return decoded.roles.split(",");
-}
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const AdminUsersPage: React.FC = () => {
-  // Получаем роли текущего пользователя
-  const roles = getUserRoles();
-  const canCreate = roles.includes("SUPERADMIN");
-  const canDeactivate = roles.includes("ADMIN") || roles.includes("SUPERADMIN");
-  const canView = roles.includes("MANAGER") || roles.includes("ADMIN") || roles.includes("SUPERADMIN");
+  const canCreate = haveSuperAdminRights();
+  const canDeactivate = haveAdminRights();
+  const canView = haveManagerRights();
 
-  // Если пользователь вообще не имеет роли (MANAGER, ADMIN, SUPERADMIN), 
-  // то он не может просматривать страницу
-  // Можно сделать редирект или отображение сообщения
   if (!canView) {
     return <div>У вас нет прав для просмотра этой страницы</div>;
   }
 
-  // Хуки
   const { data: users, isLoading, error } = useGetAllUsers();
-  const { mutate: deactivateUser } = useDeactivateUser();
+
+  const filteredUsers = users?.filter((user) => user.isActive);
+
   const { mutate: createUser } = useCreateUser();
+  const { mutate: deactivateUser } = useDeactivateUser();
 
-  // Состояние выбранного пользователя
   const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
-
-  // Состояние формы для создания пользователя
   const [showForm, setShowForm] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [newRole, setNewRole] = useState("ADMIN"); // роль по умолчанию
+  const [newRole, setNewRole] = useState("ADMIN");
 
-  // Обработчик создания пользователя (только SUPERADMIN)
+  const [emailError, setEmailError] = useState("");
+  const [backendError, setBackendError] = useState("");
+
   const handleCreateUser = () => {
+    setEmailError("");
+    setBackendError("");
+
     if (!newEmail.trim() || !newPassword.trim()) {
-      alert("Введите Email и Password!");
+      setBackendError("Введите Email и Password!");
+      return;
+    }
+    if (!emailRegex.test(newEmail)) {
+      setEmailError("Введите корректный Email");
       return;
     }
     const userDto: UserDto = {
       email: newEmail,
       password: newPassword,
-      roles: [newRole], // массив ролей
+      roles: [newRole],
     };
     createUser(userDto, {
       onSuccess: (id) => {
-        console.log("Пользователь создан:", id);
+        console.log("Пользователь создан, ID =", id);
         setNewEmail("");
         setNewPassword("");
         setNewRole("ADMIN");
         setShowForm(false);
       },
-      onError: (err) => {
+      onError: (err: any) => {
         console.error("Ошибка создания пользователя:", err);
+        setBackendError("Ошибка при создании пользователя " + err.response.data.message);
       },
     });
   };
 
-  // Обработчик деактивации (ADMIN и SUPERADMIN)
   const handleDeactivateUser = () => {
     if (!selectedUser) {
       alert("Сначала выберите пользователя");
@@ -92,7 +86,7 @@ export const AdminUsersPage: React.FC = () => {
         setSelectedUser(null);
       },
       onError: (err) => {
-        console.error("Ошибка при деактивации:", err);
+        console.error("Ошибка при деактивации пользователя:", err);
       },
     });
   };
@@ -106,28 +100,30 @@ export const AdminUsersPage: React.FC = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-           
             <th>Email</th>
             <th>Roles</th>
           </tr>
         </thead>
         <tbody>
-          {users?.map((user) => (
+          {filteredUsers?.map((user) => (
             <tr key={user.id}>
               <td>
-                <input
-                  type="checkbox"
-                  checked={selectedUser?.id === user.id}
-                  onChange={() => {
-                    if (selectedUser?.id === user.id) {
-                      setSelectedUser(null);
-                    } else {
-                      setSelectedUser(user);
-                    }
-                  }}
-                />
+                <div className={styles.emailContainer}>
+                  {user.email}
+                  <label className={styles.customCheckbox}>
+                    <input
+                      type="checkbox"
+                      checked={selectedUser?.id === user.id}
+                      onChange={() =>
+                        setSelectedUser(
+                          selectedUser?.id === user.id ? null : user,
+                        )
+                      }
+                    />
+                    <span className={styles.checkmark}></span>
+                  </label>
+                </div>
               </td>
-              <td> {user.email}</td>
               <td>{user.roles?.join(", ")}</td>
             </tr>
           ))}
@@ -135,20 +131,20 @@ export const AdminUsersPage: React.FC = () => {
       </table>
 
       <div className={styles.actionButtons}>
-        <button
-          disabled={!canDeactivate || !selectedUser}
-          onClick={handleDeactivateUser}
-        >
-          Деактивировать
-        </button>
-        <button
-          disabled={!canDeactivate || !selectedUser}
-          onClick={handleDeactivateUser}
-        >
-          Удалить
-        </button>
+        {canDeactivate && (
+          <button
+            className={styles.deactivateButton}
+            disabled={!selectedUser}
+            onClick={handleDeactivateUser}
+          >
+            Деактивировать
+          </button>
+        )}
         {canCreate && (
-          <button onClick={() => setShowForm(true)}>
+          <button
+            className={styles.addButton}
+            onClick={() => setShowForm(true)}
+          >
             Добавить
           </button>
         )}
@@ -164,6 +160,9 @@ export const AdminUsersPage: React.FC = () => {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
             />
+            {emailError && (
+              <span className={styles.errorMessage}>{emailError}</span>
+            )}
           </div>
           <div className={styles.formGroup}>
             <input
@@ -180,9 +179,11 @@ export const AdminUsersPage: React.FC = () => {
             >
               <option value="ADMIN">ADMIN</option>
               <option value="MANAGER">MANAGER</option>
-              <option value="SUPERADMIN">SUPERADMIN</option>
             </select>
           </div>
+          {backendError && (
+            <div className={styles.errorMessage}>{backendError}</div>
+          )}
           <div className={styles.formActions}>
             <button onClick={handleCreateUser}>Создать</button>
             <button onClick={() => setShowForm(false)}>Отмена</button>

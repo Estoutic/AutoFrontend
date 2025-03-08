@@ -11,6 +11,13 @@
   margin-top: 50px;
 }
 
+.deleteButton{
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 .customCheckbox {
     position: relative;
     display: inline-block;
