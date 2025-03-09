@@ -1,22 +1,24 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "./CarDetailCard.module.scss";
+import styles from "./AdminCarCard.module.scss";
 import { CarResponseDto } from "@/shared/api/car/types";
 import Button from "@/shared/ui/Button/Button";
 import bmwFallback from "@/assets/bmw.png";
 
-interface CarCardProps {
+interface AdminCarCardProps {
   car: CarResponseDto;
-  onSubmit?: () => void;
-  hideSubmitButton?: boolean;
+  onEdit?: (car: CarResponseDto) => void;
+  onManageTranslations?: (car: CarResponseDto) => void;
+  onManagePhotos?: (car: CarResponseDto) => void;
+  onDelete?: (car: CarResponseDto) => void;
 }
 
-const CarDetailCard: React.FC<CarCardProps> = ({
+const AdminCarCard: React.FC<AdminCarCardProps> = ({
   car,
-  onSubmit,
-  hideSubmitButton = false,
+  onEdit,
+  onManageTranslations,
+  onManagePhotos,
+  onDelete,
 }) => {
-  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = car.images?.length ? car.images : [bmwFallback];
@@ -30,10 +32,7 @@ const CarDetailCard: React.FC<CarCardProps> = ({
   return (
     <div className={styles.carCard}>
       <div className={styles.imageWrapper}>
-        <img
-          src={images[currentIndex]}
-          className={styles.mainImage}
-        />
+        <img src={images[currentIndex]} className={styles.mainImage} alt="Car" />
 
         <div className={styles.hoverZones}>
           {displayedImages.map((_, index) => (
@@ -55,20 +54,36 @@ const CarDetailCard: React.FC<CarCardProps> = ({
       </div>
 
       <div className={styles.infoWrapper}>
-        <h3 className={styles.title}>{car.name}</h3>
+
+      <h3 className={styles.title}>{car.name}</h3>
+
         <div className={styles.details}>
-          {car.engineCapacity} {t("carDetail.liter")} / {car.mileage}{" "}
-          {t("carDetail.kilometer")} / {car.enginePower}{" "}
-          {t("carDetail.horsepower")} / {car.engineType}
+          {car.engineCapacity} л / {car.mileage} км / {car.enginePower} л.с. /{" "}
+          {car.engineType}
         </div>
+
         <div className={styles.price}>
-          {car.price ? car.price.toLocaleString("ru-RU") : 0}{" "}
-          {t("carDetail.currency")}
+          {car.price ? car.price.toLocaleString("ru-RU") : 0} руб.
         </div>
 
         <div className={styles.actions}>
-          {!hideSubmitButton && (
-            <Button onClick={onSubmit}>{t("carDetail.submitButton")}</Button>
+          {onEdit && (
+            <Button onClick={() => onEdit(car)}>Редактировать</Button>
+          )}
+          {onManageTranslations && (
+            <Button onClick={() => onManageTranslations(car)}>
+              Переводы
+            </Button>
+          )}
+          {onManagePhotos && (
+            <Button onClick={() => onManagePhotos(car)}>
+              Фотографии
+            </Button>
+          )}
+          {onDelete && (
+            <Button variant="secondary" onClick={() => onDelete(car)}>
+              Удалить
+            </Button>
           )}
         </div>
       </div>
@@ -76,4 +91,4 @@ const CarDetailCard: React.FC<CarCardProps> = ({
   );
 };
 
-export default CarDetailCard;
+export default AdminCarCard;

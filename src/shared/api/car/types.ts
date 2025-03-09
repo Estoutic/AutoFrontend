@@ -50,6 +50,7 @@ export interface CarResponseDto {
   id: string;
   carModelId?: string;
   city: string;
+  name?: string;
   year?: number;
   description?: string;
   color?: string;

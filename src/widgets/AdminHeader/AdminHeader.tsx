@@ -22,7 +22,7 @@ export const AdminHeader = () => {
           <Link to="/admin/applications">Заявки</Link>
           <Link to="/admin/reports">Отчёты</Link>
           <Link to="/admin/users">Локализация</Link>
-          <Link to="/admin/warehouse">Автомобили</Link>
+          <Link to="/admin/cars">Автомобили</Link>
           <Link to="/admin/models">Модели автомобилей</Link>
           <Link to="/admin/users">Сотрудники</Link>
         </nav>
@@ -48,7 +48,7 @@ export const AdminHeader = () => {
             <Link to="/admin/users" onClick={closeMenu}>
               Локализация
             </Link>
-            <Link to="/admin/warehouse" onClick={closeMenu}>
+            <Link to="/admin/cars" onClick={closeMenu}>
               Автомобили
             </Link>
             <Link to="/admin/models" onClick={closeMenu}>

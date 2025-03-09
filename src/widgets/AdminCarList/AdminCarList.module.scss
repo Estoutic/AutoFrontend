@@ -1,0 +1,22 @@
+@use "@/styles/_variables.scss" as vars;
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    gap: 15px;
+  }
+  
+  .cardList {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+  
+    @media (max-width: vars.$ipad-width) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    @media (max-width: vars.$mobile-width) {
+      grid-template-columns: 1fr;
+    }
+  }

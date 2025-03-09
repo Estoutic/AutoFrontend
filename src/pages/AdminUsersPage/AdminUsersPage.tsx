@@ -25,7 +25,9 @@ export const AdminUsersPage: React.FC = () => {
 
   const { data: users, isLoading, error } = useGetAllUsers();
 
-  const filteredUsers = users?.filter((user) => user.isActive);
+  const filteredUsers = users?.filter(function (user) {
+    return !user.roles?.includes("SUPERADMIN") && user.isActive;
+  });
 
   const { mutate: createUser } = useCreateUser();
   const { mutate: deactivateUser } = useDeactivateUser();
@@ -66,7 +68,9 @@ export const AdminUsersPage: React.FC = () => {
       },
       onError: (err: any) => {
         console.error("Ошибка создания пользователя:", err);
-        setBackendError("Ошибка при создании пользователя " + err.response.data.message);
+        setBackendError(
+          "Ошибка при создании пользователя" + err.response.data.message,
+        );
       },
     });
   };
