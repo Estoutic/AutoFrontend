@@ -222,44 +222,50 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
         <div className={styles.modalBody}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            <div className={styles.fieldGroup}>
-              <label>Марка*</label>
-              {renderDropdown(
-                "brand",
-                brandOptions ? brandOptions : [],
-                false,
-                "Марка",
-              )}
-              {errors.carModelDto?.brand && (
-                <span className={styles.error}>Марка обязательна</span>
-              )}
-            </div>
+            {mode === "create" ? (
+              <>
+                <div className={styles.fieldGroup}>
+                  <label>Марка*</label>
+                  {renderDropdown(
+                    "brand",
+                    brandOptions ? brandOptions : [],
+                    false,
+                    "Марка",
+                  )}
+                  {errors.carModelDto?.brand && (
+                    <span className={styles.error}>Марка обязательна</span>
+                  )}
+                </div>
 
-            <div className={styles.fieldGroup}>
-              <label>Модель*</label>
-              {renderDropdown(
-                "model",
-                modelOptions,
-                isLoading || !filter.brand,
-                "Модель",
-              )}
-              {errors.carModelDto?.model && (
-                <span className={styles.error}>Модель обязательна</span>
-              )}
-            </div>
+                <div className={styles.fieldGroup}>
+                  <label>Модель*</label>
+                  {renderDropdown(
+                    "model",
+                    modelOptions,
+                    isLoading || !filter.brand,
+                    "Модель",
+                  )}
+                  {errors.carModelDto?.model && (
+                    <span className={styles.error}>Модель обязательна</span>
+                  )}
+                </div>
 
-            <div className={styles.fieldGroup}>
-              <label>Поколение*</label>
-              {renderDropdown(
-                "generation",
-                generationOptions,
-                isLoading || !filter.model,
-                "Поколение",
-              )}
-              {errors.carModelDto?.generation && (
-                <span className={styles.error}>Поколение обязательно</span>
-              )}
-            </div>
+                <div className={styles.fieldGroup}>
+                  <label>Поколение*</label>
+                  {renderDropdown(
+                    "generation",
+                    generationOptions,
+                    isLoading || !filter.model,
+                    "Поколение",
+                  )}
+                  {errors.carModelDto?.generation && (
+                    <span className={styles.error}>Поколение обязательно</span>
+                  )}
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
 
             <div className={styles.fieldGroup}>
               <label>Год</label>

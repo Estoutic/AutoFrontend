@@ -1,13 +1,17 @@
 import React from "react";
 import styles from "./CarCard.module.scss";
+import bmwFallback from "@/assets/bmw.png";
 
 interface CarCardProps {
-  image: string;
+  images: string[];
   name: string;
   price: number;
 }
 
-const CarCard = ({ image, name, price }: CarCardProps) => {
+const CarCard = ({ images, name, price }: CarCardProps) => {
+
+  const image = images.length ? images[0] : bmwFallback;
+
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>

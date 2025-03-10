@@ -14,6 +14,7 @@ const CarList: React.FC<CarListProps> = ({ cars }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCar, setSelectedCar] = useState<CarResponseDto | null>(null);
 
+  const filtredCars = cars.filter((car) => car.isAvailable)
   const handleOpenModal = (car: CarResponseDto) => {
     setSelectedCar(car);
     setShowModal(true);
@@ -31,9 +32,9 @@ const CarList: React.FC<CarListProps> = ({ cars }) => {
 
   return (
     <div className={styles.listContainer}>
-      <h2>{t("carList.foundCars", { count: cars.length })}</h2>
+      <h2>{t("carList.foundCars", { count: filtredCars.length })}</h2>
       <div className={styles.cardList}>
-        {cars.map((car) => (
+        {filtredCars.map((car) => (
           <CarDetailCard key={car.id} car={car}  onSubmit={() => handleOpenModal(car)} />
         ))}
       </div>
