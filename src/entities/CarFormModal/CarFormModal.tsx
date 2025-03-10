@@ -1,6 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CarCreationDto, CarResponseDto } from "@/shared/api/car/types";
+import {
+  CarCreationDto,
+  CarFilterDto,
+  CarResponseDto,
+} from "@/shared/api/car/types";
 import Button from "@/shared/ui/Button/Button";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import styles from "./CarFormModal.module.scss";
@@ -9,6 +13,8 @@ import { BodyType } from "@/shared/constants/enums/BodyType";
 import { EngineType } from "@/shared/constants/enums/EngineType";
 import { SteeringPosition } from "@/shared/constants/enums/SteeringPosition";
 import { DriveType } from "@/shared/constants/enums/ DriveType";
+import { useGetAllFilters } from "@/shared/api/carModel/hooks";
+import { f } from "react-router/dist/development/fog-of-war-CCAcUMgB";
 
 interface CarFormModalProps {
   isOpen: boolean;
@@ -36,7 +42,61 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
     formState: { errors },
   } = useForm<CarCreationDto>();
 
-  // Преобразуем enum в массив опций { value, labelKey }
+  const [filter, setFilter] = useState<CarFilterDto>({});
+  const { data: filterData, isLoading } = useGetAllFilters();
+
+  const updateFilter = (field: keyof CarFilterDto, value: string) => {
+    if (field === "brand") {
+      setFilter({
+        ...filter,
+        brand: value,
+        model: "",
+        generation: "",
+      });
+    } else if (field === "model") {
+      setFilter({ ...filter, model: value, generation: "" });
+    } else {
+      setFilter({ ...filter, generation: value });
+    }
+  };
+
+  const renderDropdown = (
+    field: "brand" | "model" | "generation",
+    options: { value: string; labelKey: string }[],
+    disabled: boolean,
+    placeholder: string,
+  ) => {
+    return (
+      <div className={styles.inputContainer}>
+        <Dropdown
+          options={options}
+          value={filter[field] || ""}
+          onChange={(val) => updateFilter(field, val)}
+          placeholder={placeholder}
+          disabled={disabled}
+        />
+      </div>
+    );
+  };
+
+  const brandOptions = filter
+    ? filterData?.brands.map((brand) => ({ value: brand, labelKey: brand }))
+    : [];
+  const modelOptions =
+    filterData && filter.brand
+      ? filterData.models[filter.brand]?.map((model) => ({
+          value: model,
+          labelKey: model,
+        })) || []
+      : [];
+  const generationOptions =
+    filterData && filter.model
+      ? filterData.generations[filter.model]?.map((gen) => ({
+          value: gen,
+          labelKey: gen,
+        })) || []
+      : [];
+
   const transmissionOptions = Object.values(TransmissionType).map((val) => ({
     value: val,
     labelKey: val,
@@ -91,7 +151,6 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
               : undefined,
           seatsCount: car.seatsCount,
           price: car.price,
-
         });
       } else {
         reset({
@@ -118,14 +177,21 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
   const onSubmit: SubmitHandler<CarCreationDto> = (data) => {
     if (
-      !data.carModelDto?.brand?.trim() ||
-      !data.carModelDto?.model?.trim() ||
-      !data.carModelDto?.generation?.trim()
+      !filter.brand?.trim() ||
+      !filter.model?.trim() ||
+      !filter.generation?.trim()
     ) {
-      alert("Пожалуйста, заполните обязательные поля: Марка, Модель и Поколение");
+      alert(
+        "Пожалуйста, заполните обязательные поля: Марка, Модель и Поколение",
+      );
       return;
     }
     if (mode === "create") {
+      data.carModelDto = {
+        brand: filter.brand,
+        model: filter.model,
+        generation: filter.generation,
+      };
       onCreateCar(data);
     } else if (mode === "edit" && car?.id) {
       onUpdateCar(car.id, data);
@@ -144,7 +210,11 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h3>{mode === "create" ? "Создать автомобиль" : "Редактировать автомобиль"}</h3>
+          <h3>
+            {mode === "create"
+              ? "Создать автомобиль"
+              : "Редактировать автомобиль"}
+          </h3>
           <button className={styles.closeButton} onClick={onClose}>
             &times;
           </button>
@@ -154,11 +224,12 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <div className={styles.fieldGroup}>
               <label>Марка*</label>
-              <input
-                type="text"
-                placeholder="Марка"
-                {...register("carModelDto.brand", { required: true })}
-              />
+              {renderDropdown(
+                "brand",
+                brandOptions ? brandOptions : [],
+                false,
+                "Марка",
+              )}
               {errors.carModelDto?.brand && (
                 <span className={styles.error}>Марка обязательна</span>
               )}
@@ -166,11 +237,12 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Модель*</label>
-              <input
-                type="text"
-                placeholder="Модель"
-                {...register("carModelDto.model", { required: true })}
-              />
+              {renderDropdown(
+                "model",
+                modelOptions,
+                isLoading || !filter.brand,
+                "Модель",
+              )}
               {errors.carModelDto?.model && (
                 <span className={styles.error}>Модель обязательна</span>
               )}
@@ -178,11 +250,12 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Поколение*</label>
-              <input
-                type="text"
-                placeholder="Поколение"
-                {...register("carModelDto.generation", { required: true })}
-              />
+              {renderDropdown(
+                "generation",
+                generationOptions,
+                isLoading || !filter.model,
+                "Поколение",
+              )}
               {errors.carModelDto?.generation && (
                 <span className={styles.error}>Поколение обязательно</span>
               )}
@@ -195,7 +268,11 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Описание</label>
-              <input type="text" placeholder="Описание" {...register("description")} />
+              <input
+                type="text"
+                placeholder="Описание"
+                {...register("description")}
+              />
             </div>
 
             <div className={styles.fieldGroup}>
@@ -205,12 +282,20 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Пробег</label>
-              <input type="number" placeholder="Пробег" {...register("mileage")} />
+              <input
+                type="number"
+                placeholder="Пробег"
+                {...register("mileage")}
+              />
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Владельцев</label>
-              <input type="number" placeholder="Владельцев" {...register("ownersCount")} />
+              <input
+                type="number"
+                placeholder="Владельцев"
+                {...register("ownersCount")}
+              />
             </div>
 
             {/* Dropdown для TransmissionType */}
@@ -242,7 +327,11 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Мощность (л.с.)</label>
-              <input type="text" placeholder="Мощность" {...register("enginePower")} />
+              <input
+                type="text"
+                placeholder="Мощность"
+                {...register("enginePower")}
+              />
             </div>
 
             <div className={styles.fieldGroup}>
@@ -294,7 +383,11 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Количество мест</label>
-              <input type="number" placeholder="Мест" {...register("seatsCount")} />
+              <input
+                type="number"
+                placeholder="Мест"
+                {...register("seatsCount")}
+              />
             </div>
 
             <div className={styles.fieldGroup}>

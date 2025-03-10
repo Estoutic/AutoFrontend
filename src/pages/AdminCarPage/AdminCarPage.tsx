@@ -6,7 +6,7 @@ import {
 } from "@/shared/api/car/types";
 import AdminFilterWidget from "@/widgets/AdminFilterWidget/AdminFilterWidget";
 import AdminCarList from "@/widgets/AdminCarList/AdminCarList";
-import { useDeleteCar, useGetAllCars } from "@/shared/api/car/hooks";
+import { useAddCar, useDeleteCar, useGetAllCars } from "@/shared/api/car/hooks";
 import styles from "./AdminCarPage.module.scss";
 import CarFormModal from "@/entities/CarFormModal/CarFormModal";
 
@@ -15,7 +15,8 @@ const AdminCarPage: React.FC = () => {
 
   const { data, isLoading, isError } = useGetAllCars(filter);
 
-  const mutation = useDeleteCar();
+  const deleteMutation = useDeleteCar();
+  const createMutation = useAddCar();
   const cars = data?.content || [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,9 +46,9 @@ const AdminCarPage: React.FC = () => {
 
   const handleDeleteCar = (car: CarResponseDto) => {
     if (window.confirm("Удалить автомобиль?")) {
-      mutation.mutate(car.id);
-      if (mutation.isError) {
-        alert(mutation.error);
+      deleteMutation.mutate(car.id);
+      if (deleteMutation.isError) {
+        alert(deleteMutation.error);
       }
       console.log("Удаление автомобиля:", car.id);
     }
@@ -63,6 +64,10 @@ const AdminCarPage: React.FC = () => {
 
   const handleCreateCar = (data: CarCreationDto) => {
     console.log("Создаем автомобиль:", data);
+    createMutation.mutate(data);
+    if (deleteMutation.isError) {
+      alert(deleteMutation.error);
+    }
     setIsModalOpen(false);
   };
 

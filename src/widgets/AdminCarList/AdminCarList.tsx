@@ -18,10 +18,13 @@ const AdminCarList: React.FC<AdminCarsListProps> = ({
   onManageTranslations,
   onManagePhotos,
 }) => {
+    const filtredCars = cars.filter(function(car) {
+        return car.isAvailable
+      })
   return (
     <div className={styles.listContainer}>
       <div className={styles.cardList}>
-        {cars.map((car) => (
+        {filtredCars.map((car) => (
           <AdminCarCard
             key={car.id}
             car={car}

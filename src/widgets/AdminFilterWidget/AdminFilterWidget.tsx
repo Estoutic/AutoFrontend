@@ -15,10 +15,7 @@ const AdminFilterWidget: React.FC<CarFilterProps> = ({ filter, onChange }) => {
   const { t } = useTranslation();
   const { data: filterData, isLoading } = useGetAllFilters();
 
-  // Универсальная функция для обновления фильтра
   const updateFilter = (field: keyof CarFilterDto, value: string) => {
-    // Если выбирается марка, сбрасываем модель и поколение,
-    // если выбирается модель – сбрасываем поколение
     if (field === "brand") {
       onChange({ ...filter, brand: value, model: "", generation: "" });
     } else if (field === "model") {
