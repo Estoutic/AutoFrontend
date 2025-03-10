@@ -3,6 +3,7 @@ import styles from "./AdminCarCard.module.scss";
 import Button from "@/shared/ui/Button/Button";
 import bmwFallback from "@/assets/bmw.png";
 import { CarResponseDto } from "@/shared/api/car/types";
+import { useNavigate } from "react-router";
 
 interface AdminCarCardProps {
   car: CarResponseDto;
@@ -26,6 +27,13 @@ const AdminCarCard: React.FC<AdminCarCardProps> = ({
   const handleHover = (index: number) => {
     setCurrentIndex(index);
   };
+
+  const navigate = useNavigate();
+
+  const handleTranslationsClick = () => {
+    navigate(`/admin/car/${car.id}/translations`);
+  };
+
 
   return (
     <div className={styles.carCard}>
@@ -61,7 +69,7 @@ const AdminCarCard: React.FC<AdminCarCardProps> = ({
         <div className={styles.actions}>
           {onEdit && <Button onClick={() => onEdit(car)}>Редактировать</Button>}
           {onManageTranslations && (
-            <Button onClick={() => onManageTranslations(car)}>
+            <Button onClick={() => handleTranslationsClick()}>
               Переводы
             </Button>
           )}
