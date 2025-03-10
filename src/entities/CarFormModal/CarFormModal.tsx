@@ -14,7 +14,6 @@ import { EngineType } from "@/shared/constants/enums/EngineType";
 import { SteeringPosition } from "@/shared/constants/enums/SteeringPosition";
 import { DriveType } from "@/shared/constants/enums/ DriveType";
 import { useGetAllFilters } from "@/shared/api/carModel/hooks";
-import { f } from "react-router/dist/development/fog-of-war-CCAcUMgB";
 
 interface CarFormModalProps {
   isOpen: boolean;
@@ -127,28 +126,30 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
           color: car.color,
           mileage: car.mileage,
           ownersCount: car.ownersCount,
-          transmissionType:
-            typeof car.transmissionType === "string"
-              ? (car.transmissionType as TransmissionType)
-              : undefined,
-          bodyType:
-            typeof car.bodyType === "string"
-              ? (car.bodyType as BodyType)
-              : undefined,
+          transmissionType: undefined,
+          bodyType: undefined,
+          engineType: undefined,
+          driveType: undefined,
+
+          // transmissionType:
+          //   typeof car.transmissionType === "string"
+          //     ? (car.transmissionType as TransmissionType)
+          //     : undefined,
+          // bodyType:
+          //   typeof car.bodyType === "string"
+          //     ? (car.bodyType as BodyType)
+          //     : undefined,
           enginePower: car.enginePower,
-          engineType:
-            typeof car.engineType === "string"
-              ? (car.engineType as EngineType)
-              : undefined,
-          driveType:
-            typeof car.driveType === "string"
-              ? (car.driveType as DriveType)
-              : undefined,
+          // engineType:
+          //   typeof car.engineType === "string"
+          //     ? (car.engineType as EngineType)
+          //     : undefined,
+          // driveType:
+          //   typeof car.driveType === "string"
+          //     ? (car.driveType as DriveType)
+          //     : undefined,
           engineCapacity: car.engineCapacity,
-          steeringPosition:
-            typeof car.steeringPosition === "string"
-              ? (car.steeringPosition as SteeringPosition)
-              : undefined,
+          steeringPosition: undefined,
           seatsCount: car.seatsCount,
           price: car.price,
         });
@@ -176,17 +177,17 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
   }, [isOpen, mode, car, reset]);
 
   const onSubmit: SubmitHandler<CarCreationDto> = (data) => {
-    if (
-      !filter.brand?.trim() ||
-      !filter.model?.trim() ||
-      !filter.generation?.trim()
-    ) {
-      alert(
-        "Пожалуйста, заполните обязательные поля: Марка, Модель и Поколение",
-      );
-      return;
-    }
     if (mode === "create") {
+      if (
+        !filter.brand?.trim() ||
+        !filter.model?.trim() ||
+        !filter.generation?.trim()
+      ) {
+        alert(
+          "Пожалуйста, заполните обязательные поля: Марка, Модель и Поколение",
+        );
+        return;
+      }
       data.carModelDto = {
         brand: filter.brand,
         model: filter.model,

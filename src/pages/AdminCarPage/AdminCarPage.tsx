@@ -6,7 +6,12 @@ import {
 } from "@/shared/api/car/types";
 import AdminFilterWidget from "@/widgets/AdminFilterWidget/AdminFilterWidget";
 import AdminCarList from "@/widgets/AdminCarList/AdminCarList";
-import { useAddCar, useDeleteCar, useGetAllCars } from "@/shared/api/car/hooks";
+import {
+  useAddCar,
+  useDeleteCar,
+  useGetAllCars,
+  useUpdateCar,
+} from "@/shared/api/car/hooks";
 import styles from "./AdminCarPage.module.scss";
 import CarFormModal from "@/entities/CarFormModal/CarFormModal";
 
@@ -17,6 +22,7 @@ const AdminCarPage: React.FC = () => {
 
   const deleteMutation = useDeleteCar();
   const createMutation = useAddCar();
+  const updateMutation = useUpdateCar();
   const cars = data?.content || [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,6 +79,7 @@ const AdminCarPage: React.FC = () => {
 
   const handleUpdateCar = (id: string, data: CarCreationDto) => {
     console.log("Обновляем автомобиль:", id, data);
+    updateMutation.mutate({ id, data });
     setIsModalOpen(false);
   };
 
