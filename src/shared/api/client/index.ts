@@ -3,11 +3,10 @@ import createHttpClient from "./apiClient";
 import { ApplicationApi } from "./application/ApplicationApi";
 import { CarApi } from "./car/CarApi";
 import { CarModelApi } from "./carModel/CarModelApi";
+import { ImageApi } from "./image/ImageApi";
 import { UserApi } from "./user/UserApi";
 
-
 const httpClient = createHttpClient("http://0.0.0.0:8088/api");
-
 
 export const carApi = new CarApi(httpClient);
 
@@ -19,5 +18,6 @@ export const userApi = new UserApi(httpClient);
 
 export const adminApi = new AdminApi(httpClient);
 
+export const imageApi = new ImageApi(httpClient);
 
-export { default as CustomApiClient } from './CustomApiClient'
+export { default as CustomApiClient } from "./CustomApiClient";

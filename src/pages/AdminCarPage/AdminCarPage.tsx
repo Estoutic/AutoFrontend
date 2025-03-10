@@ -14,6 +14,7 @@ import {
 } from "@/shared/api/car/hooks";
 import styles from "./AdminCarPage.module.scss";
 import CarFormModal from "@/entities/CarFormModal/CarFormModal";
+import CarImagesModal from "@/features/CarImagesModal/CarImagesModal";
 
 const AdminCarPage: React.FC = () => {
   const [filter, setFilter] = useState<CarFilterDto>({});
@@ -28,6 +29,8 @@ const AdminCarPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selectedCar, setSelectedCar] = useState<CarResponseDto | null>(null);
+
+  const [isImagesModalOpen, setIsImagesModalOpen] = useState(false);
 
   const handleFilterChange = (newFilter: CarFilterDto) => {
     setFilter(newFilter);
@@ -65,7 +68,11 @@ const AdminCarPage: React.FC = () => {
   };
 
   const handleManagePhotos = (car: CarResponseDto) => {
-    console.log("Управление фотографиями для автомобиля:", car.id);
+    setSelectedCar(car);
+    setIsImagesModalOpen(true);
+  };
+  const handleCloseImagesModal = () => {
+    setIsImagesModalOpen(false);
   };
 
   const handleCreateCar = (data: CarCreationDto) => {
@@ -113,6 +120,9 @@ const AdminCarPage: React.FC = () => {
         onCreateCar={handleCreateCar}
         onUpdateCar={handleUpdateCar}
       />
+       {isImagesModalOpen && selectedCar && (
+        <CarImagesModal car={selectedCar} onClose={handleCloseImagesModal} />
+      )}
     </div>
   );
 };

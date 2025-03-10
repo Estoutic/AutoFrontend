@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./AdminCarCard.module.scss";
-import { CarResponseDto } from "@/shared/api/car/types";
 import Button from "@/shared/ui/Button/Button";
 import bmwFallback from "@/assets/bmw.png";
+import { CarResponseDto } from "@/shared/api/car/types";
 
 interface AdminCarCardProps {
   car: CarResponseDto;
@@ -19,11 +19,9 @@ const AdminCarCard: React.FC<AdminCarCardProps> = ({
   onManagePhotos,
   onDelete,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [currentIndex, setCurrentIndex] = React.useState(0);
   const images = car.images?.length ? car.images : [bmwFallback];
-  const maxCount = 10;
-  const displayedImages = images.slice(0, maxCount);
+  const displayedImages = images.slice(0, 10);
 
   const handleHover = (index: number) => {
     setCurrentIndex(index);
@@ -33,7 +31,6 @@ const AdminCarCard: React.FC<AdminCarCardProps> = ({
     <div className={styles.carCard}>
       <div className={styles.imageWrapper}>
         <img src={images[currentIndex]} className={styles.mainImage} alt="Car" />
-
         <div className={styles.hoverZones}>
           {displayedImages.map((_, index) => (
             <div
@@ -52,33 +49,24 @@ const AdminCarCard: React.FC<AdminCarCardProps> = ({
           ))}
         </div>
       </div>
-
       <div className={styles.infoWrapper}>
-
-      <h3 className={styles.title}>{car.name}</h3>
-
+        <h3 className={styles.title}>{car.name}</h3>
         <div className={styles.details}>
           {car.engineCapacity} л / {car.mileage} км / {car.enginePower} л.с. /{" "}
           {car.engineType}
         </div>
-
         <div className={styles.price}>
           {car.price ? car.price.toLocaleString("ru-RU") : 0} руб.
         </div>
-
         <div className={styles.actions}>
-          {onEdit && (
-            <Button onClick={() => onEdit(car)}>Редактировать</Button>
-          )}
+          {onEdit && <Button onClick={() => onEdit(car)}>Редактировать</Button>}
           {onManageTranslations && (
             <Button onClick={() => onManageTranslations(car)}>
               Переводы
             </Button>
           )}
           {onManagePhotos && (
-            <Button onClick={() => onManagePhotos(car)}>
-              Фотографии
-            </Button>
+            <Button onClick={() => onManagePhotos(car)}>Фотографии</Button>
           )}
           {onDelete && (
             <Button variant="secondary" onClick={() => onDelete(car)}>
