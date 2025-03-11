@@ -38,6 +38,7 @@ const localeOptions = [
   
     const { control, handleSubmit, reset, watch } = useForm<CarTranslationDto>({
       defaultValues: {
+        id: undefined,
         locale: Locale.RU,
         color: "",
         description: "",
@@ -47,11 +48,9 @@ const localeOptions = [
     });
     const isEditMode = Boolean(watch("id"));
   
-    // При сабмите создаём или обновляем перевод
     const onSubmit: SubmitHandler<CarTranslationDto> = (formData) => {
       formData.carId = carId;
       if (formData.id) {
-        // Режим обновления
         updateMutation.mutate(
           { id: formData.id, dto: formData },
           {
@@ -82,29 +81,37 @@ const localeOptions = [
     };
   
     const handleDelete = (id: string) => {
-      if (window.confirm("Удалить перевод?")) {
-        deleteMutation.mutate(
-          { id, carId },
-          {
-            onSuccess: () => {
-              console.log("Перевод удалён:", id);
-              if (watch("id") === id) {
-                reset();
-              }
-            },
-            onError: (err) => {
-              alert("Ошибка удаления перевода: " + err);
-            },
-          },
-        );
-      }
-    };
+        const selectedId = watch("id"); // Объявляем переменную selectedId здесь
+        if (window.confirm("Удалить перевод?")) {
+          deleteMutation.mutate(
+            { id, carId },
+            {
+              onSuccess: () => {
+                console.log("Перевод удалён:", id);
+                if (selectedId === id) {
+                  reset({
+                    id: undefined,
+                    locale: Locale.RU,
+                    color: "",
+                    description: "",
+                    mileage: undefined,
+                    price: undefined,
+                  });
+                }
+              },
+              onError: (err) => {
+                alert("Ошибка удаления перевода: " + err);
+              },
+            }
+          );
+        }
+      };
   
     if (isCarLoading) return <div>Загрузка данных автомобиля...</div>;
     if (isCarError) return <div>Ошибка при загрузке данных автомобиля</div>;
   
     return (
-      <div className={styles.pageContainer}>
+      <div className={styles.container}>
         <h2>Управление локализациями для автомобиля {carId}</h2>
   
         <div className={styles.layout}>
