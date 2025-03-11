@@ -6,10 +6,10 @@ export enum ContactType {
   }
   
   export enum ApplicationStatus {
-    NEW = "NEW",
     IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE",
+    COMPLETED = "COMPLETED",
     REJECTED = "REJECTED",
+    ACCEPTED = "ACCEPTED",
   }
   
   export interface ApplicationCreationDto {

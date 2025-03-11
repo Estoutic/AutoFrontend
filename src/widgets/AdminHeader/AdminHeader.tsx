@@ -21,7 +21,6 @@ export const AdminHeader = () => {
         <nav className={styles.desktopNav}>
           <Link to="/admin/applications">Заявки</Link>
           <Link to="/admin/reports">Отчёты</Link>
-          <Link to="/admin/users">Локализация</Link>
           <Link to="/admin/cars">Автомобили</Link>
           <Link to="/admin/models">Модели автомобилей</Link>
           <Link to="/admin/users">Сотрудники</Link>
@@ -44,9 +43,6 @@ export const AdminHeader = () => {
             </Link>
             <Link to="/admin/reports" onClick={closeMenu}>
               Отчёты
-            </Link>
-            <Link to="/admin/users" onClick={closeMenu}>
-              Локализация
             </Link>
             <Link to="/admin/cars" onClick={closeMenu}>
               Автомобили

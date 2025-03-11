@@ -1,0 +1,58 @@
+@use "@/styles/_variables" as vars;
+
+.container {
+  padding: 0 10%;
+  margin-top: 20px;
+  color: vars.$primary-color;
+
+  h2 {
+    margin-bottom: 20px;
+  }
+}
+.filterRow {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto; 
+}
+
+.responsiveTable {
+  width: 100%;
+  min-width: 600px;  
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  tbody tr:hover {
+    background-color: #fafafa;
+  }
+}
+
+.actionsCell {
+  gap: 8px;
+  flex-wrap: wrap;
+  display: flex;;
+
+  button {
+    flex: 1;
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+}

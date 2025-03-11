@@ -10,6 +10,7 @@ import { AdminCarModelsPage } from "@/pages/AdminCarModelsPage/AdminCarModelsPag
 import AdminUsersPage from "@/pages/AdminUsersPage/AdminUsersPage";
 import AdminCarsPage from "@/pages/AdminCarPage/AdminCarPage";
 import AdminCarTranslationsPage from "@/pages/AdminCarTranslationsPage/AdminCarTranslationsPage";
+import AdminApplicationsPage from "@/pages/AdminApplicationsPage/AdminApplicationsPage";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/cars",
         element: <AdminCarsPage />,
+      },
+      {
+        path: "/admin/applications",
+        element: <AdminApplicationsPage />,
       },
       {
         path: "/admin/car/:carId/translations",

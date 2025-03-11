@@ -177,7 +177,7 @@
   display: flex;
 }
 
-@media (max-width: vars.$desktop-width) {
+@media (max-width: 1150px) {
   .desktopNav {
     display: none;
   }
