@@ -11,6 +11,7 @@ import AdminUsersPage from "@/pages/AdminUsersPage/AdminUsersPage";
 import AdminCarsPage from "@/pages/AdminCarPage/AdminCarPage";
 import AdminCarTranslationsPage from "@/pages/AdminCarTranslationsPage/AdminCarTranslationsPage";
 import AdminApplicationsPage from "@/pages/AdminApplicationsPage/AdminApplicationsPage";
+import AdminReportsPage from "@/pages/AdminReportsPage/AdminReportsPage";
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/car/:carId/translations",
         element: <AdminCarTranslationsPage />,
+      },
+      {
+        path: "/admin/reports",
+        element: <AdminReportsPage />,
       },
     ],
   },

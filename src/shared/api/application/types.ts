@@ -26,6 +26,7 @@ export enum ContactType {
     firstName: string;
     lastName: string;
     contact: ContactType;
+    contactDetails: string;
     status: ApplicationStatus;
     createdAt?: string;   
     updatedAt?: string;

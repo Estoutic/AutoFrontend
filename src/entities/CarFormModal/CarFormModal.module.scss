@@ -1,4 +1,5 @@
 @use "@/styles/_variables" as vars;
+@use "sass:color";
 
 .modalOverlay {
   position: fixed;
@@ -52,11 +53,10 @@
   }
 }
 
-/* Тело модалки прокручиваемое */
 .modalBody {
   padding: 16px 20px;
-  overflow-y: auto; /* прокрутка */
-  flex: 1; /* чтобы занять оставшееся пространство */
+  overflow-y: auto;
+  flex: 1;
 }
 
 .form {
@@ -86,7 +86,7 @@
     transition: border-color 0.3s ease;
 
     &:focus {
-      border-color: darken(vars.$primary-color, 10%);
+      border-color: color.adjust(vars.$primary-color, $lightness: -10%);
     }
   }
 }

@@ -20,7 +20,7 @@ const AdminApplicationsPage: React.FC = () => {
     { value: ApplicationStatus.REJECTED, labelKey: "Отклонено" },
     { value: ApplicationStatus.COMPLETED, labelKey: "Завершено" },
   ];
-  
+
   const { data, isLoading, isError } = useGetApplications(
     statusFilter || undefined, 
     0,  
@@ -83,7 +83,8 @@ const AdminApplicationsPage: React.FC = () => {
         <table className={styles.responsiveTable}>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Способ связи</th>
+              <th>Контакты</th>
               <th>ФИО</th>
               <th>Статус</th>
               <th>Дата создания</th>
@@ -94,7 +95,8 @@ const AdminApplicationsPage: React.FC = () => {
             {applications.length > 0 ? (
               applications.map((app) => (
                 <tr key={app.id}>
-                  <td>{app.id}</td>
+                  <td>{app.contact}</td>
+                  <td>{app.contactDetails}</td>
                   <td>
                     {app.firstName} {app.lastName}
                   </td>
@@ -105,32 +107,38 @@ const AdminApplicationsPage: React.FC = () => {
                       : "N/A"}
                   </td>
                   <td className={styles.actionsCell}>
-                    <Button
+                    <button
                       onClick={() =>
                         handleUpdateStatus(app.id, ApplicationStatus.ACCEPTED)
                       }
                     >
                       Принять
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                       onClick={() =>
                         handleUpdateStatus(app.id, ApplicationStatus.REJECTED)
                       }
                     >
                       Отклонить
-                    </Button>
-                    <Button
-                      variant="secondary"
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleUpdateStatus(app.id, ApplicationStatus.COMPLETED)
+                      }
+                    >
+                      Завершить
+                    </button>
+                    <button
                       onClick={() => handleDelete(app.id)}
                     >
                       Удалить
-                    </Button>
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5}>Заявки отсутствуют</td>
+                <td colSpan={6}>Заявки отсутствуют</td>
               </tr>
             )}
           </tbody>
