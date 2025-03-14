@@ -174,7 +174,7 @@
   display: flex;
 }
 
-@media (max-width: vars.$ipad-width) {
+@media (max-width: 1000px) {
   .desktopNav {
     display: none;
   }

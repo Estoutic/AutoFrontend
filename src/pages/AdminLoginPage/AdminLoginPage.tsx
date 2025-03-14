@@ -35,7 +35,7 @@ export const AdminLoginPage: React.FC = () => {
 
     authUser(userData, {
       onSuccess: () => {
-        navigate("/admin");
+        navigate("/admin/cars");
       },
       onError: (error) => {
         console.log("Ошибка при авторизации:", error);

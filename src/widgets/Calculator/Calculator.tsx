@@ -72,14 +72,14 @@ const Calculator = () => {
             onChange={(value) => handleChange("age", value)}
             placeholder={t("calculator.agePlaceholder")}
           />
-          <div className={styles.inputContainer}>
+          {/* <div className={styles.inputContainer}> */}
             <InputField
               type="number"
               value={filters.price}
               onChange={(value) => handleChange("price", value)}
               placeholder={t("calculator.pricePlaceholder")}
             />
-          </div>
+          {/* </div> */}
           <Dropdown
             options={CURRNECY_CODE}
             value={filters.currency}
@@ -95,22 +95,22 @@ const Calculator = () => {
             onChange={(value) => handleChange("engineType", value)}
             placeholder={t("calculator.engineTypePlaceholder")}
           />
-          <div className={styles.inputContainer}>
+          {/* <div className={styles.inputContainer}> */}
             <InputField
               type="number"
               value={filters.volume}
               onChange={(value) => handleChange("volume", value)}
               placeholder={t("calculator.volumePlaceholder")}
             />
-          </div>
-          <div className={styles.inputContainer}>
+          {/* </div> */}
+          {/* <div className={styles.inputContainer}> */}
             <InputField
               type="number"
               value={filters.power}
               onChange={(value) => handleChange("power", value)}
               placeholder={t("calculator.powerPlaceholder")}
             />
-          </div>
+          {/* </div> */}
         </div>
 
         <div className={styles.flexRow}>
