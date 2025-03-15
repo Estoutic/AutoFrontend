@@ -1,58 +1,59 @@
+// src/widgets/Calculator/CalculatorCalculations.tsx
+import React from "react";
 import CalculationTable from "@/entities/CalculationTable/CalculationTable";
 import CustomsFeesTable from "@/entities/CustomsFeesTable/CustomsFeesTable";
-import React from "react";
+import { CustomsCalculationResponseDto } from "@/shared/api/calculator/types";
 
-const CalculatorCalculations = () => {
+interface CalculatorCalculationsProps {
+  result: CustomsCalculationResponseDto;
+}
+
+const CalculatorCalculations: React.FC<CalculatorCalculationsProps> = ({ result }) => {
+  // Пример: часть данных выводим в CalculationTable, часть — в CustomsFeesTable
   const rows = [
-    { label: "Возраст:", value: "xxxxxx" },
-    { label: "Таможенная стоимость автомобиля:", value: "xxxxxx" },
-    { label: "Таможенная стоимость в рублях:", value: "xxxxxx" },
-    { label: "Объем двигателя:", value: "xxxxxx" },
-    { label: "Мощность двигателя:", value: "xxxxxx" },
-    { label: "Тип двигателя:", value: "xxxxxx" },
-    { label: "Курс USD:", value: "xxxxxx" },
-    { label: "Курс EUR:", value: "xxxxxx" },
-    { label: "Курс CNY:", value: "xxxxxx" },
+    { label: "Режим:", value: result.mode },
+    { label: "Цена в руб:", value: result.priceRub.toString() },
+    { label: "Пошлина:", value: result.dutyRub.toString() },
+    { label: "Акциз:", value: result.exciseRub.toString() },
+    { label: "НДС:", value: result.vatRub.toString() },
   ];
 
-  const endRows = [
+  const feesRows = [
     {
-      feeType: 'Таможенный сбор:',
-      base: 'xxxxxxx',
-      rate: 'xxxxxxx',
-      sumRub: 'xxxxxxx',
-      sumCny: 'xxxxxxx',
+      feeType: "Таможенный сбор",
+      base: "---",
+      rate: "---",
+      sumRub: result.clearanceFee.toString(),
+      sumCny: "---",
     },
     {
-      feeType: 'Пошлина:',
-      base: 'xxxxxxx',
-      rate: 'xxxxxxx',
-      sumRub: 'xxxxxxx',
-      sumCny: 'xxxxxxx',
+      feeType: "Утилизационный сбор",
+      base: "---",
+      rate: "---",
+      sumRub: result.recyclingFee.toString(),
+      sumCny: "---",
     },
     {
-      feeType: 'Расчет утилизационного сбора (старше 3-х лет, ...):',
-      base: 'xxxxxxx',
-      rate: 'xxxxxxx',
-      sumRub: 'xxxxxxx',
-      sumCny: 'xxxxxxx',
+      feeType: "Сбор за утилизацию",
+      base: "---",
+      rate: "---",
+      sumRub: result.utilFee.toString(),
+      sumCny: "---",
     },
   ];
+
   const totalRow = {
-    feeType: 'Итого:',
-    base: 'xxxxxxx',
-    rate: 'xxxxxxx',
-    sumRub: 'xxxxxxx',
-    sumCny: 'xxxxxxx',
+    feeType: "Итого:",
+    base: "---",
+    rate: "---",
+    sumRub: result.totalPay.toString(),
+    sumCny: "---",
   };
 
   return (
     <div>
-      <CalculationTable title="Схема расчета:" rows={rows} />
-      <CustomsFeesTable
-        title="Таможенные сборы"
-        rows={endRows}
-        total={totalRow}></CustomsFeesTable>
+      <CalculationTable title="Схема расчёта:" rows={rows} />
+      <CustomsFeesTable title="Таможенные сборы" rows={feesRows} total={totalRow} />
     </div>
   );
 };

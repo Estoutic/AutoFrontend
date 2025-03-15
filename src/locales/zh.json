@@ -91,11 +91,11 @@
   },
   "carRequestModal": {
     "contactType": {
-        "call": "电话",
-        "email": "电子邮件",
-        "whatsapp": "WhatsApp",
-        "telegram": "Telegram"
-      },
+      "call": "电话",
+      "email": "电子邮件",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
+    },
     "enterYourData": "请提供您的联系方式！",
     "firstNamePlaceholder": "您的名字",
     "lastNamePlaceholder": "您的姓氏",
@@ -125,10 +125,11 @@
     "personPlaceholder": "身份",
     "calculateButton": "计算",
     "carAge": {
-      "newUnder3Years": "新车，车龄不足3年",
-      "from3to5Years": "车龄3至5年",
-      "from5to7Years": "车龄5至7年",
-      "over7Years": "车龄超过7年"
+      "new": "全新",
+      "from1to5Years": "1至3年",
+      "from3to5Years": "3至5年",
+      "from5to7Years": "5至7年",
+      "over7Years": "超过7年"
     },
     "currency": {
       "dollar": "USD",

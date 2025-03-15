@@ -125,10 +125,11 @@
     "personPlaceholder": "Лицо",
     "calculateButton": "Рассчитать",
     "carAge": {
-      "newUnder3Years": "Новые, менее 3-х лет",
-      "from3to5Years": "От 3-х до 5-ти лет",
-      "from5to7Years": "От 5-ти до 7-ми лет",
-      "over7Years": "Старше 7-ми лет"
+      "new": "Новый",
+      "from1to5Years": "От 1 до 3 лет",
+      "from3to5Years": "От 3 до 5 лет",
+      "from5to7Years": "От 5 до 7 лет",
+      "over7Years": "Старше 7 лет"
     },
     "currency": {
       "dollar": "USD",

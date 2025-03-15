@@ -11,7 +11,7 @@
   flex-direction: column;
   gap: 15px;
 
-  > :last-child{
+  > :last-child {
     justify-content: space-between;
   }
 }
@@ -34,9 +34,9 @@
   display: flex;
   width: 200px;
 }
-.faceContainer{
-    display: flex;
-    gap: 15px;
+.faceContainer {
+  display: flex;
+  gap: 15px;
 }
 
 @media (max-width: vars.$mobile-width) {
@@ -48,4 +48,10 @@
   .inputContainer {
     width: 100%;
   }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }

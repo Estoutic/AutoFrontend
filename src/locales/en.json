@@ -91,11 +91,11 @@
   },
   "carRequestModal": {
     "contactType": {
-        "call": "Call",
-        "email": "Email",
-        "whatsapp": "WhatsApp",
-        "telegram": "Telegram"
-      },
+      "call": "Call",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
+    },
     "enterYourData": "Please provide your contact details!",
     "firstNamePlaceholder": "Your first name",
     "lastNamePlaceholder": "Your last name",
@@ -125,7 +125,8 @@
     "personPlaceholder": "Person",
     "calculateButton": "Calculate",
     "carAge": {
-      "newUnder3Years": "New, under 3 years",
+      "new": "New",
+      "from1to5Years": "From 1 to 3 years",
       "from3to5Years": "From 3 to 5 years",
       "from5to7Years": "From 5 to 7 years",
       "over7Years": "Over 7 years"
@@ -140,7 +141,8 @@
       "phys": "Individual",
       "legal": "Legal Entity"
     }
-  },"footer": {
+  },
+  "footer": {
     "logoAlt": "Druzhba Narodov",
     "social": {
       "instagram": "Instagram",
@@ -160,5 +162,4 @@
       "address": "Moscow, Skladocnaya St., 1, building 13"
     }
   }
-  
 }

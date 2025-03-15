@@ -1,132 +1,168 @@
-import React, { use, useState } from "react";
-import getUnicodeFlagIcon from "country-flag-icons/unicode";
-import Button from "@/shared/ui/Button/Button";
-import styles from "./Calculator.module.scss";
-import Text from "@/shared/ui/Text/Text";
+// src/widgets/Calculator/Calculator.tsx
+import React, { useState } from "react";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+ 
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import InputField from "@/shared/ui/InputField/InputField";
-import {
-  CAR_AGE,
-  CURRNECY_CODE,
-  PERSON,
-} from "@/shared/constants/calculatorOptions";
+import { CAR_AGE, CURRNECY_CODE, PERSON, VEHICLE_OWNER_TYPE } from "@/shared/constants/calculatorOptions";
 import { ENGINE_OPTIONS } from "@/shared/constants/carOptions";
 import CalculatorCalculations from "../CalculatorCalculations/CalculatorCalculations";
-import { useTranslation } from "react-i18next";
+import styles from "./Calculator.module.scss";
+import Button from "@/shared/ui/Button/Button";
+import { CustomsCalculationRequestDto, CustomsCalculationResponseDto } from "@/shared/api/calculator/types";
+import { useCalculateCustoms } from "@/shared/api/calculator/hooks";
 
-const Calculator = () => {
-  const { t } = useTranslation();
-  const [visible, setVisible] = useState(false);
-  const [filters, setFilters] = useState({
-    country: "",
-    age: "",
-    price: "",
-    currency: "",
-    engineType: "",
-    volume: "",
-    power: "",
-    person: "",
+
+type CalculatorFormData = CustomsCalculationRequestDto;
+
+const Calculator: React.FC = () => {
+  const { control, handleSubmit } = useForm<CalculatorFormData>({
+    defaultValues: {
+      age: "",
+      engineCapacity: 0,
+      engineType: "",
+      power: 0,
+      price: 0,
+      ownerType: "",
+      currency: "",
+      mode: "ETC", 
+    },
   });
 
-  const handleChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
+  const [result, setResult] = useState<CustomsCalculationResponseDto | null>(null);
+  const [visible, setVisible] = useState(false);
 
-  const onClick = () => {
-    setVisible(!visible);
+  const calculateMutation = useCalculateCustoms();
+
+  const onSubmit: SubmitHandler<CalculatorFormData> = (data) => {
+    calculateMutation.mutate(data, {
+      onSuccess: (res) => {
+        setResult(res);
+        setVisible(true);
+      },
+      onError: (err) => {
+        alert("Ошибка расчёта: " + err);
+      },
+    });
   };
 
   return (
     <div className={styles.calculator}>
-      <h2>
-        {t("calculator.titleLine1")} <br />
-        {t("calculator.titleLine2")}
-      </h2>
+      <h2>Калькулятор таможенных платежей</h2>
 
-      <div className={styles.flexContainer}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.flexRow}>
-          <Text>{t("calculator.calculateFor")}</Text>
-          <Button
-            variant="secondary"
-            classname={filters["country"] === "russia" ? "active" : ""}
-            onClick={() => handleChange("country", "russia")}
-          >
-            {t("calculator.russianFederation")}
-            <span className={styles.flagIcon}>{getUnicodeFlagIcon("RU")}</span>
+          {/* Возраст авто */}
+          <Controller
+            name="age"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                options={CAR_AGE}
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Возраст авто"
+              />
+            )}
+          />
+
+          {/* Цена авто */}
+          <Controller
+            name="price"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                type="number"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Цена авто"
+              />
+            )}
+          />
+
+          {/* Валюта */}
+          <Controller
+            name="currency"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                options={CURRNECY_CODE}
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Валюта"
+              />
+            )}
+          />
+        </div>
+
+        <div className={styles.flexRow}>
+          {/* Тип двигателя */}
+          <Controller
+            name="engineType"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                options={ENGINE_OPTIONS}
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Тип двигателя"
+              />
+            )}
+          />
+
+          {/* Объём двигателя */}
+          <Controller
+            name="engineCapacity"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                type="number"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Объем двигателя (л)"
+              />
+            )}
+          />
+
+          {/* Мощность */}
+          <Controller
+            name="power"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                type="number"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Мощность (л.с.)"
+              />
+            )}
+          />
+        </div>
+
+        <div className={styles.flexRow}>
+          {/* Тип владельца */}
+          <Controller
+            name="ownerType"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                options={VEHICLE_OWNER_TYPE}
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Тип владельца"
+              />
+            )}
+          />
+
+          <Button type="submit">
+            {calculateMutation.isLoading ? "Рассчитываем..." : "Рассчитать"}
           </Button>
-          <Button
-            variant="secondary"
-            classname={filters["country"] === "belarus" ? "active" : ""}
-            onClick={() => handleChange("country", "belarus")}
-          >
-            {t("calculator.belarusRepublic")}
-            <span className={styles.flagIcon}>{getUnicodeFlagIcon("BY")}</span>
-          </Button>
         </div>
+      </form>
 
-        {/* 2-я строка (3 элемента) */}
-        <div className={styles.flexRow}>
-          <Dropdown
-            options={CAR_AGE}
-            value={filters.age}
-            onChange={(value) => handleChange("age", value)}
-            placeholder={t("calculator.agePlaceholder")}
-          />
-          {/* <div className={styles.inputContainer}> */}
-            <InputField
-              type="number"
-              value={filters.price}
-              onChange={(value) => handleChange("price", value)}
-              placeholder={t("calculator.pricePlaceholder")}
-            />
-          {/* </div> */}
-          <Dropdown
-            options={CURRNECY_CODE}
-            value={filters.currency}
-            onChange={(value) => handleChange("currency", value)}
-            placeholder={t("calculator.currencyPlaceholder")}
-          />
-        </div>
-
-        <div className={styles.flexRow}>
-          <Dropdown
-            options={ENGINE_OPTIONS}
-            value={filters.engineType}
-            onChange={(value) => handleChange("engineType", value)}
-            placeholder={t("calculator.engineTypePlaceholder")}
-          />
-          {/* <div className={styles.inputContainer}> */}
-            <InputField
-              type="number"
-              value={filters.volume}
-              onChange={(value) => handleChange("volume", value)}
-              placeholder={t("calculator.volumePlaceholder")}
-            />
-          {/* </div> */}
-          {/* <div className={styles.inputContainer}> */}
-            <InputField
-              type="number"
-              value={filters.power}
-              onChange={(value) => handleChange("power", value)}
-              placeholder={t("calculator.powerPlaceholder")}
-            />
-          {/* </div> */}
-        </div>
-
-        <div className={styles.flexRow}>
-          <div className={styles.faceContainer}>
-            <Text>{t("calculator.importCalculation")}</Text>
-            <Dropdown
-              options={PERSON}
-              value={filters.person}
-              onChange={(value) => handleChange("person", value)}
-              placeholder={t("calculator.personPlaceholder")}
-            />
-          </div>
-          <Button onClick={onClick}>{t("calculator.calculateButton")}</Button>
-        </div>
-      </div>
-      {visible ? <CalculatorCalculations /> : <></>}
+      {visible && result && (
+        <CalculatorCalculations result={result} />
+      )}
     </div>
   );
 };
