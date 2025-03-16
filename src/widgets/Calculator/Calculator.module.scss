@@ -1,57 +1,108 @@
-@use "@/styles/_variables" as vars;
-
-.calculator {
+// src/widgets/Calculator/Calculator.module.scss
+.calculatorWrapper {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  width: 100%;
+  max-width: 100%;
 }
 
-.flexContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  > :last-child {
-    justify-content: space-between;
+.calculator {
+  width: 100%;
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a3865;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 }
 
 .flexRow {
   display: flex;
-  flex-direction: row;
-  gap: 15px;
-  align-items: center;
-
-  // flex-wrap: wrap;
+  gap: 16px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
-.flagIcon {
-  font-size: 30px;
-}
-
-.inputContainer {
+.formField {
   flex: 1;
   display: flex;
-  width: 200px;
-}
-.faceContainer {
-  display: flex;
-  gap: 15px;
-}
-
-@media (max-width: vars.$mobile-width) {
-  .flexRow {
-    flex-direction: column;
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-  .inputContainer {
+  flex-direction: column;
+  margin-bottom: 8px;
+  
+  // Make sure the dropdown container takes full available width
+  :global(.dropdown-container),
+  input {
     width: 100%;
   }
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.ownerTypeField {
+  flex: 2; // Make owner type field wider
+  
+  @media (max-width: 768px) {
+    flex: 1;
+  }
+}
+
+.errorText {
+  color: #333;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: normal;
+}
+
+.calculateButton {
+  background-color: #1a3865;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  height: 42px;
+  align-self: flex-end;
+  min-width: 160px;
+  
+  &:hover:not(:disabled) {
+    background-color: #0d2a54;
+  }
+  
+  &:disabled {
+    background-color: #7992b7;
+    cursor: not-allowed;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 8px;
+    align-self: stretch;
+  }
+}
+
+.resultsContainer {
+  width: 100%;
+  background-color: transparent;
+  perspective: 1000px;
+}
+
+// Make sure the dropdowns have consistent width at all times
+:global {
+  .dropdown-container {
+    width: 100%;
+    
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
 }

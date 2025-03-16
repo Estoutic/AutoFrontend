@@ -1,59 +1,76 @@
-// src/widgets/Calculator/CalculatorCalculations.tsx
-import React from "react";
-import CalculationTable from "@/entities/CalculationTable/CalculationTable";
-import CustomsFeesTable from "@/entities/CustomsFeesTable/CustomsFeesTable";
-import { CustomsCalculationResponseDto } from "@/shared/api/calculator/types";
+// src/widgets/CalculatorCalculations/CalculatorCalculations.tsx
+import React from 'react';
+import { CustomsCalculationResponseDto } from '@/shared/api/calculator/types';
+import styles from './CalculatorCalculations.module.scss';
 
 interface CalculatorCalculationsProps {
-  result: CustomsCalculationResponseDto;
+  result: CustomsCalculationResponseDto | null;
+  visible: boolean;
 }
 
-const CalculatorCalculations: React.FC<CalculatorCalculationsProps> = ({ result }) => {
-  // Пример: часть данных выводим в CalculationTable, часть — в CustomsFeesTable
-  const rows = [
-    { label: "Режим:", value: result.mode },
-    { label: "Цена в руб:", value: result.priceRub.toString() },
-    { label: "Пошлина:", value: result.dutyRub.toString() },
-    { label: "Акциз:", value: result.exciseRub.toString() },
-    { label: "НДС:", value: result.vatRub.toString() },
-  ];
+const CalculatorCalculations: React.FC<CalculatorCalculationsProps> = ({
+  result,
+  visible
+}) => {
+  if (!visible || !result) return null;
 
-  const feesRows = [
-    {
-      feeType: "Таможенный сбор",
-      base: "---",
-      rate: "---",
-      sumRub: result.clearanceFee.toString(),
-      sumCny: "---",
-    },
-    {
-      feeType: "Утилизационный сбор",
-      base: "---",
-      rate: "---",
-      sumRub: result.recyclingFee.toString(),
-      sumCny: "---",
-    },
-    {
-      feeType: "Сбор за утилизацию",
-      base: "---",
-      rate: "---",
-      sumRub: result.utilFee.toString(),
-      sumCny: "---",
-    },
-  ];
-
-  const totalRow = {
-    feeType: "Итого:",
-    base: "---",
-    rate: "---",
-    sumRub: result.totalPay.toString(),
-    sumCny: "---",
+  // Helper function to format numbers with thousand separators
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString('ru-RU');
   };
 
   return (
-    <div>
-      <CalculationTable title="Схема расчёта:" rows={rows} />
-      <CustomsFeesTable title="Таможенные сборы" rows={feesRows} total={totalRow} />
+    <div className={styles.calculationsContainer}>
+      <div className={styles.header}>
+        <h2>Результаты расчета таможенных платежей</h2>
+      </div>
+      
+      <div className={styles.resultsTableWrapper}>
+        <table className={styles.resultsTable}>
+          <tbody>
+            <tr>
+              <td>Режим расчета</td>
+              <td>{result.mode}</td>
+            </tr>
+            {result.priceRub > 0 && (
+              <tr>
+                <td>Стоимость автомобиля в рублях</td>
+                <td>{formatNumber(result.priceRub)} ₽</td>
+              </tr>
+            )}
+            <tr>
+              <td>Пошлина</td>
+              <td>{formatNumber(result.dutyRub)} ₽</td>
+            </tr>
+            <tr>
+              <td>Акциз</td>
+              <td>{formatNumber(result.exciseRub)} ₽</td>
+            </tr>
+            <tr>
+              <td>НДС</td>
+              <td>{formatNumber(result.vatRub)} ₽</td>
+            </tr>
+            <tr>
+              <td>Таможенный сбор</td>
+              <td>{formatNumber(result.clearanceFee)} ₽</td>
+            </tr>
+            <tr>
+              <td>Утилизационный сбор</td>
+              <td>{formatNumber(result.recyclingFee)} ₽</td>
+            </tr>
+            {result.utilFee > 0 && (
+              <tr>
+                <td>Сбор за утилизацию (базовый)</td>
+                <td>{formatNumber(result.utilFee)} ₽</td>
+              </tr>
+            )}
+            <tr className={styles.totalRow}>
+              <td>Итого к оплате</td>
+              <td>{formatNumber(result.totalPay)} ₽</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
