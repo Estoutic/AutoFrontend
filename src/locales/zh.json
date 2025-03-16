@@ -75,7 +75,9 @@
     "steeringPositionPlaceholder": "方向盘位置",
     "mileageFromPlaceholder": "里程从, km",
     "mileageToPlaceholder": "里程到, km",
-    "showButton": "显示"
+    "showButton": "显示",
+    "clearButton": "清除"
+
   },
   "carList": {
     "foundCars": "找到 {{count}} 辆汽车",

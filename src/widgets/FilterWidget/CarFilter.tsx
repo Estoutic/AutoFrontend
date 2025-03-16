@@ -31,6 +31,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
     });
   };
 
+  // Function to clear all filters
+  const handleClearFilters = () => {
+    // Create empty filter object
+    const emptyFilter: CarFilterDto = {};
+    onChange(emptyFilter);
+  };
+
   return (
     <div className={styles.filterContainer}>
       <h2>
@@ -198,9 +205,16 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
           />
         </div>
 
-        <Button onClick={() => console.log("Текущий фильтр:", filter)}>
-          {t("carFilter.showButton")}
-        </Button>
+        <div className={styles.buttonContainer}>
+          <Button onClick={() => console.log("Текущий фильтр:", filter)}>
+            {t("carFilter.showButton")}
+          </Button>
+          <Button 
+            onClick={handleClearFilters} 
+          >
+            {t("carFilter.clearButton") || "Очистить"}
+          </Button>
+        </div>
       </div>
     </div>
   );

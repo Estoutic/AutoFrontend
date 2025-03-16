@@ -75,7 +75,8 @@
     "steeringPositionPlaceholder": "Steering Position",
     "mileageFromPlaceholder": "Mileage from, km",
     "mileageToPlaceholder": "Mileage to, km",
-    "showButton": "Show"
+    "showButton": "Show",
+    "clearButton": "Clear"
   },
   "carList": {
     "foundCars": "{{count}} Cars found",

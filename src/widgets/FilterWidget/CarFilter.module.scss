@@ -37,3 +37,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.buttonContainer {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  
+  button {
+    flex: 1;
+  }
+}

@@ -1,6 +1,9 @@
 @use "@/styles/_variables.scss" as vars;
 
 .footer {
+  // width: 100vw;
+  // bottom: 0;
+  // position: absolute;
   display: flex;
   flex-direction: column;
 
