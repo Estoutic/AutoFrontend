@@ -1,51 +1,21 @@
-@use "@/styles/_variables" as vars;
-@use "sass:color";
-
 .button {
-  padding: 10px 20px;
-  font-size: 16px;
-//   font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  background-color: #1a3865;
+  color: white;
+  padding: 0 20px;
+  border-radius: 4px;
   border: none;
-  outline: none;
-
-  &.primary {
-    background: vars.$primary-color;
-    color: white;
-
-    &:hover {
-      background: color.adjust(vars.$primary-color, $lightness: -10%);
-    }
-
-    &:disabled {
-      background: gray;
-      cursor: not-allowed;
-    }
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 42px;
+  line-height: 42px;
+  
+  &:hover:not(:disabled) {
+    background-color: #0d2a54;
   }
-
-  &.secondary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    padding: 0px 10px;
-
-    background: white;
-    color: vars.$primary-color;
-    border: 2px solid vars.$primary-color;
-
-    &:disabled {
-      //   border-color: gray;
-      //   color: gray;
-      cursor: not-allowed;
-    }
+  
+  &:disabled {
+    background-color: #7992b7;
+    cursor: not-allowed;
   }
-}
-
-.active {
-  background-color: vars.$primary-color !important;
-  color: white !important;
 }
