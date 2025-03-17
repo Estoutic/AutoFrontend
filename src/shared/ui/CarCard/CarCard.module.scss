@@ -1,28 +1,25 @@
 @use "@/styles/_variables" as vars;
 
 .card {
-  background: vars.$primary-color;
+  background: #1e3056; // Dark blue background like in the image
   border-radius: 10px;
-  padding: 10px 20px;
+  overflow: hidden;
+  width: 280px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 280px;  
-  flex-shrink: 0;
 }
 
 .imageContainer {
   width: 100%;
   height: 180px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: solid white 2px;
-
-
+  padding: 8px;
+  
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 8px;
   }
 }
 
@@ -30,24 +27,56 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 5px;
-  
+  padding: 10px 16px 16px;
   color: white;
 }
 
 .name {
   font-weight: bold;
   font-size: 16px;
-  text-wrap: auto;
+  line-height: 1.2;
+  text-wrap: wrap;
+  flex: 1;
 }
 
 .price {
   font-size: 16px;
+  text-align: right;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.modelWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.subModel {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+@media (max-width: vars.$ipad-width) {
+  .card {
+    width: 250px;
+  }
+  
+  .imageContainer {
+    height: 160px;
+  }
 }
 
 @media (max-width: vars.$mobile-width) {
   .card {
-    width: 100%;
-    max-width: 250px;
+    width: 230px;
+  }
+  
+  .imageContainer {
+    height: 140px;
+  }
+  
+  .details {
+    padding: 8px 12px 12px;
   }
 }

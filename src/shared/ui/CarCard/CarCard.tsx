@@ -6,20 +6,25 @@ interface CarCardProps {
   images: string[];
   name: string;
   price: number;
+  subModel?: string;
 }
 
-const CarCard = ({ images, name, price }: CarCardProps) => {
-
+const CarCard: React.FC<CarCardProps> = ({ images, name, price, subModel }) => {
   const image = images.length ? images[0] : bmwFallback;
+  
+  const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
-        <img src={image} alt={name} className={styles.image} />
+        <img src={image} alt={name} />
       </div>
       <div className={styles.details}>
-        <span className={styles.name}>{name}</span>
-        <span className={styles.price}>{price} руб.</span>
+        <div className={styles.modelWrapper}>
+          <span className={styles.name}>{name}</span>
+          {subModel && <span className={styles.subModel}>{subModel}</span>}
+        </div>
+        <span className={styles.price}>{formattedPrice} руб.</span>
       </div>
     </div>
   );

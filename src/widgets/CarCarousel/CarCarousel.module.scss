@@ -1,0 +1,228 @@
+@use "@/styles/_variables" as vars;
+
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.carouselWrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.carouselTrack {
+  padding: 10px;
+}
+
+.carouselSlide {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.carouselItem {
+  padding: 0 10px;
+  flex: 0 0 auto;
+  width: 280px; /* Default width, will be calculated dynamically */
+}
+
+.carouselNavButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(200, 200, 220, 0.8);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(220, 220, 240, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: #1e3056;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.prevButton {
+  left: 10px;
+}
+
+.nextButton {
+  right: 10px;
+}
+
+.dotIndicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &.active {
+    background-color: #1e3056;
+    transform: scale(1.2);
+  }
+}
+
+/* Card styles */
+.carCard {
+  background: #1e3056;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.cardImage {
+  width: 100%;
+  height: 180px;
+  padding: 8px;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+}
+
+.cardDetails {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 16px 16px;
+  color: white;
+}
+
+.modelInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.modelName {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.subModel {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.cardPrice {
+  font-size: 16px;
+  text-align: right;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.activeCard {
+  transform: scale(1.05);
+  z-index: 5;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading and error states */
+.loadingState,
+.errorState,
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 280px;
+  width: 100%;
+}
+
+.errorState {
+  color: red;
+}
+
+@media (max-width: vars.$ipad-width) {
+  .carouselNavButton {
+    width: 40px;
+    height: 40px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .carouselItem {
+    width: 250px;
+  }
+  
+  .cardImage {
+    height: 160px;
+  }
+}
+
+@media (max-width: vars.$mobile-width) {
+  .carouselNavButton {
+    width: 35px;
+    height: 35px;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  .prevButton {
+    left: 5px;
+  }
+  
+  .nextButton {
+    right: 5px;
+  }
+  
+  .carouselItem {
+    width: 230px;
+  }
+  
+  .cardImage {
+    height: 140px;
+  }
+  
+  .cardDetails {
+    padding: 8px 12px 12px;
+  }
+}

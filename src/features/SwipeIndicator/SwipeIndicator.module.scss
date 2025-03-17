@@ -1,0 +1,87 @@
+.swipeIndicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    z-index: 100;
+    animation: fadeInOut 3s ease-in-out forwards;
+    pointer-events: none;
+  }
+  
+  .swipeAnimation {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .hand {
+    position: relative;
+    animation: moveHand 1.5s infinite;
+    
+    svg {
+      fill: white;
+      width: 30px;
+      height: 30px;
+    }
+  }
+  
+  .arrow {
+    width: 40px;
+    height: 2px;
+    background: white;
+    position: relative;
+    margin-left: 8px;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid white;
+      border-top: 2px solid white;
+      transform: rotate(45deg);
+    }
+  }
+  
+  .text {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+  
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  
+  @keyframes moveHand {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(20px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
