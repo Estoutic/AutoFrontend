@@ -1,22 +1,75 @@
 @use "@/styles/_variables" as vars;
 
+// Animation keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes floatAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .hero {
+  overflow-x: hidden;
+  padding: 20px;
+
+  @media (min-width: vars.$ipad-width) {
+    padding: 40px;
+  }
+
   .container {
     margin: 0 auto;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     flex-direction: column;
+    max-width: 1400px;
   }
 
   .body {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 
     @media (max-width: vars.$ipad-width) {
       flex-direction: column;
-      gap: 20px;
+      gap: 40px;
     }
   }
 
@@ -24,6 +77,12 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    opacity: 0;
+    transition: all 0.6s ease;
+
+    &.animate {
+      opacity: 1;
+    }
 
     h1 {
       text-wrap: nowrap;
@@ -32,13 +91,21 @@
     @media (max-width: vars.$ipad-width) {
       flex-direction: column;
       align-items: flex-start;
+
+      .label {
+        margin-top: 10px;
+      }
     }
   }
 
   .secondText {
     gap: 20px;
-    max-width: 380px;
+    max-width: 450px;
     padding-top: 20px;
+
+    @media (max-width: vars.$ipad-width) {
+      max-width: 100%;
+    }
   }
 
   .text {
@@ -47,16 +114,26 @@
     flex-direction: column;
     justify-content: center;
 
+    .mainTitle {
+      opacity: 0;
+      transition: all 0.6s ease;
+
+      &.animate {
+        opacity: 1;
+        animation: fadeInUp 0.8s ease forwards;
+      }
+    }
+
     h1 {
       font-size: vars.$font-header-size-base;
-
       font-weight: bold;
       color: vars.$primary-color;
       text-transform: uppercase;
-      line-height: 1;
+      line-height: 1.1;
       display: flex;
       flex-direction: column;
     }
+
     @media (max-width: vars.$ipad-width) {
       h1 {
         font-size: vars.$font-header-mobile-size;
@@ -65,7 +142,7 @@
 
     .label {
       display: inline-block;
-      padding: 2px 30px;
+      padding: 4px 30px;
       border: 2px solid vars.$primary-color;
       border-radius: 5px;
       font-size: 16px;
@@ -73,29 +150,59 @@
       color: vars.$primary-color;
       white-space: nowrap;
       margin-left: 20px;
-      white-space: nowrap;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(vars.$primary-color, 0.1);
+      }
 
       @media (max-width: vars.$ipad-width) {
         margin-left: 0px;
+        align-self: flex-start;
       }
     }
 
     p {
       font-size: 20px;
-      line-height: 1.2;
+      line-height: 1.4;
+      opacity: 0;
+      transition: all 0.6s ease;
+
+      &.animate {
+        opacity: 1;
+        animation: fadeInUp 0.8s ease forwards;
+      }
+
+      @media (max-width: vars.$ipad-width) {
+        font-size: 18px;
+      }
     }
   }
 
   .contacts {
+    opacity: 0;
+    transition: all 0.6s ease;
+
+    &.animate {
+      opacity: 1;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
     div {
       display: flex;
       align-items: center;
       gap: 12px;
       font-size: 18px;
-      margin-top: 12px;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateX(5px);
+      }
 
       svg {
         color: vars.$primary-color;
+        font-size: 20px;
       }
     }
   }
@@ -105,26 +212,64 @@
     display: flex;
     max-width: 700px;
     margin-left: 40px;
-
     justify-content: center;
     align-items: flex-end;
-    img {
+
+    @media (max-width: vars.$ipad-width) {
+      margin-left: 0;
+      max-width: 100%;
+    }
+
+    .imageWrapper {
       width: 100%;
-      display: block;
+      opacity: 0;
+      transition: all 0.8s ease;
       position: relative;
       z-index: 2;
+
+      &.animate {
+        opacity: 1;
+        animation: slideInRight 1s ease forwards;
+      }
+
+      img {
+        width: 100%;
+        display: block;
+        position: relative;
+        z-index: 2;
+        animation: floatAnimation 6s ease-in-out infinite;
+      }
     }
 
     &::before {
-      bottom: -15px;
-      right: 5px;
       content: "";
       position: absolute;
+      bottom: -15px;
+      right: 5px;
       width: 110%;
       height: 130px;
       background: #1d3050;
       border-radius: 50%;
       z-index: 1;
+      opacity: 1;
+      animation: slideInRight 1s ease-in forwards;
+
+      @media (max-width: vars.$ipad-width) {
+        height: 100px;
+        width: 100%;
+        bottom: -10px;
+        right: 0;
+      }
+
+      @media (max-width: 480px) {
+        height: 70px;
+        bottom: -8px;
+      }
+    }
+
+    &:hover .imageWrapper {
+      transform: translateY(-8px);
+      transition: transform 0.5s ease;
     }
   }
 }
