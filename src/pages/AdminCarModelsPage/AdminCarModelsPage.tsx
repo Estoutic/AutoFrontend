@@ -10,6 +10,7 @@ import {
 import { CarModelDto } from "@/shared/api/car/types";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import styles from "./AdminCarModelsPage.module.scss";
+import Button from "@/shared/ui/Button/Button";
 
 export const AdminCarModelsPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -162,7 +163,7 @@ export const AdminCarModelsPage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Список моделей автомобиля</h2>
-        <button
+        <Button
           className={styles.addButton}
           onClick={() => {
             setShowForm(true);
@@ -170,7 +171,7 @@ export const AdminCarModelsPage: React.FC = () => {
           }}
         >
           Добавить
-        </button>
+        </Button>
       </div>
 
       <div className={styles.filterContainer}>
@@ -236,7 +237,7 @@ export const AdminCarModelsPage: React.FC = () => {
         </tbody>
       </table>
       <div className={styles.actionButtons}>
-        <button
+        <Button
           className={styles.editButton}
           disabled={!selectedModel}
           onClick={() => {
@@ -245,14 +246,14 @@ export const AdminCarModelsPage: React.FC = () => {
           }}
         >
           Изменить
-        </button>
-        <button
-          className={styles.deleteButton}
+        </Button>
+        <Button
+          variant="secondary" 
           disabled={!selectedModel}
           onClick={handleDeleteModel}
         >
           Удалить
-        </button>
+        </Button>
       </div>
 
       {showForm && (
@@ -284,11 +285,11 @@ export const AdminCarModelsPage: React.FC = () => {
           </div>
           <div className={styles.formActions}>
             {createForm ? (
-              <button onClick={handleCreateModel}>Создать</button>
+              <Button onClick={handleCreateModel}>Создать</Button>
             ) : (
-              <button onClick={handleEditModel}>Обновить</button>
+              <Button onClick={handleEditModel}>Обновить</Button>
             )}
-            <button onClick={() => setShowForm(false)}>Отмена</button>
+            <Button  variant="secondary" onClick={() => setShowForm(false)}>Отмена</Button>
           </div>
         </div>
       )}

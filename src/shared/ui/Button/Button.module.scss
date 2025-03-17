@@ -1,21 +1,73 @@
+@use "sass:color";
+@use "@/styles/_variables.scss" as vars;
+
 .button {
-  background-color: #1a3865;
-  color: white;
-  padding: 0 20px;
-  border-radius: 4px;
-  border: none;
-  font-weight: 500;
+  // Base button styles
+  padding: 10px 20px; // Reduced padding to make it less heavy
+  border-radius: vars.$border-radius;
+  font-family: vars.$font-main;
+  font-size: 16px; // Slightly smaller font size
+  font-weight: 500; // Reduced font weight
   cursor: pointer;
-  transition: background-color 0.3s;
-  height: 42px;
-  line-height: 42px;
-  
-  &:hover:not(:disabled) {
-    background-color: #0d2a54;
+  transition:
+    background-color vars.$transition-speed ease,
+    transform vars.$transition-speed ease,
+    box-shadow vars.$transition-speed ease;
+  outline: none;
+  border: 2px solid transparent;
+  letter-spacing: 0.5px;
+
+  // Hover and active states
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
-  &:disabled {
-    background-color: #7992b7;
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  // Primary variant (dark blue)
+  &.primary {
+    background-color: vars.$primary-color;
+    color: vars.$text-color;
+    border-color: vars.$primary-color;
+
+    &:hover {
+      background-color: color.scale(vars.$primary-color, $lightness: -10%);
+      border-color: color.scale(vars.$primary-color, $lightness: -10%);
+    }
+  }
+
+  // Secondary variant (white with primary color border)
+  &.secondary {
+    background-color: white;
+    color: vars.$primary-color;
+    border: 2px solid vars.$primary-color;
+
+    &:hover {
+      background-color: color.scale(white, $lightness: -5%);
+      border-color: color.scale(vars.$primary-color, $lightness: -10%);
+    }
+  }
+
+  // Disabled state
+  &.disabled {
+    opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+
+    &:hover {
+      background-color: inherit;
+      border-color: inherit;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: vars.$mobile-width) {
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }

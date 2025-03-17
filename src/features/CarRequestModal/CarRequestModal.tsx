@@ -81,9 +81,9 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>
+        <Button className={styles.closeButton} variant="secondary" onClick={onClose}>
           ✕
-        </button>
+        </Button>
         {viewMode === "form" ? (
           <>
             <Text variant="blue">

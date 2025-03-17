@@ -38,7 +38,7 @@ const CarImagesModal: React.FC<CarImagesModalProps> = ({ car, onClose }) => {
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
           <h3>Фотографии автомобиля</h3>
-          <button className={styles.closeButton} onClick={onClose}>&times;</button>
+          <Button className={styles.closeButton} onClick={onClose}>&times;</Button>
         </div>
         <div className={styles.modalBody}>
           {isLoading && <div>Загрузка изображений...</div>}

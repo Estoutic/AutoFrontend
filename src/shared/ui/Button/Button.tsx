@@ -7,21 +7,30 @@ interface ButtonProps {
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
 }
 
-const Button: React.FC<ButtonProps> = ({ 
-  type = 'button', 
-  disabled = false, 
-  className = '', 
+const Button: React.FC<ButtonProps> = ({
+  type = 'button',
+  disabled = false,
+  className = '',
   onClick,
-  children 
+  children,
+  variant = 'primary'
 }) => {
+  const buttonClasses = `
+    ${styles.button} 
+    ${styles[variant]} 
+    ${className} 
+    ${disabled ? styles.disabled : ''}
+  `.trim();
+
   return (
     <button
       type={type}
+      className={buttonClasses}
+      onClick={!disabled ? onClick : undefined}
       disabled={disabled}
-      className={`${styles.button} ${className}`}
-      onClick={onClick}
     >
       {children}
     </button>

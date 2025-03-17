@@ -96,12 +96,12 @@ const AdminReportsPage: React.FC = () => {
                   </p> */}
                 </div>
                 <div className={styles.itemActions}>
-                  <button onClick={() => handleDownload(report.id)}>
+                  <Button onClick={() => handleDownload(report.id)}>
                     Скачать
-                  </button>
-                  <button  onClick={() => handleDelete(report.id)}>
+                  </Button>
+                  <Button  variant="secondary" onClick={() => handleDelete(report.id)}>
                     Удалить
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))

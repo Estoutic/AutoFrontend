@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { RU as RuIcon, US as UsIcon, CN as CnIcon } from "country-flag-icons/react/3x2";
 import styles from "./LanguageSwitcher.module.scss";
+import Button from "@/shared/ui/Button/Button";
 
 type FlagIconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
@@ -44,14 +45,14 @@ export const LanguageSwitcher: React.FC = () => {
 
   return (
     <div className={styles.languageSwitcher}>
-      <button className={styles.currentLang} onClick={toggleDropdown}>
+      <Button className={styles.currentLang}  variant="secondary" onClick={toggleDropdown}>
         <currentLangData.FlagIcon
           className={styles.flagIcon}
           aria-label={currentLangData.label}
           role="img"
         />
         <span>{currentLangData.label}</span>
-      </button>
+      </Button>
 
       {isOpen && (
         <ul className={styles.dropdown}>

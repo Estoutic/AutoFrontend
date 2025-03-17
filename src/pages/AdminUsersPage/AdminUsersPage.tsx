@@ -11,6 +11,7 @@ import {
   useDeactivateUser,
   useGetAllUsers,
 } from "@/shared/api/admin/hooks";
+import Button from "@/shared/ui/Button/Button";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -136,21 +137,22 @@ export const AdminUsersPage: React.FC = () => {
 
       <div className={styles.actionButtons}>
         {canDeactivate && (
-          <button
+          <Button
+            variant="secondary"
             className={styles.deactivateButton}
             disabled={!selectedUser}
             onClick={handleDeactivateUser}
           >
             Деактивировать
-          </button>
+          </Button>
         )}
         {canCreate && (
-          <button
+          <Button
             className={styles.addButton}
             onClick={() => setShowForm(true)}
           >
             Добавить
-          </button>
+          </Button>
         )}
       </div>
 
@@ -189,8 +191,10 @@ export const AdminUsersPage: React.FC = () => {
             <div className={styles.errorMessage}>{backendError}</div>
           )}
           <div className={styles.formActions}>
-            <button onClick={handleCreateUser}>Создать</button>
-            <button onClick={() => setShowForm(false)}>Отмена</button>
+            <Button onClick={handleCreateUser}>Создать</Button>
+            <Button variant="secondary" onClick={() => setShowForm(false)}>
+              Отмена
+            </Button>
           </div>
         </div>
       )}

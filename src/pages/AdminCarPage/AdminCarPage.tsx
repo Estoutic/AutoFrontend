@@ -15,6 +15,7 @@ import {
 import styles from "./AdminCarPage.module.scss";
 import CarFormModal from "@/entities/CarFormModal/CarFormModal";
 import CarImagesModal from "@/features/CarImagesModal/CarImagesModal";
+import Button from "@/shared/ui/Button/Button";
 
 const AdminCarPage: React.FC = () => {
   const [filter, setFilter] = useState<CarFilterDto>({});
@@ -94,9 +95,9 @@ const AdminCarPage: React.FC = () => {
     <div className={styles.container}>
       <h2>Управление автомобилями</h2>
       <AdminFilterWidget filter={filter} onChange={handleFilterChange} />
-      <button className={styles.addButton} onClick={handleOpenCreateModal}>
+      <Button className={styles.addButton} onClick={handleOpenCreateModal}>
         Добавить автомобиль
-      </button>
+      </Button>
 
       {isLoading ? (
         <div>Загрузка...</div>

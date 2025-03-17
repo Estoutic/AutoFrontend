@@ -216,9 +216,9 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
               ? "Создать автомобиль"
               : "Редактировать автомобиль"}
           </h3>
-          <button className={styles.closeButton} onClick={onClose}>
+          <Button className={styles.closeButton} onClick={onClose}>
             &times;
-          </button>
+          </Button>
         </div>
 
         <div className={styles.modalBody}>

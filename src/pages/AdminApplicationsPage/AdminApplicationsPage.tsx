@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import Button from "@/shared/ui/Button/Button";
-import { ApplicationDto, ApplicationStatus } from "@/shared/api/application/types";
+import {
+  ApplicationDto,
+  ApplicationStatus,
+} from "@/shared/api/application/types";
 import {
   useGetApplications,
   useDeleteApplication,
@@ -22,12 +25,12 @@ const AdminApplicationsPage: React.FC = () => {
   ];
 
   const { data, isLoading, isError } = useGetApplications(
-    statusFilter || undefined, 
-    0,  
-    10,  
+    statusFilter || undefined,
+    0,
+    10,
     "id",
     "asc",
-    "EU"
+    "EU",
   );
 
   const deleteMutation = useDeleteApplication();
@@ -56,7 +59,7 @@ const AdminApplicationsPage: React.FC = () => {
         onError: (err) => {
           alert("Ошибка обновления статуса заявки: " + err);
         },
-      }
+      },
     );
   };
 
@@ -107,32 +110,33 @@ const AdminApplicationsPage: React.FC = () => {
                       : "N/A"}
                   </td>
                   <td className={styles.actionsCell}>
-                    <button
+                    <Button
                       onClick={() =>
                         handleUpdateStatus(app.id, ApplicationStatus.ACCEPTED)
                       }
                     >
                       Принять
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() =>
                         handleUpdateStatus(app.id, ApplicationStatus.REJECTED)
                       }
                     >
                       Отклонить
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() =>
                         handleUpdateStatus(app.id, ApplicationStatus.COMPLETED)
                       }
                     >
                       Завершить
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="secondary"
                       onClick={() => handleDelete(app.id)}
                     >
                       Удалить
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))

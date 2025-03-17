@@ -263,13 +263,13 @@ const Calculator: React.FC = () => {
               )}
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={calculateMutation.isLoading}
               className={styles.calculateButton}
             >
               {calculateMutation.isLoading ? "Рассчитываем..." : "Рассчитать"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
