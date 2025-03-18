@@ -82,3 +82,42 @@
     flex-direction: column;
   }
   
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .loadingMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.1);
+    border-radius: 8px;
+    margin: 20px 0;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  
+  .errorMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #d32f2f;
+    background-color: rgba(211, 47, 47, 0.1);
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.6;
+    }
+  }

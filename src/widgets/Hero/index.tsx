@@ -7,7 +7,6 @@ import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 export const Hero = () => {
   const { t } = useTranslation();
   
-  // Create refs for elements we want to animate
   const headerRef = useRef<HTMLHeadingElement>(null);
   const subHeaderRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -15,7 +14,6 @@ export const Hero = () => {
   const contactsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Adding animation classes with delay for each element
     const timer1 = setTimeout(() => {
       if (headerRef.current) {
         headerRef.current.classList.add(styles.animate);
@@ -46,7 +44,6 @@ export const Hero = () => {
       }
     }, 1300);
 
-    // Cleanup timers on component unmount
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);

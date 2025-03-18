@@ -22,7 +22,7 @@ const CalculatorCalculations: React.FC<CalculatorCalculationsProps> = ({
   return (
     <div className={styles.calculationsContainer}>
       <div className={styles.header}>
-        <h2>Результаты расчета таможенных платежей</h2>
+        <h3>Результаты расчета таможенных платежей</h3>
       </div>
       
       <div className={styles.resultsTableWrapper}>

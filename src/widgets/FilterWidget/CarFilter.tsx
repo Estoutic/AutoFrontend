@@ -9,7 +9,6 @@ import {
   ENGINE_OPTIONS,
   STEERING_OPTIONS,
   TRANSMISSION_OPTIONS,
-  OWNERS_COUNT,
 } from "@/shared/constants/carOptions";
 import { CarFilterDto } from "@/shared/api/car/types";
 import { useTranslation } from "react-i18next";
@@ -18,9 +17,11 @@ import { useGetAllFilters } from "@/shared/api/carModel/hooks";
 interface CarFilterProps {
   filter: CarFilterDto;
   onChange: (newFilter: CarFilterDto) => void;
+  onApplyFilter: () => void; // Prop для обработки нажатия кнопки Показать
+  onClearFilters: () => void; // Prop для обработки нажатия кнопки Очистить
 }
 
-const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
+const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, onClearFilters }) => {
   const { t } = useTranslation();
   const { data: filterData, isLoading } = useGetAllFilters();
 
@@ -29,13 +30,6 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
       ...filter,
       [key]: value,
     });
-  };
-
-  // Function to clear all filters
-  const handleClearFilters = () => {
-    // Create empty filter object
-    const emptyFilter: CarFilterDto = {};
-    onChange(emptyFilter);
   };
 
   return (
@@ -57,6 +51,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
               console.log(val);
               
               handleChange("brand", val);
+              // При изменении бренда можно опционально сбросить модель и поколение
               // handleChange("model", "");
               // handleChange("generation", "");
             }}
@@ -206,11 +201,15 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange }) => {
         </div>
 
         <div className={styles.buttonContainer}>
-          <Button onClick={() => console.log("Текущий фильтр:", filter)}>
-            {t("carFilter.showButton")}
+          <Button 
+            onClick={onApplyFilter}
+            className={styles.showButton}
+          >
+            {t("carFilter.showButton") || "Показать"}
           </Button>
           <Button 
-            onClick={handleClearFilters} 
+            onClick={onClearFilters}
+            className={styles.clearButton}
           >
             {t("carFilter.clearButton") || "Очистить"}
           </Button>

@@ -46,15 +46,9 @@ const Calculator: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   const calculateMutation = useCalculateCustoms();
   
-  // Наблюдаем за всеми полями формы
   const formValues = watch();
 
-  // Функция для определения, нужно ли показывать сообщение об ошибке
   const shouldShowRequiredError = (fieldName: keyof CalculatorFormData) => {
-    // Показываем ошибку только если:
-    // 1. Форма была отправлена хотя бы раз ИЛИ
-    // 2. Поле было "тронуто" (пользователь взаимодействовал с ним)
-    // И при этом поле пустое или не определено
     return (submitCount > 0 || touchedFields[fieldName]) && 
            (!formValues[fieldName] || formValues[fieldName] === "");
   };
@@ -64,7 +58,6 @@ const Calculator: React.FC = () => {
       onSuccess: (res) => {
         setResult(res);
         setShowResults(true);
-        // Scroll to results after a short delay to ensure rendering
         setTimeout(() => {
           const resultsElement = document.getElementById("calculation-results");
           if (resultsElement) {
