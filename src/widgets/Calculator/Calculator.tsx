@@ -282,3 +282,6 @@ const Calculator: React.FC = () => {
 };
 
 export default Calculator;
+
+
+// TODO локализация

@@ -45,11 +45,7 @@
 }
 
 .hero {
-  overflow-x: hidden;
-  padding: 20px;
-
-  @media (min-width: vars.$ipad-width) {
-    padding: 40px;
+  @media (min-width: vars.$mobile-width) {
   }
 
   .container {
