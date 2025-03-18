@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import styles from "./CarRequestModal.module.scss";
 import { CarResponseDto } from "@/shared/api/car/types";
 import Text from "@/shared/ui/Text/Text";
@@ -53,8 +53,14 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
 
   if (!isOpen || !car) return null;
 
-  const handleChange = (key: keyof ApplicationCreationDto, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+  // Handle input changes from InputField components (which use event objects)
+  const handleInputChange = (key: keyof ApplicationCreationDto) => (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [key]: event.target.value }));
+  };
+
+  // Handle direct string value from Dropdown component
+  const handleDropdownChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, contact: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -81,11 +87,12 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <Button className={styles.closeButton} variant="secondary" onClick={onClose}>
-          ✕
-        </Button>
+
         {viewMode === "form" ? (
           <>
+                  <Button className={styles.closeButton} variant="secondary" onClick={onClose}>
+          ✕
+        </Button>
             <Text variant="blue">
               {t("carRequestModal.enterYourData")}
             </Text>
@@ -95,13 +102,13 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
                 <InputField
                   type="text"
                   value={formData.firstName}
-                  onChange={(val) => handleChange("firstName", val)}
+                  onChange={handleInputChange("firstName")}
                   placeholder={t("carRequestModal.firstNamePlaceholder")}
                 />
                 <InputField
                   type="text"
                   value={formData.lastName}
-                  onChange={(val) => handleChange("lastName", val)}
+                  onChange={handleInputChange("lastName")}
                   placeholder={t("carRequestModal.lastNamePlaceholder")}
                 />
               </div>
@@ -109,7 +116,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
               <Dropdown
                 options={CONTACT_TYPE_OPTIONS}
                 value={formData.contact}
-                onChange={(val) => handleChange("contact", val)}
+                onChange={handleDropdownChange}
                 placeholder={t("carRequestModal.contactTypePlaceholder")}
               />
 
@@ -117,7 +124,7 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
                 <InputField
                   type="text"
                   value={formData.contactDetails}
-                  onChange={(val) => handleChange("contactDetails", val)}
+                  onChange={handleInputChange("contactDetails")}
                   placeholder={t("carRequestModal.contactDetailsPlaceholder")}
                 />
               </div>
@@ -155,8 +162,5 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
     </div>
   );
 };
-
-// TODO пофиксить объекты
-
 
 export default CarRequestModal;

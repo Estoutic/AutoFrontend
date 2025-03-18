@@ -248,7 +248,7 @@
       border-radius: 50%;
       z-index: 1;
       opacity: 1;
-      animation: slideInRight 1s ease-in forwards;
+      animation: fadeInUp 2s ease-in forwards;
 
       @media (max-width: vars.$ipad-width) {
         height: 100px;

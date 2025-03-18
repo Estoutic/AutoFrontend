@@ -71,7 +71,7 @@ const CarCatalog: React.FC = () => {
       )}
       {isError && <div className={styles.errorMessage}>Ошибка при загрузке данных</div>}
 
-      <CarList cars={cars} />
+      <CarList cars={cars} loading={(isLoading || isSearching)} />
       
       {/* Здесь можно добавить компонент пагинации */}
     </div>

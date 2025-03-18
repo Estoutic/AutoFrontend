@@ -13,7 +13,6 @@ export interface CustomsCalculationRequestDto {
   mode: string;
 }
 
-enum CarAgeCategory {}
 export interface CustomsCalculationResponseDto {
   mode: string; // Режим расчёта (например, ETC, CTP)
   priceRub: number; // Стоимость автомобиля в рублях (если актуально)

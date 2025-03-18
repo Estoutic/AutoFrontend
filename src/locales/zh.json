@@ -76,7 +76,9 @@
     "mileageFromPlaceholder": "里程从, km",
     "mileageToPlaceholder": "里程到, km",
     "showButton": "显示",
-    "clearButton": "清除"
+    "clearButton": "清除",
+    "searchingMessage" :"我們正在尋找汽車..."
+
 
   },
   "carList": {

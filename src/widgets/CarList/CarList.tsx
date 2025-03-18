@@ -7,14 +7,15 @@ import { useTranslation } from "react-i18next";
 
 interface CarListProps {
   cars: CarResponseDto[];
+  loading: boolean;
 }
 
-const CarList: React.FC<CarListProps> = ({ cars }) => {
+const CarList: React.FC<CarListProps> = ({ cars, loading }) => {
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [selectedCar, setSelectedCar] = useState<CarResponseDto | null>(null);
 
-  const filtredCars = cars.filter((car) => car.isAvailable)
+  const filtredCars = cars.filter((car) => car.isAvailable);
   const handleOpenModal = (car: CarResponseDto) => {
     setSelectedCar(car);
     setShowModal(true);
@@ -32,10 +33,16 @@ const CarList: React.FC<CarListProps> = ({ cars }) => {
 
   return (
     <div className={styles.listContainer}>
-      <h2>{t("carList.foundCars", { count: filtredCars.length })}</h2>
+      {!loading && (
+        <h2>{t("carList.foundCars", { count: filtredCars.length })}</h2>
+      )}
       <div className={styles.cardList}>
         {filtredCars.map((car) => (
-          <CarDetailCard key={car.id} car={car}  onSubmit={() => handleOpenModal(car)} />
+          <CarDetailCard
+            key={car.id}
+            car={car}
+            onSubmit={() => handleOpenModal(car)}
+          />
         ))}
       </div>
       <CarRequestModal

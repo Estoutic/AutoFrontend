@@ -76,7 +76,8 @@
     "mileageFromPlaceholder": "Mileage from, km",
     "mileageToPlaceholder": "Mileage to, km",
     "showButton": "Show",
-    "clearButton": "Clear"
+    "clearButton": "Clear",
+    "searchingMessage" :"Searching cars..."
   },
   "carList": {
     "foundCars": "{{count}} Cars found",

@@ -76,7 +76,9 @@
     "mileageFromPlaceholder": "Пробег от, км",
     "mileageToPlaceholder": "Пробег до, км",
     "showButton": "Показать",
-    "clearButton": "Очистить"
+    "clearButton": "Очистить",
+    "searchingMessage" :"Ищем автомобили..."
+
 
   },
   "carList": {

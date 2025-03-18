@@ -1,3 +1,5 @@
+@use "@/styles/_variables" as vars;
+
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -84,16 +86,14 @@
   
   .container {
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
   }
   
   .loadingMessage {
     text-align: center;
     padding: 20px;
     font-size: 18px;
-    color: #1976d2;
+    color: vars.$primary-color;
     background-color: rgba(25, 118, 210, 0.1);
     border-radius: 8px;
     margin: 20px 0;
