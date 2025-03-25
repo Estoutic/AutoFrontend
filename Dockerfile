@@ -1,19 +1,40 @@
-FROM node:18-alpine AS build
+#################
+#Build
+#################
+FROM --platform=linux/amd64 node:20.15.1-alpine3.20 AS build
+
 WORKDIR /app
 
-# Копируем файлы пакетов и устанавливаем зависимости
-COPY package.json yarn.lock ./
+COPY ./package.json ./
+COPY ./yarn.lock ./
+
 RUN yarn install --frozen-lockfile
 
-# Копируем исходные файлы и собираем приложение
-COPY . .
+COPY .eslintrc.cjs ./
+COPY eslint.config.js ./
+COPY .declaration.module.ts ./
+COPY tsconfig.json ./
+COPY tsconfig.node.json ./
+COPY .prettierrc ./
+COPY tsconfig.app.tsbuildinfo ./
+COPY tsconfig.node.tsbuildinfo ./
+COPY tsconfig.app.json ./
+COPY index.html ./
+COPY vite.config.ts ./
+COPY ./src ./src/
+
 RUN yarn build
 
-# Этап продакшн с Nginx
-FROM nginx:stable-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+#################
+#Start
+#################
+FROM --platform=linux/amd64 node:20.15.1-alpine3.20 AS deploy
 
-# Экспонируем порты
-EXPOSE 80 443
+WORKDIR /app
 
-CMD ["nginx", "-g", "daemon off;"]
+RUN apk add bash && \
+  yarn global add serve
+
+COPY --from=build ./app/dist ./dist
+
+CMD ["/bin/bash", "-c", "serve -s dist"]
