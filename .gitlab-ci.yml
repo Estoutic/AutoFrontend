@@ -16,7 +16,6 @@ build:
     - node --version
     - npm --version
     - yarn --version
-    - yarn 
     - yarn build
     - echo "Build successful"
   artifacts:
