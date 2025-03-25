@@ -15,8 +15,8 @@ build:
     - echo "Building deploy package"
     - node --version
     - npm --version
-    - yarn --version
-    - yarn build
+    - npm install --legacy-peer-deps
+    - npm run build
     - echo "Build successful"
   artifacts:
     expire_in: 1 hour
@@ -33,4 +33,3 @@ deploy:
     - sudo rm -rf /var/www/$CI_PROJECT_NAME
     - cp -rv ./dist /var/www/$CI_PROJECT_NAME
     - echo "Deployed"
-
