@@ -15,8 +15,11 @@ build:
     - echo "Building deploy package"
     - node --version
     - npm --version
-    - npm install --legacy-peer-deps
-    - npm run build
+    - sudo npm install -g yarn --force  # Install Yarn globally with sudo
+    - export PATH="$PATH:/usr/local/bin"  # Ensure the path includes where npm installs global packages
+    - yarn --version  # Check the new Yarn version
+    - yarn install  # Use the new Yarn to install dependencies
+    - yarn build  # Use the new Yarn to build
     - echo "Build successful"
   artifacts:
     expire_in: 1 hour
