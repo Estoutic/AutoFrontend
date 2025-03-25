@@ -29,5 +29,4 @@ EOL
 # Создадим директорию для конфигурации Nginx в проекте
 mkdir -p nginx
 
-# Скопируем конфигурацию Nginx в проект
 cp /home/admin/projects/auto/front/nginx/default.conf nginx/default.conf
