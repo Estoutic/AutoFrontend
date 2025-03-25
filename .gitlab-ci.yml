@@ -1,3 +1,5 @@
+image: node:18
+
 stages:
   - build
   - deploy
@@ -8,34 +10,27 @@ default:
 
 build:
   stage: build
+  interruptible: true
   script:
     - echo "Building deploy package"
-    - if ! command -v node &> /dev/null; then
-        echo "Installing Node.js..."
-        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-      fi
-    - node -v
-    - if ! command -v yarn &> /dev/null; then
-        echo "Installing Yarn..."
-        sudo npm install -g yarn
-      fi
-    - yarn -v
-    - yarn install
+    - yarn install 
     - yarn build
     - echo "Build successful"
+
   artifacts:
     expire_in: 1 hour
     paths:
       - build
       - dist
 
+
 deploy:
   stage: deploy
+  interruptible: true
   script:
     - echo "Deploying to server"
-    - sudo mkdir -p /var/www/$CI_PROJECT_NAME
+    - mkdir -p /var/www/$CI_PROJECT_NAME
     - sudo rm -rf /var/www/$CI_PROJECT_NAME
-    - sudo cp -rv ./dist /var/www/$CI_PROJECT_NAME
-    - sudo chown -R www-data:www-data /var/www/$CI_PROJECT_NAME
+    - cp -rv ./dist /var/www/$CI_PROJECT_NAME
     - echo "Deployed"
+
