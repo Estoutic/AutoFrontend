@@ -13,11 +13,13 @@ build:
   interruptible: true
   script:
     - echo "Building deploy package"
-    - which yarn || (npm install -g yarn) # Make sure yarn is installed
-    - yarn --version # Check yarn version
-    - yarn install --pure-lockfile # Use frozen-lockfile for CI environments
+    - yarn --version # Check current version
+    - npm install -g yarn # Update to the latest Yarn version
+    - yarn --version # Verify the update
+    - yarn install
     - yarn build
     - echo "Build successful"
+
   artifacts:
     expire_in: 1 hour
     paths:
