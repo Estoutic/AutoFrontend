@@ -10,10 +10,17 @@ build:
   stage: build
   script:
     - echo "Building deploy package"
-    # Используем NVM для установки правильной версии Node.js
-    - source ~/.nvm/nvm.sh || true
-    - nvm use 18 || nvm install 18
-    - npm install -g yarn
+    - if ! command -v node &> /dev/null; then
+        echo "Installing Node.js..."
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+      fi
+    - node -v
+    - if ! command -v yarn &> /dev/null; then
+        echo "Installing Yarn..."
+        sudo npm install -g yarn
+      fi
+    - yarn -v
     - yarn install
     - yarn build
     - echo "Build successful"
@@ -27,7 +34,8 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying to server"
-    - mkdir -p /var/www/$CI_PROJECT_NAME
-    - rm -rf /var/www/$CI_PROJECT_NAME || true
-    - cp -rv ./dist /var/www/$CI_PROJECT_NAME
+    - sudo mkdir -p /var/www/$CI_PROJECT_NAME
+    - sudo rm -rf /var/www/$CI_PROJECT_NAME
+    - sudo cp -rv ./dist /var/www/$CI_PROJECT_NAME
+    - sudo chown -R www-data:www-data /var/www/$CI_PROJECT_NAME
     - echo "Deployed"
