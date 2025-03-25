@@ -4,6 +4,8 @@ import {
   useQuery,
   UseMutationResult,
   useQueryClient,
+  UseQueryOptions,
+  UseQueryResult,
 } from "react-query";
 import { carApi } from "../client";
 import keys from "./keys";
@@ -12,6 +14,7 @@ import {
   CarFilterDto,
   CarResponseDto,
   CarUpdateDto,
+  PaginatedCarResponse,
 } from "./types";
 
 /**
@@ -66,8 +69,8 @@ export const useGetAllCars = (
   sortBy = "id",
   sortOrder = "asc",
   locale = "EU",
-  options = {},
-) => {
+  options: Partial<UseQueryOptions<PaginatedCarResponse, AxiosError>> = {},
+): UseQueryResult<PaginatedCarResponse, AxiosError> => {
   console.log(filterDto);
 
   const queryKey = keys.list({
@@ -89,7 +92,7 @@ export const useGetAllCars = (
       locale,
     );
 
-  return useQuery({
+  return useQuery<PaginatedCarResponse, AxiosError>({
     queryKey,
     queryFn,
     keepPreviousData: true,
