@@ -19,8 +19,10 @@ build:
     - apt-get install -y nodejs
     - node --version
     - npm --version
-    - npm install
-    - npm run build
+    - npm install -g yarn
+    - yarn --version
+    - yarn install --ignore-engines
+    - yarn build
     - echo "Build successful"
   artifacts:
     expire_in: 1 hour
