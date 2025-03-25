@@ -16,7 +16,7 @@ build:
     - node --version
     - npm --version
     - yarn --version
-    - yarn install --ignore-engines --ignore-platform
+    - yarn install
     - yarn build
     - echo "Build successful"
   artifacts:
@@ -24,7 +24,6 @@ build:
     paths:
       - build
       - dist
-
 
 deploy:
   stage: deploy
