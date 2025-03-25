@@ -1,0 +1,174 @@
+stages:
+  - build
+  - deploy
+  - ssl
+  - cleanup
+
+# Используем shell runner как в бэкенде
+default:
+  tags:
+    - shell
+
+build:
+  stage: build
+  script:
+    - echo "FRONTEND BUILD STARTED!"
+    - docker rmi -f autofrontend:latest || true
+    - docker build -t autofrontend:latest .
+    - echo "FRONTEND BUILD COMPLETED!"
+  only:
+    - master
+  allow_failure: false
+
+deploy:
+  stage: deploy
+  script:
+    - echo "FRONTEND DEPLOY STARTED!"
+    
+    # Создаем структуру директорий для фронтенда
+    - mkdir -p /home/admin/projects/auto/front/nginx/ssl/live/drujbacarsale.ru
+    - mkdir -p /home/admin/projects/auto/front/certbot/www/.well-known/acme-challenge
+    
+    # Проверяем наличие сети Docker и создаем, если не существует
+    - docker network ls | grep auto_network || docker network create auto_network
+    
+    # Создаем конфигурацию nginx
+    - |
+      mkdir -p /home/admin/projects/auto/front/nginx
+      cat > /home/admin/projects/auto/front/nginx/default.conf << 'EOL'
+      server {
+          listen 80;
+          listen [::]:80;
+          server_name drujbacarsale.ru www.drujbacarsale.ru;
+          
+          # Для верификации Let's Encrypt
+          location /.well-known/acme-challenge/ {
+              root /var/www/certbot;
+          }
+          
+          # Перенаправление HTTP на HTTPS
+          location / {
+              return 301 https://$host$request_uri;
+          }
+      }
+
+      server {
+          listen 443 ssl http2;
+          listen [::]:443 ssl http2;
+          server_name drujbacarsale.ru www.drujbacarsale.ru;
+
+          # SSL сертификаты
+          ssl_certificate /etc/nginx/ssl/live/drujbacarsale.ru/fullchain.pem;
+          ssl_certificate_key /etc/nginx/ssl/live/drujbacarsale.ru/privkey.pem;
+          
+          # Настройки SSL
+          ssl_protocols TLSv1.2 TLSv1.3;
+          ssl_prefer_server_ciphers on;
+          ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+          ssl_session_cache shared:SSL:10m;
+          ssl_session_timeout 1d;
+          ssl_session_tickets off;
+
+          # HSTS
+          add_header Strict-Transport-Security "max-age=63072000" always;
+
+          # Корневая директория
+          root /usr/share/nginx/html;
+          index index.html;
+
+          # Обслуживание статического контента с поддержкой React Router
+          location / {
+              try_files $uri $uri/ /index.html;
+          }
+
+          # Прокси к бекенду
+          location /api/ {
+              proxy_pass http://auto-backend:8088/;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection 'upgrade';
+              proxy_set_header Host $host;
+              proxy_cache_bypass $http_upgrade;
+          }
+
+          # Кеширование статических ресурсов
+          location ~* \.(?:jpg|jpeg|gif|png|ico|svg|woff|woff2|ttf|css|js)$ {
+              expires 30d;
+              add_header Cache-Control "public, no-transform";
+          }
+      }
+      EOL
+    
+    # Создаем docker-compose.yml
+    - |
+      cat > /home/admin/projects/auto/front/docker-compose.yml << 'EOL'
+      version: '3.8'
+      
+      services:
+        frontend:
+          image: autofrontend:latest
+          container_name: auto-frontend
+          restart: always
+          ports:
+            - "80:80"
+            - "443:443"
+          volumes:
+            - ./nginx/ssl:/etc/nginx/ssl
+            - ./certbot/www:/var/www/certbot
+          networks:
+            - auto_network
+      
+      networks:
+        auto_network:
+          external: true
+      EOL
+    
+    # Запускаем контейнеры
+    - cd /home/admin/projects/auto/front
+    - docker compose down || true
+    - docker compose up -d
+    
+    - echo "FRONTEND DEPLOY COMPLETED!"
+  only:
+    - master
+
+ssl:
+  stage: ssl
+  script:
+    - echo "SSL SETUP STARTED!"
+    
+    # Устанавливаем certbot, если он еще не установлен
+    - which certbot || apt-get update && apt-get install -y certbot
+    
+    # Получаем SSL сертификат
+    - |
+      cd /home/admin/projects/auto/front
+      mkdir -p certbot/www
+      
+      # Временно останавливаем контейнер фронтенда, чтобы освободить порт 80
+      docker compose down
+      
+      # Получаем или обновляем сертификат
+      certbot certonly --standalone \
+        -d drujbacarsale.ru -d www.drujbacarsale.ru \
+        --email drujba_narodov1@mail.ru --agree-tos --no-eff-email
+      
+      # Копируем сертификаты в директорию ssl для nginx
+      mkdir -p nginx/ssl/live/drujbacarsale.ru
+      cp /etc/letsencrypt/live/drujbacarsale.ru/fullchain.pem nginx/ssl/live/drujbacarsale.ru/
+      cp /etc/letsencrypt/live/drujbacarsale.ru/privkey.pem nginx/ssl/live/drujbacarsale.ru/
+      
+      # Перезапускаем контейнер фронтенда
+      docker compose up -d
+    
+    - echo "SSL SETUP COMPLETED!"
+  only:
+    - master
+
+cleanup:
+  stage: cleanup
+  when: always
+  script:
+    - echo "CLEANUP STARTED!"
+    - docker system prune -a -f --volumes --filter "until=24h" || true
+    - echo "CLEANUP COMPLETED!"
