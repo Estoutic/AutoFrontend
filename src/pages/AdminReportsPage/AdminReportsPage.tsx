@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import Button from "@/shared/ui/Button/Button";
 import { useGetAllReports, useDeleteReport } from "@/shared/api/report/hooks";
-import { ReportFilterDto } from "@/shared/api/report/types";
+import { ReportDto, ReportFilterDto } from "@/shared/api/report/types";
 import styles from "./AdminReportsPage.module.scss";
 import { useMutation } from "react-query";
 import { adminApi } from "@/shared/api/client";
 
+// Type guard to check if object has content property that is an array
+const isPaginatedResponse = (data: any): data is { content: ReportDto[] } => {
+  return data && typeof data === 'object' && Array.isArray(data.content);
+};
+
 const AdminReportsPage: React.FC = () => {
-  
   const [filter, setFilter] = useState<ReportFilterDto>({});
 
   const handleCreatedAfterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +32,29 @@ const AdminReportsPage: React.FC = () => {
 
   const { data, isLoading, isError } = useGetAllReports(filter);
 
-  // Мутация для удаления отчёта
+  // Get the reports array regardless of response format with proper type narrowing
+  const getReports = (): ReportDto[] => {
+    if (!data) {
+      return [];
+    }
+    
+    // Use type guard to safely access content property
+    if (isPaginatedResponse(data)) {
+      return data.content;
+    }
+    
+    // Otherwise, if data is an array, return it
+    if (Array.isArray(data)) {
+      return data;
+    }
+    
+    // Fallback to empty array
+    return [];
+  };
+
+  const reports = getReports();
+
+  // Mutation for deleting a report
   const deleteMutation = useDeleteReport();
 
   const downloadReportMutation = useMutation(async (id: string) => {
@@ -80,8 +105,8 @@ const AdminReportsPage: React.FC = () => {
         <div>Ошибка при загрузке отчётов</div>
       ) : (
         <div className={styles.reportsList}>
-          {data && data.content && data.content.length > 0 ? (
-            data.content.map((report) => (
+          {reports.length > 0 ? (
+            reports.map((report) => (
               <div key={report.id} className={styles.reportItem}>
                 <div className={styles.reportInfo}>
                   <h3>{report.name}</h3>
@@ -91,15 +116,12 @@ const AdminReportsPage: React.FC = () => {
                       ? new Date(report.createdAt).toLocaleString()
                       : "N/A"}
                   </p>
-                  {/* <p>
-                    <strong>Путь к файлу:</strong> {report.filePath}
-                  </p> */}
                 </div>
                 <div className={styles.itemActions}>
                   <Button onClick={() => handleDownload(report.id)}>
                     Скачать
                   </Button>
-                  <Button  variant="secondary" onClick={() => handleDelete(report.id)}>
+                  <Button variant="secondary" onClick={() => handleDelete(report.id)}>
                     Удалить
                   </Button>
                 </div>
