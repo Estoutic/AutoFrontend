@@ -8,7 +8,7 @@ import { ImageApi } from "./image/ImageApi";
 import { CarTranslationApi } from "./translation/CarTranslationApi";
 import { UserApi } from "./user/UserApi";
 
-const httpClient = createHttpClient("http://213.183.45.128:8088/api");
+const httpClient = createHttpClient("https://drujbacarsale.ru/api");
 
 export const carApi = new CarApi(httpClient);
 
