@@ -13,15 +13,10 @@ build:
   interruptible: true
   script:
     - echo "Building deploy package"
-    - apt-get update
-    - apt-get install -y curl
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
     - node --version
     - npm --version
-    - npm install -g yarn
     - yarn --version
-    - yarn install --ignore-engines
+    - yarn install --ignore-engines --ignore-platform
     - yarn build
     - echo "Build successful"
   artifacts:
