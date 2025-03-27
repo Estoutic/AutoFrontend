@@ -45,7 +45,6 @@ const AdminFilterWidget: React.FC<CarFilterProps> = ({ filter, onChange }) => {
           onChange={(val) => updateFilter(field, val)}
           placeholder={placeholder}
           disabled={disabled}
-          className={styles.dropdown}
         />
       </div>
     );
