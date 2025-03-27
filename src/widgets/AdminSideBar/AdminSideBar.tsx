@@ -76,7 +76,6 @@ const AdminSidebar: React.FC = () => {
         <div className={styles.sidebarHeader}>
           <Link to="/" className={styles.logo}>
             <img src="/logo.svg" alt="Дружба Народов" />
-            {!isCollapsed && !isMobile && <span className={styles.logoText}>Дружба Народов</span>}
           </Link>
           
           {/* Mobile close button (X) */}
