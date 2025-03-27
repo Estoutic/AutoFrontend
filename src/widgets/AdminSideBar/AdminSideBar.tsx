@@ -13,12 +13,13 @@ import {
   AiOutlineMenuFold,
   AiOutlineMenuUnfold,
   AiOutlineMenu,
-  AiOutlineClose
+  AiOutlineClose,
 } from "react-icons/ai";
 import { useSidebar } from "@/features/SidebarContext/SidebarContext";
 
 const AdminSidebar: React.FC = () => {
-  const { isCollapsed, isMobile, isOpen, toggleSidebar, closeSidebar } = useSidebar();
+  const { isCollapsed, isMobile, isOpen, toggleSidebar, closeSidebar } =
+    useSidebar();
   const location = useLocation();
 
   const navItems = [
@@ -61,8 +62,8 @@ const AdminSidebar: React.FC = () => {
     <>
       {/* Mobile toggle button */}
       {isMobile && (
-        <button 
-          className={styles.mobileToggle} 
+        <button
+          className={styles.mobileToggle}
           onClick={toggleSidebar}
           aria-label="Открыть меню"
         >
@@ -74,14 +75,16 @@ const AdminSidebar: React.FC = () => {
         className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""} ${isMobile ? styles.mobile : ""} ${isOpen ? styles.open : ""}`}
       >
         <div className={styles.sidebarHeader}>
-          <Link to="/" className={styles.logo}>
-            <img src="/logo.svg" alt="Дружба Народов" />
-          </Link>
-          
+          {!isCollapsed && (
+            <Link to="/" className={styles.logo}>
+              <img src="/logo.svg" alt="Дружба Народов" />
+            </Link>
+          )}
+
           {/* Mobile close button (X) */}
           {isMobile && (
-            <button 
-              className={styles.closeButton} 
+            <button
+              className={styles.closeButton}
               onClick={closeSidebar}
               aria-label="Закрыть меню"
             >
@@ -99,8 +102,12 @@ const AdminSidebar: React.FC = () => {
               onClick={isMobile ? closeSidebar : undefined}
             >
               <span className={styles.icon}>{item.icon}</span>
-              {(!isCollapsed || isMobile) && <span className={styles.label}>{item.label}</span>}
-              {isActive(item.path) && <div className={styles.activeIndicator} />}
+              {(!isCollapsed || isMobile) && (
+                <span className={styles.label}>{item.label}</span>
+              )}
+              {isActive(item.path) && (
+                <div className={styles.activeIndicator} />
+              )}
             </Link>
           ))}
         </nav>
@@ -110,7 +117,9 @@ const AdminSidebar: React.FC = () => {
             <button
               className={styles.toggleButton}
               onClick={toggleSidebar}
-              aria-label={isCollapsed ? "Развернуть сайдбар" : "Свернуть сайдбар"}
+              aria-label={
+                isCollapsed ? "Развернуть сайдбар" : "Свернуть сайдбар"
+              }
             >
               {isCollapsed ? (
                 <AiOutlineMenuUnfold size={20} />
