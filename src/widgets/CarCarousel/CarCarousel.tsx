@@ -68,7 +68,10 @@ const CarCard: React.FC<CarCardProps> = ({ car, isActive }) => {
   const formattedPrice = formatPrice(price);
 
   return (
-    <div className={`${styles.carCard} ${isActive ? styles.activeCard : ""}`}>
+    <div 
+      className={`${styles.carCard} ${isActive ? styles.activeCard : ""}`}
+      style={{ width: '100%', height: '100%' }} // Ensure the card fills its container
+    >
       <div className={styles.cardImage}>
         <img src={image} alt={name} />
       </div>
@@ -97,7 +100,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ initialFilter = {} }) => {
 
   // State variables
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cardWidth, setCardWidth] = useState(300); // Default in case calculation fails
+  const [cardWidth, setCardWidth] = useState(280); // Default to match CSS
   const [slideWidth, setSlideWidth] = useState(0);
   const [visibleCards, setVisibleCards] = useState(3);
   const [isMobile, setIsMobile] = useState(false);
@@ -124,28 +127,21 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ initialFilter = {} }) => {
       // Get track dimensions
       const trackWidth = trackRef.current.clientWidth;
 
-      // Get first card dimensions (if it exists)
-      const cardElements = document.querySelectorAll(`.${styles.carouselItem}`);
-      if (cardElements.length === 0) return;
-
-      const firstCard = cardElements[0] as HTMLElement;
-      const cardRect = firstCard.getBoundingClientRect();
-      const cardFullWidth = firstCard.offsetWidth;
-
-      // Set card width
-      setCardWidth(cardFullWidth);
+      // Set a fixed card width that matches CSS
+      const fixedCardWidth = isMobile ? 230 : 280; // Match CSS values based on breakpoints
+      setCardWidth(fixedCardWidth);
 
       // Detect mobile view
       const mobileBreakpoint = 768;
       const isMobileView = window.innerWidth <= mobileBreakpoint;
       setIsMobile(isMobileView);
 
-      // Calculate how many cards can be fully visible
-      const visibleCount = Math.floor(trackWidth / cardFullWidth);
+      // Calculate how many cards can be fully visible (account for padding)
+      const visibleCount = Math.floor((trackWidth - 20) / fixedCardWidth);
       setVisibleCards(Math.max(1, visibleCount));
 
       // Set slide width (total width of all cards)
-      setSlideWidth(cardFullWidth * filteredCars.length);
+      setSlideWidth(fixedCardWidth * filteredCars.length);
     };
 
     // Run calculation after render
@@ -154,7 +150,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ initialFilter = {} }) => {
     // Add resize listener
     window.addEventListener("resize", calculateDimensions);
     return () => window.removeEventListener("resize", calculateDimensions);
-  }, [filteredCars]);
+  }, [filteredCars, isMobile]);
 
   // Slide to a specific index
   const slideTo = (index: number) => {

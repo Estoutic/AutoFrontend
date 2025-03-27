@@ -1,19 +1,25 @@
 @use "@/styles/_variables" as vars;
 
-.card {
-  background: #1e3056; // Dark blue background like in the image
-  border-radius: 10px;
-  overflow: hidden;
-  width: 280px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.imageContainer {
+.carCard {
+  background: #1e3056;
+  border-radius: 10px;
+  overflow: hidden;
   width: 100%;
-  height: 180px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.cardImage {
+  width: 100%;
+  height: 180px; /* Фиксированная высота */
   padding: 8px;
+  flex-shrink: 0; /* Запрещаем сжиматься */
   
   img {
     width: 100%;
@@ -23,60 +29,74 @@
   }
 }
 
-.details {
+.cardDetails {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start; /* Выравнивание по верху */
   width: 100%;
   padding: 10px 16px 16px;
   color: white;
+  height: 80px; /* Фиксированная высота */
+  flex-shrink: 0; /* Запрещаем сжиматься */
 }
 
-.name {
+.modelInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  max-width: 70%; /* Ограничиваем ширину */
+}
+
+.modelName {
   font-weight: bold;
   font-size: 16px;
   line-height: 1.2;
-  text-wrap: wrap;
-  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px; /* Фиксированный отступ */
 }
 
-.price {
+.subModel {
+  font-size: 14px;
+  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardPrice {
   font-size: 16px;
   text-align: right;
   white-space: nowrap;
   margin-left: 10px;
 }
 
-.modelWrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.subModel {
-  font-size: 14px;
-  opacity: 0.9;
+.activeCard {
+  transform: scale(1.05);
+  z-index: 5;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform-origin: center center;
 }
 
 @media (max-width: vars.$ipad-width) {
-  .card {
-    width: 250px;
+  .cardImage {
+    height: 160px;
   }
   
-  .imageContainer {
-    height: 160px;
+  .cardDetails {
+    height: 70px;
   }
 }
 
 @media (max-width: vars.$mobile-width) {
-  .card {
-    width: 230px;
-  }
-  
-  .imageContainer {
+  .cardImage {
     height: 140px;
   }
   
-  .details {
+  .cardDetails {
     padding: 8px 12px 12px;
+    height: 70px;
   }
 }

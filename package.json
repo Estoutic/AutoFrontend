@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "country-flag-icons": "^1.5.18",
+    "framer-motion": "^12.6.2",
     "i18n": "^0.15.1",
     "i18next": "^24.2.2",
     "jwt-decode": "^4.0.0",
