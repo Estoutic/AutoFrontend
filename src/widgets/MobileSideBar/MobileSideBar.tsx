@@ -97,13 +97,12 @@ const MobileSidebar: React.FC = () => {
           ))}
           
           {/* Language switcher */}
-          
+          <div className={styles.languageSwitcherContainer}>
+            <LanguageSwitcher />
+          </div>
         </nav>
 
         <div className={styles.sidebarFooter}>
-        <div className={styles.languageSwitcherContainer}>
-            <LanguageSwitcher />
-          </div>
           <button
             className={styles.toggleButton}
             onClick={toggleCollapse}
@@ -115,7 +114,6 @@ const MobileSidebar: React.FC = () => {
               <AiOutlineMenuFold size={20} />
             )}
           </button>
-          
         </div>
       </aside>
     </>

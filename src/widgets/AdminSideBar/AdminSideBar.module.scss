@@ -1,4 +1,4 @@
-// Sidebar.module.scss
+// AdminSidebar.module.scss
 @use "@/styles/_variables" as vars;
 
 // Переменные
@@ -24,6 +24,16 @@ $active-indicator-width: 4px;
   
   &.collapsed {
     width: $sidebar-collapsed-width;
+  }
+  
+  // Mobile styles
+  &.mobile {
+    width: $sidebar-width;
+    transform: translateX(-100%);
+    
+    &.open {
+      transform: translateX(0);
+    }
   }
 }
 
@@ -56,6 +66,30 @@ $active-indicator-width: 4px;
     font-weight: 600;
     white-space: nowrap;
     transition: opacity 0.2s ease;
+  }
+}
+
+// Close button for mobile
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -162,6 +196,35 @@ $active-indicator-width: 4px;
   }
 }
 
+// Мобильная кнопка-гамбургер
+.mobileToggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 999;
+  background-color: vars.$primary-color;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: darken(vars.$primary-color, 5%);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(white, 0.3);
+  }
+}
+
 // Главный контент - добавляем отступ слева для компенсации ширины сайдбара
 :global(.mainContent) {
   margin-left: $sidebar-width;
@@ -171,41 +234,25 @@ $active-indicator-width: 4px;
   .sidebar.collapsed + & {
     margin-left: $sidebar-collapsed-width;
   }
+  
+  // Убираем отступ на мобильных устройствах
+  @media (max-width: 799px) {
+    margin-left: 0 !important;
+  }
 }
 
-// // Адаптив для мобильных устройств
-// @media (max-width: 768px) {
-//   .sidebar {
-//     transform: translateX(-100%);
-    
-//     &.open {
-//       transform: translateX(0);
-//     }
-//   }
+// Overlay for mobile menu
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
   
-//   :global(.mainContent) {
-//     margin-left: 0;
-    
-//     .sidebar.collapsed + & {
-//       margin-left: 0;
-//     }
-//   }
-  
-//   // Мобильная кнопка-гамбургер (опционально)
-//   .mobileToggle {
-//     position: fixed;
-//     top: 15px;
-//     left: 15px;
-//     z-index: 1001;
-//     background-color: vars.$primary-color;
-//     color: white;
-//     border: none;
-//     border-radius: 8px;
-//     width: 40px;
-//     height: 40px;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-//   }
-// }
+  .sidebar.mobile.open ~ & {
+    display: block;
+  }
+}

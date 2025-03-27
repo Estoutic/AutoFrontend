@@ -1,7 +1,7 @@
-// Sidebar.tsx
+// AdminSidebar.tsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./AdminSideBar.module.scss";
+import styles from "./AdminSidebar.module.scss";
 
 import {
   AiOutlineHome,
@@ -12,11 +12,13 @@ import {
   AiOutlineTeam,
   AiOutlineMenuFold,
   AiOutlineMenuUnfold,
+  AiOutlineMenu,
+  AiOutlineClose
 } from "react-icons/ai";
 import { useSidebar } from "@/features/SidebarContext/SidebarContext";
 
 const AdminSidebar: React.FC = () => {
-  const { isCollapsed, toggleSidebar } = useSidebar();
+  const { isCollapsed, isMobile, isOpen, toggleSidebar, closeSidebar } = useSidebar();
   const location = useLocation();
 
   const navItems = [
@@ -56,45 +58,71 @@ const AdminSidebar: React.FC = () => {
   };
 
   return (
-    <aside
-      className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""}`}
-    >
-      <div className={styles.sidebarHeader}>
-        {!isCollapsed && (
+    <>
+      {/* Mobile toggle button */}
+      {isMobile && (
+        <button 
+          className={styles.mobileToggle} 
+          onClick={toggleSidebar}
+          aria-label="Открыть меню"
+        >
+          <AiOutlineMenu size={24} />
+        </button>
+      )}
+
+      <aside
+        className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""} ${isMobile ? styles.mobile : ""} ${isOpen ? styles.open : ""}`}
+      >
+        <div className={styles.sidebarHeader}>
           <Link to="/" className={styles.logo}>
             <img src="/logo.svg" alt="Дружба Народов" />
+            {!isCollapsed && !isMobile && <span className={styles.logoText}>Дружба Народов</span>}
           </Link>
-        )}
-      </div>
-
-      <nav className={styles.navContainer}>
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`${styles.navItem} ${isActive(item.path) ? styles.active : ""}`}
-          >
-            <span className={styles.icon}>{item.icon}</span>
-            {!isCollapsed && <span className={styles.label}>{item.label}</span>}
-            {isActive(item.path) && <div className={styles.activeIndicator} />}
-          </Link>
-        ))}
-      </nav>
-
-      <div className={styles.sidebarFooter}>
-        <button
-          className={styles.toggleButton}
-          onClick={toggleSidebar}
-          aria-label={isCollapsed ? "Развернуть сайдбар" : "Свернуть сайдбар"}
-        >
-          {isCollapsed ? (
-            <AiOutlineMenuUnfold size={20} />
-          ) : (
-            <AiOutlineMenuFold size={20} />
+          
+          {/* Mobile close button (X) */}
+          {isMobile && (
+            <button 
+              className={styles.closeButton} 
+              onClick={closeSidebar}
+              aria-label="Закрыть меню"
+            >
+              <AiOutlineClose size={20} />
+            </button>
           )}
-        </button>
-      </div>
-    </aside>
+        </div>
+
+        <nav className={styles.navContainer}>
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`${styles.navItem} ${isActive(item.path) ? styles.active : ""}`}
+              onClick={isMobile ? closeSidebar : undefined}
+            >
+              <span className={styles.icon}>{item.icon}</span>
+              {(!isCollapsed || isMobile) && <span className={styles.label}>{item.label}</span>}
+              {isActive(item.path) && <div className={styles.activeIndicator} />}
+            </Link>
+          ))}
+        </nav>
+
+        {!isMobile && (
+          <div className={styles.sidebarFooter}>
+            <button
+              className={styles.toggleButton}
+              onClick={toggleSidebar}
+              aria-label={isCollapsed ? "Развернуть сайдбар" : "Свернуть сайдбар"}
+            >
+              {isCollapsed ? (
+                <AiOutlineMenuUnfold size={20} />
+              ) : (
+                <AiOutlineMenuFold size={20} />
+              )}
+            </button>
+          </div>
+        )}
+      </aside>
+    </>
   );
 };
 
