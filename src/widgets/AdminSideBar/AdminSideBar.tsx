@@ -1,7 +1,7 @@
 // AdminSidebar.tsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./AdminSidebar.module.scss";
+import styles from "./AdminSidBar.module.scss";
 
 import {
   AiOutlineHome,
