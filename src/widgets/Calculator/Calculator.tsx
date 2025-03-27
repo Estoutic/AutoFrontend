@@ -1,6 +1,7 @@
 // src/widgets/Calculator/Calculator.tsx
 import React, { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import InputField from "@/shared/ui/InputField/InputField";
 import {
@@ -21,6 +22,8 @@ import Button from "@/shared/ui/Button/Button";
 type CalculatorFormData = CustomsCalculationRequestDto;
 
 const Calculator: React.FC = () => {
+  const { t } = useTranslation();
+  
   const {
     control,
     handleSubmit,
@@ -69,7 +72,7 @@ const Calculator: React.FC = () => {
         }, 100);
       },
       onError: (err) => {
-        alert("Ошибка расчёта: " + err);
+        alert(t("calculator.errorMessage") + err);
         setShowResults(false);
       },
     });
@@ -78,21 +81,21 @@ const Calculator: React.FC = () => {
   return (
     <div className={styles.calculatorWrapper}>
       <div className={styles.calculator}>
-        <h2>Калькулятор таможенных платежей</h2>
+        <h2>{t("calculator.titleLine1")}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.flexRow}>
-            {/* Возраст авто */}
+            {/* Car Age */}
             <div className={styles.formField}>
               <Controller
                 name="age"
                 control={control}
-                rules={{ required: "Обязательное поле" }}
+                rules={{ required: t("calculator.requiredField") }}
                 render={({ field }) => (
                   <Dropdown
                     options={CAR_AGE}
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder="Возраст авто"
+                    placeholder={t("calculator.agePlaceholder")}
                   />
                 )}
               />
@@ -100,24 +103,24 @@ const Calculator: React.FC = () => {
                 <div className={styles.errorText}>{errors.age.message}</div>
               )}
               {shouldShowRequiredError('age') && !errors.age && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
-            {/* Цена авто */}
+            {/* Car Price */}
             <div className={styles.formField}>
               <Controller
                 name="price"
                 control={control}
                 rules={{
-                  required: "Обязательное поле",
-                  min: { value: 1, message: "Цена должна быть больше 0" },
+                  required: t("calculator.requiredField"),
+                  min: { value: 1, message: t("calculator.priceGreaterThanZero") },
                 }}
                 render={({ field }) => (
                   <InputField
                     type="number"
                     value={field.value || ""}
                     onChange={field.onChange}
-                    placeholder="Цена авто"
+                    placeholder={t("calculator.pricePlaceholder")}
                   />
                 )}
               />
@@ -125,21 +128,21 @@ const Calculator: React.FC = () => {
                 <div className={styles.errorText}>{errors.price.message}</div>
               )}
               {shouldShowRequiredError('price') && !errors.price && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
-            {/* Валюта */}
+            {/* Currency */}
             <div className={styles.formField}>
               <Controller
                 name="currency"
                 control={control}
-                rules={{ required: "Обязательное поле" }}
+                rules={{ required: t("calculator.requiredField") }}
                 render={({ field }) => (
                   <Dropdown
                     options={CURRNECY_CODE}
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder="Валюта"
+                    placeholder={t("calculator.currencyPlaceholder")}
                   />
                 )}
               />
@@ -149,23 +152,23 @@ const Calculator: React.FC = () => {
                 </div>
               )}
               {shouldShowRequiredError('currency') && !errors.currency && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
           </div>
           <div className={styles.flexRow}>
-            {/* Тип двигателя */}
+            {/* Engine Type */}
             <div className={styles.formField}>
               <Controller
                 name="engineType"
                 control={control}
-                rules={{ required: "Обязательное поле" }}
+                rules={{ required: t("calculator.requiredField") }}
                 render={({ field }) => (
                   <Dropdown
                     options={ENGINE_OPTIONS}
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder="Тип двигателя"
+                    placeholder={t("calculator.engineTypePlaceholder")}
                   />
                 )}
               />
@@ -175,25 +178,25 @@ const Calculator: React.FC = () => {
                 </div>
               )}
               {shouldShowRequiredError('engineType') && !errors.engineType && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
-            {/* Объём двигателя */}
+            {/* Engine Capacity */}
             <div className={styles.formField}>
               <Controller
                 name="engineCapacity"
                 control={control}
                 rules={{
-                  required: "Обязательное поле",
-                  min: { value: 0.1, message: "Минимальный объем 0.1 л" },
-                  max: { value: 10, message: "Максимальный объем 10 л" },
+                  required: t("calculator.requiredField"),
+                  min: { value: 0.1, message: t("calculator.minEngineCapacity") },
+                  max: { value: 10, message: t("calculator.maxEngineCapacity") },
                 }}
                 render={({ field }) => (
                   <InputField
                     type="number"
                     value={field.value || ""}
                     onChange={field.onChange}
-                    placeholder="Объем двигателя (л)"
+                    placeholder={t("calculator.volumePlaceholder")}
                   />
                 )}
               />
@@ -203,24 +206,24 @@ const Calculator: React.FC = () => {
                 </div>
               )}
               {shouldShowRequiredError('engineCapacity') && !errors.engineCapacity && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
-            {/* Мощность */}
+            {/* Engine Power */}
             <div className={styles.formField}>
               <Controller
                 name="power"
                 control={control}
                 rules={{
-                  required: "Обязательное поле",
-                  min: { value: 1, message: "Минимальная мощность 1 л.с." },
+                  required: t("calculator.requiredField"),
+                  min: { value: 1, message: t("calculator.minPower") },
                 }}
                 render={({ field }) => (
                   <InputField
                     type="number"
                     value={field.value || ""}
                     onChange={field.onChange}
-                    placeholder="Мощность (л.с.)"
+                    placeholder={t("calculator.powerPlaceholder")}
                   />
                 )}
               />
@@ -228,23 +231,23 @@ const Calculator: React.FC = () => {
                 <div className={styles.errorText}>{errors.power.message}</div>
               )}
               {shouldShowRequiredError('power') && !errors.power && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
           </div>
           <div className={styles.formActionsRow}>
-            {/* Тип владельца */}
+            {/* Owner Type */}
             <div className={styles.ownerTypeField}>
               <Controller
                 name="ownerType"
                 control={control}
-                rules={{ required: "Обязательное поле" }}
+                rules={{ required: t("calculator.requiredField") }}
                 render={({ field }) => (
                   <Dropdown
                     options={VEHICLE_OWNER_TYPE}
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder="Тип владельца"
+                    placeholder={t("calculator.personPlaceholder")}
                   />
                 )}
               />
@@ -252,7 +255,7 @@ const Calculator: React.FC = () => {
                 <div className={styles.errorText}>{errors.ownerType.message}</div>
               )}
               {shouldShowRequiredError('ownerType') && !errors.ownerType && (
-                <div className={styles.errorText}>Обязательное поле</div>
+                <div className={styles.errorText}>{t("calculator.requiredField")}</div>
               )}
             </div>
 
@@ -261,12 +264,12 @@ const Calculator: React.FC = () => {
               disabled={calculateMutation.isLoading}
               className={styles.calculateButton}
             >
-              {calculateMutation.isLoading ? "Рассчитываем..." : "Рассчитать"}
+              {calculateMutation.isLoading ? t("calculator.calculating") : t("calculator.calculateButton")}
             </Button>
           </div>
         </form>
       </div>
-      {/* Результаты расчета (отображаются под формой) */}
+      {/* Calculation Results (displayed below the form) */}
       <div id="calculation-results" className={styles.resultsContainer}>
         <CalculatorCalculations result={result} visible={showResults} />
       </div>
@@ -275,6 +278,3 @@ const Calculator: React.FC = () => {
 };
 
 export default Calculator;
-
-
-// TODO локализация

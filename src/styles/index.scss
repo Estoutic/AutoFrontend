@@ -44,6 +44,14 @@ h3 {
   color: vars.$primary-color;
   margin-block-start: 0px;
   margin-block-end: 0px;
+  
+}
+
+h2,
+h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+
 }
 
 // h1 {
@@ -110,7 +118,6 @@ h2 {
   @include responsive-heading;
   font-size: vars.$font-header-size-base * 0.6;  
   letter-spacing: -0.02em;
-  margin: 20px 0 0  0;
 }
 
 h3 {

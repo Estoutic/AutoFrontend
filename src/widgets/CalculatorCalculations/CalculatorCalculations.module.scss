@@ -1,11 +1,10 @@
-// src/widgets/CalculatorCalculations/CalculatorCalculations.module.scss
 .calculationsContainer {
+  margin-top: 20px;
   width: 100%;
   animation: slideDown 0.5s ease-out forwards;
   transform-origin: top center;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 @keyframes slideDown {

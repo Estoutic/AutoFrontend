@@ -1,5 +1,6 @@
 // src/widgets/CalculatorCalculations/CalculatorCalculations.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { CustomsCalculationResponseDto } from '@/shared/api/calculator/types';
 import styles from './CalculatorCalculations.module.scss';
 
@@ -12,6 +13,8 @@ const CalculatorCalculations: React.FC<CalculatorCalculationsProps> = ({
   result,
   visible
 }) => {
+  const { t } = useTranslation();
+  
   if (!visible || !result) return null;
 
   // Helper function to format numbers with thousand separators
@@ -22,50 +25,50 @@ const CalculatorCalculations: React.FC<CalculatorCalculationsProps> = ({
   return (
     <div className={styles.calculationsContainer}>
       <div className={styles.header}>
-        <h3>Результаты расчета таможенных платежей</h3>
+        <h3>{t("calculator.resultsTitle")}</h3>
       </div>
       
       <div className={styles.resultsTableWrapper}>
         <table className={styles.resultsTable}>
           <tbody>
             <tr>
-              <td>Режим расчета</td>
+              <td>{t("calculator.calculationMode")}</td>
               <td>{result.mode}</td>
             </tr>
             {result.priceRub > 0 && (
               <tr>
-                <td>Стоимость автомобиля в рублях</td>
+                <td>{t("calculator.carPriceRub")}</td>
                 <td>{formatNumber(result.priceRub)} ₽</td>
               </tr>
             )}
             <tr>
-              <td>Пошлина</td>
+              <td>{t("calculator.duty")}</td>
               <td>{formatNumber(result.dutyRub)} ₽</td>
             </tr>
             <tr>
-              <td>Акциз</td>
+              <td>{t("calculator.exciseTax")}</td>
               <td>{formatNumber(result.exciseRub)} ₽</td>
             </tr>
             <tr>
-              <td>НДС</td>
+              <td>{t("calculator.vat")}</td>
               <td>{formatNumber(result.vatRub)} ₽</td>
             </tr>
             <tr>
-              <td>Таможенный сбор</td>
+              <td>{t("calculator.customsFee")}</td>
               <td>{formatNumber(result.clearanceFee)} ₽</td>
             </tr>
             <tr>
-              <td>Утилизационный сбор</td>
+              <td>{t("calculator.recyclingFee")}</td>
               <td>{formatNumber(result.recyclingFee)} ₽</td>
             </tr>
             {result.utilFee > 0 && (
               <tr>
-                <td>Сбор за утилизацию (базовый)</td>
+                <td>{t("calculator.utilizationFeeBase")}</td>
                 <td>{formatNumber(result.utilFee)} ₽</td>
               </tr>
             )}
             <tr className={styles.totalRow}>
-              <td>Итого к оплате</td>
+              <td>{t("calculator.totalPayment")}</td>
               <td>{formatNumber(result.totalPay)} ₽</td>
             </tr>
           </tbody>

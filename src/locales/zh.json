@@ -114,36 +114,53 @@
     "returnToCatalog": "返回目录"
   },
   "calculator": {
-    "titleLine1": "汽车关税计算器",
-    "titleLine2": "",
-    "calculateFor": "计算适用于",
+    "titleLine1": "海关关税计算器",
+    "titleLine2": "汽车专用",
+    "calculateFor": "计算对象",
     "russianFederation": "俄罗斯联邦",
     "belarusRepublic": "白俄罗斯共和国",
     "agePlaceholder": "车龄",
     "pricePlaceholder": "价格",
     "currencyPlaceholder": "货币",
     "engineTypePlaceholder": "发动机类型",
-    "volumePlaceholder": "发动机排量",
-    "powerPlaceholder": "发动机功率",
+    "volumePlaceholder": "发动机排量 (升)",
+    "powerPlaceholder": "发动机功率 (马力)",
     "importCalculation": "进口计算",
-    "personPlaceholder": "身份",
+    "personPlaceholder": "所有者类型",
     "calculateButton": "计算",
+    "calculating": "计算中...",
+    "errorMessage": "计算错误: ",
+    "requiredField": "必填字段",
+    "priceGreaterThanZero": "价格必须大于0",
+    "minEngineCapacity": "最小排量为0.1升",
+    "maxEngineCapacity": "最大排量为10升",
+    "minPower": "最小功率为1马力",
+    "resultsTitle": "关税计算结果",
+    "calculationMode": "计算模式",
+    "carPriceRub": "汽车卢布价格",
+    "duty": "关税",
+    "exciseTax": "消费税",
+    "vat": "增值税",
+    "customsFee": "海关手续费",
+    "recyclingFee": "回收费",
+    "utilizationFeeBase": "基本处置费",
+    "totalPayment": "总支付额",
     "carAge": {
-      "new": "全新",
+      "new": "新车",
       "from1to5Years": "1至3年",
       "from3to5Years": "3至5年",
       "from5to7Years": "5至7年",
-      "over7Years": "超过7年"
+      "over7Years": "7年以上"
     },
     "currency": {
-      "dollar": "USD",
-      "euro": "EUR",
-      "yen": "CNY",
-      "rub": "RUB"
+      "dollar": "美元",
+      "euro": "欧元",
+      "yen": "人民币",
+      "rub": "卢布"
     },
     "person": {
       "phys": "个人",
-      "legal": "企业"
+      "legal": "法人实体"
     }
   },
   "footer": {
