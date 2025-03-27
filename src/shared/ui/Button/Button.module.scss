@@ -17,6 +17,13 @@
   border: 2px solid transparent;
   letter-spacing: 0.5px;
 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-align: center;
+  min-height: 40px;
   // Hover and active states
   &:hover {
     transform: translateY(-2px);

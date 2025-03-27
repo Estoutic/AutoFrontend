@@ -8,7 +8,6 @@
   color: vars.$primary-color !important;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
 }
 
 // .deleteButton{
@@ -77,11 +76,7 @@
   align-items: center;
   margin-bottom: 20px;
 
-  h2 {
-    margin: 0;
-    font-size: 24px;
-    color: vars.$primary-color;
-  }
+
 
   // .addButton {
   //   background-color: vars.$primary-color;

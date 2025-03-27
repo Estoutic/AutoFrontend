@@ -12,11 +12,11 @@
     gap: 16px;
     grid-template-columns: repeat(3, 1fr);
   
-    @media (max-width: vars.$ipad-width) {
+    @media (max-width: 1100px) {
       grid-template-columns: repeat(2, 1fr);
     }
   
-    @media (max-width: vars.$mobile-width) {
+    @media (max-width: 730px) {
       grid-template-columns: 1fr;
     }
   }

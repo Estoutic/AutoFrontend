@@ -25,7 +25,12 @@ const AdminFilterWidget: React.FC<CarFilterProps> = ({ filter, onChange }) => {
     }
   };
 
-  // Универсальный рендер Dropdown для нужного поля
+  // Handler to clear all filter values
+  const handleClearFilter = () => {
+    onChange({ brand: "", model: "", generation: "" });
+  };
+
+  // Render dropdown for each filter field
   const renderDropdown = (
     field: "brand" | "model" | "generation",
     options: { value: string; labelKey: string }[],
@@ -33,13 +38,14 @@ const AdminFilterWidget: React.FC<CarFilterProps> = ({ filter, onChange }) => {
     placeholder: string
   ) => {
     return (
-      <div className={styles.inputContainer}>
+      <div className={styles.dropdownWrapper}>
         <Dropdown
           options={options}
           value={filter[field] || ""}
           onChange={(val) => updateFilter(field, val)}
           placeholder={placeholder}
           disabled={disabled}
+          className={styles.dropdown}
         />
       </div>
     );
@@ -65,32 +71,48 @@ const AdminFilterWidget: React.FC<CarFilterProps> = ({ filter, onChange }) => {
 
   return (
     <div className={styles.filterContainer}>
-      <h3>
-      Каталог автомобилей:<br/>
-технические характеристики
+      <h3 className={styles.filterTitle}>
+        Каталог автомобилей: технические характеристики
       </h3>
-      <div className={styles.filterGrid}>
-        {renderDropdown(
-          "brand",
-          brandOptions,
-          isLoading,
-          t("carFilter.brandPlaceholder", "Марка")
-        )}
-        {renderDropdown(
-          "model",
-          modelOptions,
-          isLoading || !filter.brand,
-          t("carFilter.modelPlaceholder", "Модель")
-        )}
-        {renderDropdown(
-          "generation",
-          generationOptions,
-          isLoading || !filter.model,
-          t("carFilter.generationPlaceholder", "Поколение")
-        )}
-        <Button onClick={() => console.log("Текущий фильтр:", filter)}>
-          {t("carFilter.showButton", "Показать")}
-        </Button>
+      
+      <div className={styles.filterControls}>
+        <div className={styles.dropdownsContainer}>
+          {renderDropdown(
+            "brand",
+            brandOptions,
+            isLoading,
+            t("carFilter.brandPlaceholder", "Марка")
+          )}
+          {renderDropdown(
+            "model",
+            modelOptions,
+            isLoading || !filter.brand,
+            t("carFilter.modelPlaceholder", "Модель")
+          )}
+          {renderDropdown(
+            "generation",
+            generationOptions,
+            isLoading || !filter.model,
+            t("carFilter.generationPlaceholder", "Поколение")
+          )}
+        </div>
+        
+        <div className={styles.actionButtons}>
+          <Button 
+            onClick={() => console.log("Текущий фильтр:", filter)}
+            className={styles.primaryButton}
+          >
+            {t("carFilter.showButton", "Показать")}
+          </Button>
+          
+          <Button 
+            onClick={handleClearFilter} 
+            className={styles.secondaryButton}
+            variant="secondary"
+          >
+            {t("carFilter.clearButton", "Очистить")}
+          </Button>
+        </div>
       </div>
     </div>
   );
