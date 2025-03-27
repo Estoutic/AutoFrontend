@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./MobileSidebar.module.scss";
+import styles from "./MobileSideBar.module.scss";
 import { useTranslation } from "react-i18next";
 import {
   AiOutlineHome,
