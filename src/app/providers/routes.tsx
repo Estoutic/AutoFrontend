@@ -34,14 +34,14 @@ export const router = createBrowserRouter([
     path: "/admin",
     element: <AdminLayout />,
     children: [
-      // { path: "/admin", element: <AdminPage /> },
+      { path: "/admin", element: <AdminCarsPage /> },
 
       {
         path: "/admin/models",
         element: <AdminCarModelsPage />,
       },
       {
-        path: "/admin/users",
+        path: "/admin/users", 
         element: <AdminUsersPage />,
       },
       {
