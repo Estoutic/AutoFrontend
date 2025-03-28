@@ -159,7 +159,11 @@
     "person": {
       "phys": "Individual",
       "legal": "Legal Entity"
-    }
+    }, "mode": {
+      "etc": "ETC",
+      "ctp": "CTP"
+    },
+    "modePlaceholder": "Calculation mode"
   },
   "footer": {
     "logoAlt": "Druzhba Narodov",

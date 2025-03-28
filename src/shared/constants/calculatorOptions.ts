@@ -7,13 +7,18 @@ export const CAR_AGE = [
 ];
 
 export const CURRNECY_CODE = [
-  { value: "dollar", labelKey: "calculator.currency.dollar" },
-  { value: "euro", labelKey: "calculator.currency.euro" },
-  { value: "yen", labelKey: "calculator.currency.yen" },
-  { value: "rub", labelKey: "calculator.currency.rub" },
+  { value: "DOLLAR", labelKey: "calculator.currency.dollar" },
+  { value: "EURO", labelKey: "calculator.currency.euro" },
+  { value: "YEN", labelKey: "calculator.currency.yen" },
+  { value: "RUB", labelKey: "calculator.currency.rub" },
 ];
  
 export const VEHICLE_OWNER_TYPE = [
   { value: "INDIVIDUAL", labelKey: "calculator.person.phys" },
   { value: "COMPANY", labelKey: "calculator.person.legal" },
+];
+
+export const CALCULATION_MODES = [
+  { value: "ETC", labelKey: "calculator.mode.etc" },
+  { value: "CTP", labelKey: "calculator.mode.ctp" },
 ];

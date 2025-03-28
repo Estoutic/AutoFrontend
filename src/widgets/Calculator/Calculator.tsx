@@ -8,6 +8,7 @@ import {
   CAR_AGE,
   CURRNECY_CODE,
   VEHICLE_OWNER_TYPE,
+  CALCULATION_MODES, // Import the new constant
 } from "@/shared/constants/calculatorOptions";
 import { ENGINE_OPTIONS } from "@/shared/constants/carOptions";
 import CalculatorCalculations from "../CalculatorCalculations/CalculatorCalculations";
@@ -38,7 +39,7 @@ const Calculator: React.FC = () => {
       price: undefined,
       ownerType: "",
       currency: "",
-      mode: "ETC",
+      mode: "", // Default mode is ETC
     },
     mode: "onChange",
   });
@@ -237,7 +238,7 @@ const Calculator: React.FC = () => {
           </div>
           <div className={styles.formActionsRow}>
             {/* Owner Type */}
-            <div className={styles.ownerTypeField}>
+            <div className={styles.formField}>
               <Controller
                 name="ownerType"
                 control={control}
@@ -256,6 +257,25 @@ const Calculator: React.FC = () => {
               )}
               {shouldShowRequiredError('ownerType') && !errors.ownerType && (
                 <div className={styles.errorText}>{t("calculator.requiredField")}</div>
+              )}
+            </div>
+
+            {/* Calculation Mode - Added here as the penultimate element */}
+            <div className={styles.formField}>
+              <Controller
+                name="mode"
+                control={control}
+                render={({ field }) => (
+                  <Dropdown
+                    options={CALCULATION_MODES}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={t("calculator.modePlaceholder")}
+                  />
+                )}
+              />
+              {errors.mode && (
+                <div className={styles.errorText}>{errors.mode.message}</div>
               )}
             </div>
 

@@ -100,7 +100,6 @@
 }
 
 .calculateButton {
-  flex: 1;
   background-color: #1a3865;
   color: white;
   border-radius: 4px;
@@ -131,7 +130,6 @@
 
   @media (max-width: 768px) {
     width: 100%;
-    margin-top: 20px;
   }
 }
 

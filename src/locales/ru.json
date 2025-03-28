@@ -77,9 +77,7 @@
     "mileageToPlaceholder": "Пробег до, км",
     "showButton": "Показать",
     "clearButton": "Очистить",
-    "searchingMessage" :"Ищем автомобили..."
-
-
+    "searchingMessage": "Ищем автомобили..."
   },
   "carList": {
     "foundCars": "Найдено {{count}} автомобилей",
@@ -113,7 +111,7 @@
     "thankYou2": "мы с вами свяжемся в ближайшее время!",
     "returnToCatalog": "Вернуться к каталогу"
   },
- "calculator": {
+  "calculator": {
     "titleLine1": "Калькулятор таможенных платежей",
     "titleLine2": "для автомобилей",
     "calculateFor": "Рассчитать для",
@@ -161,8 +159,14 @@
     "person": {
       "phys": "Физическое лицо",
       "legal": "Юридическое лицо"
-    }
-  },"footer": {
+    },
+    "mode": {
+      "etc": "ЕТС",
+      "ctp": "СТР"
+    },
+    "modePlaceholder": "Режим расчета"
+  },
+  "footer": {
     "logoAlt": "Дружба Народов",
     "social": {
       "instagram": "Instagram",

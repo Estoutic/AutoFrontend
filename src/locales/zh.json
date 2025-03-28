@@ -161,7 +161,12 @@
     "person": {
       "phys": "个人",
       "legal": "法人实体"
-    }
+    },
+    "mode": {
+      "etc": "欧亚关税同盟",
+      "ctp": "单一关税制度"
+    },
+    "modePlaceholder": "计算模式"
   },
   "footer": {
     "logoAlt": "民族友谊",
