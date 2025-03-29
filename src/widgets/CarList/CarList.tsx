@@ -17,8 +17,10 @@ const CarList: React.FC<CarListProps> = ({ cars, loading }) => {
 
   const filtredCars = cars.filter((car) => car.isAvailable);
   const handleOpenModal = (car: CarResponseDto) => {
+    
     setSelectedCar(car);
     setShowModal(true);
+    
   };
 
   const handleCloseModal = () => {

@@ -70,9 +70,7 @@ const AdminFilterWidget: React.FC<CarFilterProps> = ({ filter, onChange }) => {
 
   return (
     <div className={styles.filterContainer}>
-      <h3 className={styles.filterTitle}>
-        Каталог автомобилей: технические характеристики
-      </h3>
+
       
       <div className={styles.filterControls}>
         <div className={styles.dropdownsContainer}>

@@ -163,15 +163,7 @@ export const AdminCarModelsPage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Список моделей автомобиля</h2>
-        <Button
-          className={styles.addButton}
-          onClick={() => {
-            setShowForm(true);
-            setCreateForm(true);
-          }}
-        >
-          Добавить
-        </Button>
+      
       </div>
 
       <div className={styles.filterContainer}>
@@ -203,6 +195,15 @@ export const AdminCarModelsPage: React.FC = () => {
           placeholder="Модель"
           disabled={isFilterLoading || !filterBrand}
         />
+          <Button
+          className={styles.addButton}
+          onClick={() => {
+            setShowForm(true);
+            setCreateForm(true);
+          }}
+        >
+          Добавить
+        </Button>
       </div>
 
       {/* Таблица моделей */}

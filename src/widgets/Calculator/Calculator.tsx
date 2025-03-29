@@ -19,11 +19,13 @@ import {
 } from "@/shared/api/calculator/types";
 import { useCalculateCustoms } from "@/shared/api/calculator/hooks";
 import Button from "@/shared/ui/Button/Button";
+import { useNotifications } from "@/shared/hooks/useNotifications";
 
 type CalculatorFormData = CustomsCalculationRequestDto;
 
 const Calculator: React.FC = () => {
   const { t } = useTranslation();
+  const { showInfo } = useNotifications();
   
   const {
     control,
@@ -52,12 +54,14 @@ const Calculator: React.FC = () => {
   
   const formValues = watch();
 
+
   const shouldShowRequiredError = (fieldName: keyof CalculatorFormData) => {
     return (submitCount > 0 || touchedFields[fieldName]) && 
            (!formValues[fieldName] || formValues[fieldName] === "");
   };
 
   const onSubmit: SubmitHandler<CalculatorFormData> = (data) => {
+
     calculateMutation.mutate(data, {
       onSuccess: (res) => {
         setResult(res);

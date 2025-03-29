@@ -1,0 +1,214 @@
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    width: calc(100% - 40px);
+  }
+  
+  .notification {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+    animation: notification-enter 0.3s ease forwards;
+    transform-origin: top right;
+    overflow: hidden;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+    
+    &--exit {
+      animation: notification-exit 0.3s ease forwards;
+    }
+    
+    &--error {
+      background-color: #fef2f2;
+      border: 1px solid #fee2e2;
+      
+      &::after {
+        background-color: #dc2626;
+      }
+      
+      .notification__icon {
+        color: #dc2626;
+      }
+      
+      .notification__title {
+        color: #b91c1c;
+      }
+    }
+    
+    &--warning {
+      background-color: #fffbeb;
+      border: 1px solid #fef3c7;
+      
+      &::after {
+        background-color: #f59e0b;
+      }
+      
+      .notification__icon {
+        color: #f59e0b;
+      }
+      
+      .notification__title {
+        color: #d97706;
+      }
+    }
+    
+    &--success {
+      background-color: #f0fdf4;
+      border: 1px solid #dcfce7;
+      
+      &::after {
+        background-color: #22c55e;
+      }
+      
+      .notification__icon {
+        color: #22c55e;
+      }
+      
+      .notification__title {
+        color: #15803d;
+      }
+    }
+    
+    &--info {
+      background-color: #eff6ff;
+      border: 1px solid #dbeafe;
+      
+      &::after {
+        background-color: #3b82f6;
+      }
+      
+      .notification__icon {
+        color: #3b82f6;
+      }
+      
+      .notification__title {
+        color: #1d4ed8;
+      }
+    }
+    
+    &__icon {
+      flex-shrink: 0;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    &__content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    &__title {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    &__message {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #374151;
+    }
+    
+    &__close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      margin-left: 12px;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+      
+      &:hover {
+        color: #4b5563;
+      }
+    }
+  }
+  
+  // Custom theme styles that match your website's color scheme
+  .notification {
+    // Dark theme variant that matches your website's navy color
+    &--error, &--warning, &--success, &--info {
+      background-color: #1e3a8a; // Dark blue background like your site
+      border: 1px solid #2c5282;
+      color: #ffffff;
+      
+      .notification__message {
+        color: #e2e8f0;
+      }
+      
+      .notification__title {
+        color: #ffffff;
+      }
+      
+      .notification__close {
+        color: #cbd5e0;
+        
+        &:hover {
+          color: #ffffff;
+        }
+      }
+    }
+    
+    &--error::after {
+      background-color: #ef4444;
+    }
+    
+    &--warning::after {
+      background-color: #f59e0b;
+    }
+    
+    &--success::after {
+      background-color: #10b981;
+    }
+    
+    &--info::after {
+      background-color: #3b82f6;
+    }
+  }
+  
+  @keyframes notification-enter {
+    0% {
+      transform: translateX(100%) scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes notification-exit {
+    0% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%) scale(0.8);
+      opacity: 0;
+    }
+  }
