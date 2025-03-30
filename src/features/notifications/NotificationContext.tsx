@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Notification, NotificationContextType, NotificationType } from './types';
-import { v4 as uuidv4 } from 'uuid'; // You'll need to install this package
+import { v4 as uuidv4 } from 'uuid';
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
@@ -18,27 +18,35 @@ interface NotificationProviderProps {
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  
+  // Отладочный вывод при изменении списка уведомлений
+  useEffect(() => {
+    console.log('Текущий список уведомлений:', notifications);
+  }, [notifications]);
 
   const addNotification = useCallback((notification: Omit<Notification, 'id'>) => {
+    console.log('Добавление уведомления:', notification);
+    
     const id = uuidv4();
     const newNotification: Notification = {
       id,
-      duration: 5000, // Default duration
+      duration: notification.duration || 7000,  
       ...notification,
     };
 
     setNotifications((prev) => [...prev, newNotification]);
-
-    // Auto-remove notification after duration
-    if (newNotification.duration !== Infinity) {
-      setTimeout(() => {
-        removeNotification(id);
-      }, newNotification.duration);
-    }
+    
+    return id;
   }, []);
 
   const removeNotification = useCallback((id: string) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    console.log('Удаление уведомления с ID:', id);
+    setNotifications((prev) => {
+      const exists = prev.some(notification => notification.id === id);
+      console.log(`Уведомление с ID ${id} ${exists ? 'найдено' : 'не найдено'} в списке`);
+      
+      return prev.filter((notification) => notification.id !== id);
+    });
   }, []);
 
   return (

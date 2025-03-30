@@ -6,41 +6,49 @@ export const useNotifications = () => {
   const { addNotification } = useNotification();
 
   const showNotification = useCallback(
-    (type: NotificationType, message: string, title?: string, duration?: number) => {
-      addNotification({
+    (type: NotificationType, message: string, title?: string, duration: number = 10000) => {
+      console.log(`Вызов showNotification: тип=${type}, сообщение=${message}, заголовок=${title}, длительность=${duration}`);
+      
+      const finalDuration = Math.max(duration, 3000);
+      
+      return addNotification({
         type,
         message,
         title,
-        duration,
+        duration: finalDuration,
       });
     },
     [addNotification]
   );
 
   const showError = useCallback(
-    (message: string, title?: string, duration?: number) => {
-      showNotification('error', message, title || 'Ошибка', duration);
+    (message: string, title: string = 'Ошибка', duration: number = 7000) => {
+      console.log(`Вызов showError: сообщение=${message}`);
+      return showNotification('error', message, title, duration);
     },
     [showNotification]
   );
 
   const showWarning = useCallback(
-    (message: string, title?: string, duration?: number) => {
-      showNotification('warning', message, title || 'Предупреждение', duration);
+    (message: string, title: string = 'Предупреждение', duration: number = 7000) => {
+      console.log(`Вызов showWarning: сообщение=${message}`);
+      return showNotification('warning', message, title, duration);
     },
     [showNotification]
   );
 
   const showSuccess = useCallback(
-    (message: string, title?: string, duration?: number) => {
-      showNotification('success', message, title || 'Успешно', duration);
+    (message: string, title: string = 'Успешно', duration: number = 7000) => {
+      console.log(`Вызов showSuccess: сообщение=${message}`);
+      return showNotification('success', message, title, duration);
     },
     [showNotification]
   );
 
   const showInfo = useCallback(
-    (message: string, title?: string, duration?: number) => {
-      showNotification('info', message, title || 'Информация', duration);
+    (message: string, title: string = 'Информация', duration: number = 7000) => {
+      console.log(`Вызов showInfo: сообщение=${message}`);
+      return showNotification('info', message, title, duration);
     },
     [showNotification]
   );

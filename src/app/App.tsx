@@ -11,9 +11,8 @@ const queryClient = new QueryClient();
 export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-        <NotificationProvider>
-      <RouterProvider router={router} />
-       <NotificationContainer />
+      <NotificationProvider>
+        <RouterProvider router={router} />
       </NotificationProvider>
     </QueryClientProvider>
   );
