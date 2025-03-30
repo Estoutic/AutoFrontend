@@ -61,7 +61,7 @@
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: vars.$ipad-width) {
   .desktopNav {
     display: none;
   }

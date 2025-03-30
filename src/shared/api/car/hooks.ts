@@ -35,9 +35,8 @@ export const useAddCar = (): UseMutationResult<
     },
     onSuccess: (newCarId) => {
       console.log("Создана машина, ID =", newCarId);
-      queryClient.invalidateQueries("cars");
-      queryClient.invalidateQueries(keys.detail(newCarId));
-      queryClient.refetchQueries("cars");
+      // Invalidate all car-related queries
+      queryClient.invalidateQueries(keys.all);
     },
   });
 };
@@ -124,9 +123,8 @@ export const useUpdateCar = (): UseMutationResult<
     },
     onSuccess: (_, variables) => {
       console.log(`Машина ${variables.id} обновлена`);
-      queryClient.invalidateQueries(keys.detail(variables.id));
-      queryClient.invalidateQueries("cars");
-      queryClient.refetchQueries("cars");
+      // Invalidate all car-related queries
+      queryClient.invalidateQueries(keys.all);
     },
   });
 };
@@ -144,9 +142,8 @@ export const useDeleteCar = (): UseMutationResult<void, AxiosError, string> => {
     },
     onSuccess: (_, carId) => {
       console.log(`Машина удалена: ${carId}`);
-      queryClient.invalidateQueries(keys.detail(carId));
-      queryClient.invalidateQueries("cars");
-      queryClient.refetchQueries("cars");
+      // Invalidate all car-related queries
+      queryClient.invalidateQueries(keys.all);
     },
   });
 };

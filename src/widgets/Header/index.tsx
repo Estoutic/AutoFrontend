@@ -21,7 +21,7 @@ export const Header = () => {
             <Link to="/">{t("header.aboutUs")}</Link>
             <Link to="/catalog">{t("header.catalog")}</Link>
             <Link to="/calculator">{t("header.calculator")}</Link>
-            <Link to="/contacts">{t("header.contacts")}</Link>
+            {/* <Link to="/contacts">{t("header.contacts")}</Link> */}
             <LanguageSwitcher />
           </nav>
         </div>

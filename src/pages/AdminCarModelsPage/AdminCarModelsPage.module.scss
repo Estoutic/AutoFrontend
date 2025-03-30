@@ -10,13 +10,6 @@
   flex-direction: column;
 }
 
-// .deleteButton{
-//   &:disabled {
-//     opacity: 0.5;
-//     cursor: not-allowed;
-//   }
-// }
-
 .customCheckbox {
   position: relative;
   display: inline-block;
@@ -70,34 +63,49 @@
     transform: rotate(45deg);
   }
 }
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-
-
-
-  // .addButton {
-  //   background-color: vars.$primary-color;
-  //   color: #fff;
-  //   border: none;
-  //   padding: 8px 16px;
-  //   border-radius: 4px;
-  //   cursor: pointer;
-  //   font-size: 16px;
-  //   transition: background-color 0.3s ease;
-
-  //   &:hover {
-  //     background-color: color.adjust(vars.$primary-color, $lightness: -10%);
-  //   }
-  // }
 }
 
 .filterContainer {
   display: flex;
-  gap: 20px;
+  flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dropdowns {
+  display: flex;
+  gap: 20px;
+  flex-grow: 1;
+  flex-wrap: wrap;
+
+  & > * {
+    min-width: 150px;
+    flex-grow: 1;
+  }
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  button {
+    flex: 1;
+  }
+}
+
+.clearButton,
+.addButton {
+  white-space: nowrap;
 }
 
 .table {
@@ -119,6 +127,7 @@
     width: 100%;
   }
 }
+
 .brandContainer {
   display: flex;
   justify-content: space-between;
@@ -136,7 +145,12 @@
   .formGroup {
     display: flex;
     margin-bottom: 10px;
+    flex-direction: column;
+    gap: 5px;
 
+    span {
+      color: red;
+    }
     label {
       display: block;
       margin-bottom: 4px;
@@ -154,15 +168,6 @@
       border: 1px solid vars.$primary-color;
       border-radius: 4px;
       outline: none;
-
-      // &::placeholder {
-      // //   color: lighten(vars.$primary-color, 30%);
-      //   /* или просто #999, если хотите более светлый текст */
-      // }
-
-      // &:focus {
-      //   border-color: darken(vars.$primary-color, 10%);
-      // }
     }
   }
 
@@ -170,62 +175,65 @@
     margin-top: 10px;
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 
     button {
       flex: 1;
+      min-width: 120px;
     }
-    //   margin-right: 10px;
-    //   padding: 8px 16px;
-    //   border: none;
-    //   border-radius: 4px;
-    //   cursor: pointer;
-    //   font-size: 16px;
-
-    //   &:first-of-type {
-    //     background-color: vars.$primary-color;
-    //     color: #fff;
-
-    //     &:hover {
-    //       background-color: color.adjust(vars.$primary-color, $lightness: -10%);
-    //     }
-    //   }
-
-    //   &:last-of-type {
-    //     background-color: #ccc;
-    //     color: #333;
-
-    //     // &:hover {
-    //     //   background-color: color.adjust(vars.$primary-color, $lightness: -10%);
-    //     // }
-    //   }
-    // }
   }
 }
-
-// button{
-//     background-color:white;
-//     color: #000000;
-//     border: none;
-//     padding: 8px 16px;
-//     border-radius: 4px;
-//     cursor: pointer;
-//     font-size: 16px;
-//     transition: background-color 0.3s ease;
-//     border: 1px solid;
-//     &:hover {
-//         transition: 0.2s;
-//       background-color: vars.$primary-color;
-//       color: #fff;
-//     }
-// }
 
 @media (max-width: vars.$mobile-width) {
   .container {
     padding: 0 5%;
+  }
+
+  .filterContainer {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .dropdowns {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filterButtons {
+    width: 100%;
+    justify-content: space-between;
+    button {
+      flex: 1;
+    }
+  }
+
+  .formActions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
   }
 }
 
 .actionButtons {
   display: flex;
   gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    padding: 6px 4px;
+    font-size: 14px;
+  }
 }

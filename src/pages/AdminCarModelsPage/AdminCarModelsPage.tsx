@@ -11,9 +11,11 @@ import { CarModelDto } from "@/shared/api/car/types";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import styles from "./AdminCarModelsPage.module.scss";
 import Button from "@/shared/ui/Button/Button";
+import { useNotifications } from "@/shared/hooks/useNotifications";
 
 export const AdminCarModelsPage: React.FC = () => {
   const queryClient = useQueryClient();
+  const { showSuccess, showError, showWarning, showInfo } = useNotifications();
 
   const { data: filterData, isLoading: isFilterLoading } = useGetAllFilters();
 
@@ -35,6 +37,13 @@ export const AdminCarModelsPage: React.FC = () => {
   const [newBrand, setNewBrand] = useState<string>("");
   const [newModel, setNewModel] = useState<string>("");
   const [newGeneration, setNewGeneration] = useState<string>("");
+  
+  // Validation errors
+  const [errors, setErrors] = useState<{
+    brand?: string;
+    model?: string;
+    generation?: string;
+  }>({});
 
   const loadAllCarModels = () => {
     if (!filterData) return;
@@ -70,140 +79,236 @@ export const AdminCarModelsPage: React.FC = () => {
   const { mutate: deleteModel } = useDeleteModel();
   const { mutate: updateModel } = useUpdateModel();
 
-  const handleCreateModel = () => {
-    if (!newBrand.trim() || !newModel.trim() || !newGeneration.trim()) {
-      alert("Пожалуйста, заполните все поля");
-      return;
-    }
-    const dto: CarModelDto = {
-      brand: newBrand,
-      model: newModel,
-      generation: newGeneration,
-    };
-    createModel(dto, {
-      onSuccess: () => {
-        console.log("Модель успешно создана!");
-        queryClient.invalidateQueries("allFilters");
-        queryClient.refetchQueries("allFilters");
-        setNewBrand("");
-        setNewModel("");
-        setNewGeneration("");
-        setShowForm(false);
-      },
-      onError: (err) => {
-        console.error("Ошибка при создании модели:", err);
-      },
-    });
+  // Clear filters function
+  const handleClearFilters = () => {
+    setFilterBrand("");
+    setFilterModel("");
   };
 
-  const handleEditModel = () => {
-    if (!selectedModel) {
-      alert("Сначала выберите модель");
-      return;
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors: { brand?: string; model?: string; generation?: string } = {};
+    let isValid = true;
+
+    if (!newBrand.trim()) {
+      newErrors.brand = "Марка обязательна";
+      isValid = false;
     }
 
-    if (isLoading) {
-      console.log("Загрузка данных...");
-      return;
+    if (!newModel.trim()) {
+      newErrors.model = "Модель обязательна";
+      isValid = false;
     }
 
-    if (isError || !currentModel) {
-      console.error("Ошибка загрузки модели!");
+    if (!newGeneration.trim()) {
+      newErrors.generation = "Поколение обязательно";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const resetForm = () => {
+    setNewBrand("");
+    setNewModel("");
+    setNewGeneration("");
+    setErrors({});
+    setShowForm(false);
+  };
+
+  const handleCreateModel = async () => {
+    if (!validateForm()) {
+      showWarning("Пожалуйста, заполните все обязательные поля");
       return;
     }
 
     const dto: CarModelDto = {
-      brand: newBrand != "" ? newBrand : currentModel.brand,
-      model: newModel != "" ? newModel : currentModel.model,
-      generation: newGeneration != "" ? newGeneration : currentModel.generation,
+      brand: newBrand.trim(),
+      model: newModel.trim(),
+      generation: newGeneration.trim(),
     };
 
-    console.log("Текущая модель:", currentModel);
-    if (currentModel.carModelId) {
-      updateModel(
-        { id: currentModel.carModelId, dto: dto },
-        {
-          onSuccess: () => {
-            console.log("Модель успешно обновлена!");
-            queryClient.invalidateQueries("allFilters");
-            queryClient.refetchQueries("allFilters");
-            setNewBrand("");
-            setNewModel("");
-            setNewGeneration("");
-            setShowForm(false);
-          },
-          onError: (err) => {
-            console.error("Ошибка при создании модели:", err);
-          },
-        },
+    try {
+      showInfo("Создание модели...");
+      await new Promise<void>((resolve, reject) => {
+        createModel(dto, {
+          onSuccess: () => resolve(),
+          onError: (err) => reject(err),
+        });
+      });
+      
+      showSuccess("Модель успешно создана!");
+      queryClient.invalidateQueries("allFilters");
+      queryClient.refetchQueries("allFilters");
+      resetForm();
+    } catch (error) {
+      showError(
+        typeof error === "string"
+          ? error
+          : "Ошибка при создании модели"
       );
     }
   };
 
-  const handleDeleteModel = () => {
+  const handleEditModel = async () => {
     if (!selectedModel) {
-      alert("Сначала выберите модель");
+      showWarning("Сначала выберите модель");
       return;
     }
 
-    deleteModel(selectedModel, {
-      onSuccess: () => {
-        console.log("Модель удалена:", selectedModel);
+    if (isLoading) {
+      showInfo("Загрузка данных...");
+      return;
+    }
+
+    if (isError || !currentModel) {
+      showError("Ошибка загрузки модели!");
+      return;
+    }
+
+    // Check if at least one field is filled for update
+    if (!newBrand.trim() && !newModel.trim() && !newGeneration.trim()) {
+      showWarning("Измените хотя бы одно поле");
+      return;
+    }
+
+    const dto: CarModelDto = {
+      brand: newBrand.trim() !== "" ? newBrand.trim() : currentModel.brand,
+      model: newModel.trim() !== "" ? newModel.trim() : currentModel.model,
+      generation: newGeneration.trim() !== "" ? newGeneration.trim() : currentModel.generation,
+    };
+
+    if (!dto.brand || !dto.model || !dto.generation) {
+      showWarning("Все поля должны быть заполнены");
+      return;
+    }
+
+    if (currentModel.carModelId) {
+      try {
+        showInfo("Обновление модели...");
+        await new Promise<void>((resolve, reject) => {
+          updateModel(
+            { id: currentModel.carModelId!, dto: dto },
+            {
+              onSuccess: () => resolve(),
+              onError: (err) => reject(err),
+            },
+          );
+        });
+        
+        showSuccess("Модель успешно обновлена!");
+        queryClient.invalidateQueries("allFilters");
+        queryClient.refetchQueries("allFilters");
+        resetForm();
+      } catch (error) {
+        showError(
+          typeof error === "string"
+            ? error
+            : "Ошибка при обновлении модели"
+        );
+      }
+    } else {
+      showError("Не удалось найти ID модели");
+    }
+  };
+
+  const handleDeleteModel = async () => {
+    if (!selectedModel) {
+      showWarning("Сначала выберите модель");
+      return;
+    }
+
+    if (window.confirm("Вы уверены, что хотите удалить эту модель?")) {
+      try {
+        showInfo("Удаление модели...");
+        await new Promise<void>((resolve, reject) => {
+          deleteModel(selectedModel, {
+            onSuccess: () => resolve(),
+            onError: (err) => reject(err),
+          });
+        });
+        
+        showSuccess("Модель успешно удалена");
         queryClient.invalidateQueries("allFilters");
         queryClient.refetchQueries("allFilters");
         setSelectedModel(undefined);
-      },
-      onError: (err) => {
-        console.error("Ошибка при удалении модели:", err);
-      },
-    });
+      } catch (error) {
+        showError(
+          typeof error === "string"
+            ? error
+            : "Ошибка при удалении модели"
+        );
+      }
+    }
   };
+
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (!createForm && currentModel && showForm) {
+      setNewBrand(currentModel.brand || "");
+      setNewModel(currentModel.model || "");
+      setNewGeneration(currentModel.generation || "");
+    }
+  }, [createForm, currentModel, showForm]);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Список моделей автомобиля</h2>
-      
       </div>
 
       <div className={styles.filterContainer}>
-        <Dropdown
-          options={
-            filterData
-              ? filterData.brands.map((b) => ({ value: b, labelKey: b }))
-              : []
-          }
-          value={filterBrand}
-          onChange={(value) => {
-            setFilterBrand(value);
-            setFilterModel("");
-          }}
-          placeholder="Марка"
-          disabled={isFilterLoading}
-        />
-        <Dropdown
-          options={
-            filterData && filterBrand
-              ? (filterData.models[filterBrand] || []).map((m) => ({
-                  value: m,
-                  labelKey: m,
-                }))
-              : []
-          }
-          value={filterModel}
-          onChange={(value) => setFilterModel(value)}
-          placeholder="Модель"
-          disabled={isFilterLoading || !filterBrand}
-        />
+        <div className={styles.dropdowns}>
+          <Dropdown
+            options={
+              filterData
+                ? filterData.brands.map((b) => ({ value: b, labelKey: b }))
+                : []
+            }
+            value={filterBrand}
+            onChange={(value) => {
+              setFilterBrand(value);
+              setFilterModel("");
+            }}
+            placeholder="Марка"
+            disabled={isFilterLoading}
+          />
+          <Dropdown
+            options={
+              filterData && filterBrand
+                ? (filterData.models[filterBrand] || []).map((m) => ({
+                    value: m,
+                    labelKey: m,
+                  }))
+                : []
+            }
+            value={filterModel}
+            onChange={(value) => setFilterModel(value)}
+            placeholder="Модель"
+            disabled={isFilterLoading || !filterBrand}
+          />
+        </div>
+        <div className={styles.filterButtons}>
           <Button
-          className={styles.addButton}
-          onClick={() => {
-            setShowForm(true);
-            setCreateForm(true);
-          }}
-        >
-          Добавить
-        </Button>
+            variant="secondary"
+            onClick={handleClearFilters}
+            disabled={!filterBrand && !filterModel}
+            className={styles.clearButton}
+          >
+            Очистить
+          </Button>
+          <Button
+            className={styles.addButton}
+            onClick={() => {
+              resetForm();
+              setShowForm(true);
+              setCreateForm(true);
+            }}
+          >
+            Добавить
+          </Button>
+        </div>
       </div>
 
       {/* Таблица моделей */}
@@ -216,34 +321,54 @@ export const AdminCarModelsPage: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredModels.map((item, idx) => (
-            <tr key={`${item.brand} ${item.model} ${item.generation}`}>
-              <td>
-                <div className={styles.brandContainer}>
-                  {item.brand}
-                  <label className={styles.customCheckbox}>
-                    <input
-                      type="checkbox"
-                      checked={selectedModel === item}
-                      onChange={() => setSelectedModel(item!)}
-                    />
-                    <span className={styles.checkmark}></span>
-                  </label>
-                </div>
+          {filteredModels.length > 0 ? (
+            filteredModels.map((item, idx) => (
+              <tr 
+                key={`${item.brand}-${item.model}-${item.generation}-${idx}`}
+                className={selectedModel === item ? styles.selectedRow : ""}
+                onClick={() => setSelectedModel(item)}
+              >
+                <td>
+                  <div className={styles.brandContainer}>
+                    {item.brand}
+                    <label className={styles.customCheckbox}>
+                      <input
+                        type="checkbox"
+                        checked={selectedModel === item}
+                        onChange={() => setSelectedModel(item)}
+                      />
+                      <span className={styles.checkmark}></span>
+                    </label>
+                  </div>
+                </td>
+                <td>{item.model}</td>
+                <td>{item.generation}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={3} className={styles.noData}>
+                {isFilterLoading 
+                  ? "Загрузка данных..." 
+                  : "Нет доступных моделей"}
               </td>
-              <td>{item.model}</td>
-              <td>{item.generation}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
+      
       <div className={styles.actionButtons}>
         <Button
           className={styles.editButton}
           disabled={!selectedModel}
           onClick={() => {
-            setShowForm(true);
-            setCreateForm(false);
+            if (selectedModel) {
+              setShowForm(true);
+              setCreateForm(false);
+              setErrors({});
+            } else {
+              showWarning("Сначала выберите модель");
+            }
           }}
         >
           Изменить
@@ -265,32 +390,56 @@ export const AdminCarModelsPage: React.FC = () => {
               type="text"
               placeholder="Марка"
               value={newBrand}
-              onChange={(e) => setNewBrand(e.target.value)}
+              onChange={(e) => {
+                setNewBrand(e.target.value);
+                if (e.target.value.trim()) {
+                  setErrors({ ...errors, brand: undefined });
+                }
+              }}
+              className={errors.brand ? styles.inputError : ""}
             />
+            {errors.brand && <span className={styles.errorMessage}>{errors.brand}</span>}
           </div>
+          
           <div className={styles.formGroup}>
             <input
               type="text"
               placeholder="Модель"
               value={newModel}
-              onChange={(e) => setNewModel(e.target.value)}
+              onChange={(e) => {
+                setNewModel(e.target.value);
+                if (e.target.value.trim()) {
+                  setErrors({ ...errors, model: undefined });
+                }
+              }}
+              className={errors.model ? styles.inputError : ""}
             />
+            {errors.model && <span className={styles.errorMessage}>{errors.model}</span>}
           </div>
+          
           <div className={styles.formGroup}>
             <input
               type="text"
               placeholder="Поколение"
               value={newGeneration}
-              onChange={(e) => setNewGeneration(e.target.value)}
+              onChange={(e) => {
+                setNewGeneration(e.target.value);
+                if (e.target.value.trim()) {
+                  setErrors({ ...errors, generation: undefined });
+                }
+              }}
+              className={errors.generation ? styles.inputError : ""}
             />
+            {errors.generation && <span className={styles.errorMessage}>{errors.generation}</span>}
           </div>
+          
           <div className={styles.formActions}>
             {createForm ? (
               <Button onClick={handleCreateModel}>Создать</Button>
             ) : (
               <Button onClick={handleEditModel}>Обновить</Button>
             )}
-            <Button  variant="secondary" onClick={() => setShowForm(false)}>Отмена</Button>
+            <Button variant="secondary" onClick={() => setShowForm(false)}>Отмена</Button>
           </div>
         </div>
       )}

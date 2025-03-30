@@ -32,11 +32,11 @@ const MobileSidebar: React.FC = () => {
       label: t("header.calculator"),
       icon: <AiOutlineCalculator size={20} />,
     },
-    {
-      path: "/contacts",
-      label: t("header.contacts"),
-      icon: <AiOutlineContacts size={20} />,
-    },
+    // {
+    //   path: "/contacts",
+    //   label: t("header.contacts"),
+    //   icon: <AiOutlineContacts size={20} />,
+    // },
   ];
 
   const isActive = (path: string) => {
