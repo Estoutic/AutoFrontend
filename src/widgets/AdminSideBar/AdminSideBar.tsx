@@ -1,6 +1,5 @@
-// AdminSidebar.tsx
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useCallback } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./AdminSideBar.module.scss";
 
 import {
@@ -14,6 +13,7 @@ import {
   AiOutlineMenuUnfold,
   AiOutlineMenu,
   AiOutlineClose,
+  AiOutlineLogout
 } from "react-icons/ai";
 import { useSidebar } from "@/features/SidebarContext/SidebarContext";
 
@@ -21,7 +21,18 @@ const AdminSidebar: React.FC = () => {
   const { isCollapsed, isMobile, isOpen, toggleSidebar, closeSidebar } =
     useSidebar();
   const location = useLocation();
+  const navigate = useNavigate();
 
+  const handleLogout = useCallback(() => {
+    // Remove tokens from localStorage
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    
+    // Redirect to login page
+    navigate('/admin/login');
+  }, [navigate]);
+
+  // Separate regular nav items from logout
   const navItems = [
     { path: "/admin", label: "Главная", icon: <AiOutlineHome size={20} /> },
     {
@@ -48,8 +59,14 @@ const AdminSidebar: React.FC = () => {
       path: "/admin/users",
       label: "Сотрудники",
       icon: <AiOutlineTeam size={20} />,
-    },
+    }
   ];
+
+  const logoutItem = {
+    path: "/admin/login",
+    label: "Выйти",
+    icon: <AiOutlineLogout size={20} />
+  };
 
   const isActive = (path: string) => {
     return (
@@ -94,6 +111,7 @@ const AdminSidebar: React.FC = () => {
         </div>
 
         <nav className={styles.navContainer}>
+          {/* Regular nav items */}
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -110,10 +128,25 @@ const AdminSidebar: React.FC = () => {
               )}
             </Link>
           ))}
+          
+          {/* Logout item - using button with navItem styling to trigger handleLogout */}
+          <button
+            className={`${styles.navItem} ${styles.logoutButton}`}
+            onClick={() => {
+              handleLogout();
+              if (isMobile) closeSidebar();
+            }}
+          >
+            <span className={styles.icon}>{logoutItem.icon}</span>
+            {(!isCollapsed || isMobile) && (
+              <span className={styles.label}>{logoutItem.label}</span>
+            )}
+          </button>
         </nav>
 
-        {!isMobile && (
-          <div className={styles.sidebarFooter}>
+        <div className={styles.sidebarFooter}>
+          {/* Toggle button for non-mobile */}
+          {!isMobile && (
             <button
               className={styles.toggleButton}
               onClick={toggleSidebar}
@@ -127,8 +160,8 @@ const AdminSidebar: React.FC = () => {
                 <AiOutlineMenuFold size={20} />
               )}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </aside>
     </>
   );

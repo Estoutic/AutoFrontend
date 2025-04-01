@@ -4,6 +4,7 @@ import { AuthToken, RefreshTokenDto, UserDto } from "../auth/types";
 import { userApi } from "../client";
 
 /** Авторизация пользователя (POST /user/auth) */
+/** Авторизация пользователя (POST /user/auth) */
 export const useAuthUser = (): UseMutationResult<
   AuthToken,
   AxiosError,
@@ -12,8 +13,13 @@ export const useAuthUser = (): UseMutationResult<
   const queryClient = useQueryClient();
 
   const mutationFn = async (userDto: UserDto) => {
-    const authToken = await userApi.authUser(userDto);
-    return authToken;
+    try {
+      const authToken = await userApi.authUser(userDto);
+      return authToken;
+    } catch (error) {
+      // Make sure we're properly throwing the error so React Query can handle it
+      throw error;
+    }
   };
 
   return useMutation({

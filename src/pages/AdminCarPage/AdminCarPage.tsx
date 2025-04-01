@@ -18,18 +18,32 @@ import CarImagesModal from "@/features/CarImagesModal/CarImagesModal";
 import Button from "@/shared/ui/Button/Button";
 import { useNotifications } from "@/shared/hooks/useNotifications";
 import { useNavigate } from "react-router-dom";
+import Pagination from "@/shared/ui/Pagination/Pagination";
 
 const AdminCarPage: React.FC = () => {
   const { showSuccess, showError, showInfo, showWarning } = useNotifications();
   const navigate = useNavigate();
 
   const [filter, setFilter] = useState<CarFilterDto>({});
-  const { data, isLoading, isError, refetch } = useGetAllCars(filter);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10);
+
+  // Use the paginated hook
+  const { data, isLoading, isError, refetch } = useGetAllCars(
+    filter,
+    page,
+    size,
+    "id",
+    "asc",
+  );
+
+  const cars = data?.content || [];
+  const totalPages = data?.totalPages || 0;
+  const totalElements = data?.totalElements || 0;
+
   const deleteMutation = useDeleteCar();
   const createMutation = useAddCar();
   const updateMutation = useUpdateCar();
-
-  const cars = data?.content || [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
@@ -152,6 +166,11 @@ const AdminCarPage: React.FC = () => {
         </Button>
       </div>
 
+      {cars.length > 0 && (
+        <h2>
+          Всего доступных автомобилей: {totalElements}
+        </h2>
+      )}
       {isLoading ? (
         <div className={styles.loadingState}>Загрузка автомобилей...</div>
       ) : isError ? (
@@ -191,6 +210,16 @@ const AdminCarPage: React.FC = () => {
 
       {isImagesModalOpen && selectedCar && (
         <CarImagesModal car={selectedCar} onClose={handleCloseImagesModal} />
+      )}
+      {!isError && totalPages > 1 && (
+        <div className={styles.paginationContainer}>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(newPage) => setPage(newPage)}
+            disabled={isLoading}
+          />
+        </div>
       )}
     </div>
   );

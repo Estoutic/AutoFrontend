@@ -65,7 +65,7 @@ const AdminCarList: React.FC<AdminCarsListProps> = ({
         ))}
       </div>
       
-      {/* Show pagination only if there are enough items */}
+      {/* Show pagination only if there are enough items
       {totalPages > 1 && (
         <div className={styles.paginationContainer}>
           <Pagination
@@ -74,17 +74,9 @@ const AdminCarList: React.FC<AdminCarsListProps> = ({
             onPageChange={handlePageChange}
           />
         </div>
-      )}
+      )} */}
       
-      {/* Display total count */}
-      {filteredCars.length > 0 && (
-        <div className={styles.resultsInfo}>
-          {t('admin.carList.totalItems', {
-            count: totalItems,
-            defaultValue: `Всего доступных автомобилей: ${totalItems}`
-          })}
-        </div>
-      )}
+
       
       {/* No results message */}
       {filteredCars.length === 0 && (
