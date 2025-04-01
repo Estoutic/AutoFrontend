@@ -12,6 +12,22 @@ import {
   ContactType,
 } from "@/shared/api/application/types";
 import { useTranslation } from "react-i18next";
+import { metricsMock, METRIC_EVENTS, METRIC_GOALS } from "@/utils/metricsMock";
+
+// Пытаемся импортировать настоящий хук метрики, но не вызываем его здесь
+let useMetrika: any;
+try {
+  // Динамический импорт вызовет ошибку, но не завершит работу компонента
+  import('@/features/YandexMetrika/YandexMetrikaProvider')
+    .then(module => {
+      useMetrika = module.useMetrika;
+    })
+    .catch(() => {
+      console.warn('Модуль Яндекс.Метрики не загружен');
+    });
+} catch (e) {
+  console.warn('Ошибка при импорте модуля метрики');
+}
 
 const CONTACT_TYPE_OPTIONS = [
   { value: "CALL", labelKey: "carRequestModal.contactType.call" },
@@ -34,6 +50,19 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   onSubmit,
 }) => {
   const { t } = useTranslation();
+  
+  // Метрика: пытаемся использовать настоящую, с fallback на заглушку
+  let metrics = metricsMock;
+  try {
+    if (typeof useMetrika === 'function') {
+      metrics = useMetrika() || metricsMock;
+    }
+  } catch (e) {
+    console.warn('Ошибка при использовании метрики, используется заглушка');
+  }
+  
+  const { sendGoal, sendEvent } = metrics;
+  
   const [viewMode, setViewMode] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState<ApplicationCreationDto>({
     firstName: "",
@@ -48,19 +77,42 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setViewMode("form");
+      
+      // Отправляем событие открытия формы
+      if (car) {
+        sendEvent(METRIC_EVENTS.FORM_OPEN, {
+          formType: 'car_request',
+          carId: car.id,
+          carName: car.name,
+          carPrice: car.price
+        });
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, car, sendEvent]);
 
   if (!isOpen || !car) return null;
 
-  // Handle input changes from InputField components (which use event objects)
+  // Handle input changes from InputField components
   const handleInputChange = (key: keyof ApplicationCreationDto) => (event: ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [key]: event.target.value }));
+    
+    // Отслеживаем заполнение полей
+    sendEvent(METRIC_EVENTS.FORM_FIELD_FILLED, { 
+      fieldName: key,
+      carId: car.id
+    });
   };
 
   // Handle direct string value from Dropdown component
   const handleDropdownChange = (value: string) => {
     setFormData((prev) => ({ ...prev, contact: value }));
+    
+    // Отслеживаем выбор типа контакта
+    sendEvent(METRIC_EVENTS.FORM_FIELD_FILLED, { 
+      fieldName: 'contact',
+      contactType: value,
+      carId: car.id
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -72,9 +124,25 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
         onSuccess: (newId) => {
           console.log(t("carRequestModal.applicationCreated"), newId);
           setViewMode("success");
+          
+          // Отправляем цель успешной отправки формы
+          sendGoal(METRIC_GOALS.CAR_REQUEST_SUBMITTED, {
+            carId: car.id,
+            carName: car.name,
+            carPrice: car.price,
+            applicationId: newId,
+            contactType: formData.contact
+          });
         },
         onError: (err) => {
           console.log(t("carRequestModal.error"), err);
+          
+          // Отслеживаем ошибки отправки
+          sendEvent(METRIC_EVENTS.FORM_SUBMIT, {
+            status: 'error',
+            carId: car.id,
+            errorMessage: String(err)
+          });
         },
       },
     );
@@ -82,6 +150,13 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
 
   const handleReturnToCatalog = () => {
     onClose();
+    
+    // Отслеживаем возврат в каталог
+    sendEvent(METRIC_EVENTS.BUTTON_CLICK, {
+      buttonType: 'return_to_catalog',
+      fromSuccessScreen: viewMode === 'success',
+      carId: car.id
+    });
   };
 
   return (
@@ -90,9 +165,16 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
 
         {viewMode === "form" ? (
           <>
-                  <Button className={styles.closeButton} variant="secondary" onClick={onClose}>
-          ✕
-        </Button>
+            <Button className={styles.closeButton} variant="secondary" onClick={() => {
+              onClose();
+              // Отслеживаем закрытие формы
+              sendEvent(METRIC_EVENTS.FORM_CLOSE, {
+                stage: 'form',
+                carId: car.id
+              });
+            }}>
+              ✕
+            </Button>
             <Text variant="blue">
               {t("carRequestModal.enterYourData")}
             </Text>
@@ -133,7 +215,19 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
                 <CarDetailCard car={car} hideSubmitButton />
               </div>
 
-              <Button type="submit" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                onClick={() => {
+                  // Отслеживаем клик по кнопке отправки
+                  sendEvent(METRIC_EVENTS.BUTTON_CLICK, {
+                    buttonType: 'car_request_submit',
+                    carId: car.id,
+                    formComplete: Boolean(formData.firstName && formData.lastName && 
+                                          formData.contact && formData.contactDetails)
+                  });
+                }}
+              >
                 {isLoading
                   ? t("carRequestModal.sending")
                   : t("carRequestModal.submitButton")}

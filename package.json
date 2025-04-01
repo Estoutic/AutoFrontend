@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/node": "^22.13.17",
     "axios": "^1.7.9",
     "country-flag-icons": "^1.5.18",
     "framer-motion": "^12.6.2",
