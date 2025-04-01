@@ -9,11 +9,14 @@ import {
 } from "@/shared/api/carModel/hooks";
 import { CarModelDto } from "@/shared/api/car/types";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
+import Pagination from "@/shared/ui/Pagination/Pagination";
 import styles from "./AdminCarModelsPage.module.scss";
 import Button from "@/shared/ui/Button/Button";
 import { useNotifications } from "@/shared/hooks/useNotifications";
+import { useTranslation } from "react-i18next";
 
 export const AdminCarModelsPage: React.FC = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { showSuccess, showError, showWarning, showInfo } = useNotifications();
 
@@ -24,6 +27,10 @@ export const AdminCarModelsPage: React.FC = () => {
 
   const [carModels, setCarModels] = useState<CarModelDto[]>([]);
   const [selectedModel, setSelectedModel] = useState<CarModelDto>();
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const {
     data: currentModel,
@@ -64,6 +71,11 @@ export const AdminCarModelsPage: React.FC = () => {
     }
   }, [filterData]);
 
+  // Reset pagination when filter changes
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [filterBrand, filterModel]);
+
   const filteredModels = carModels.filter((item) => {
     let match = true;
     if (filterBrand) {
@@ -75,6 +87,15 @@ export const AdminCarModelsPage: React.FC = () => {
     return match;
   });
 
+  // Calculate total pages for pagination
+  const totalPages = Math.ceil(filteredModels.length / itemsPerPage);
+  
+  // Get current page data
+  const currentModels = filteredModels.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
   const { mutate: createModel } = useCreateModel();
   const { mutate: deleteModel } = useDeleteModel();
   const { mutate: updateModel } = useUpdateModel();
@@ -83,6 +104,14 @@ export const AdminCarModelsPage: React.FC = () => {
   const handleClearFilters = () => {
     setFilterBrand("");
     setFilterModel("");
+    setCurrentPage(0); // Reset to first page
+  };
+  
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Deselect the current model when changing pages
+    setSelectedModel(undefined);
   };
 
   // Validate form fields
@@ -252,6 +281,13 @@ export const AdminCarModelsPage: React.FC = () => {
     }
   }, [createForm, currentModel, showForm]);
 
+  // Handle items per page change
+  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSize = parseInt(e.target.value, 10);
+    setItemsPerPage(newSize);
+    setCurrentPage(0); // Reset to first page when changing items per page
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -311,51 +347,87 @@ export const AdminCarModelsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Таблица моделей */}
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Марка</th>
-            <th>Модель</th>
-            <th>Поколение</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredModels.length > 0 ? (
-            filteredModels.map((item, idx) => (
-              <tr 
-                key={`${item.brand}-${item.model}-${item.generation}-${idx}`}
-                className={selectedModel === item ? styles.selectedRow : ""}
-                onClick={() => setSelectedModel(item)}
-              >
-                <td>
-                  <div className={styles.brandContainer}>
-                    {item.brand}
-                    <label className={styles.customCheckbox}>
-                      <input
-                        type="checkbox"
-                        checked={selectedModel === item}
-                        onChange={() => setSelectedModel(item)}
-                      />
-                      <span className={styles.checkmark}></span>
-                    </label>
-                  </div>
-                </td>
-                <td>{item.model}</td>
-                <td>{item.generation}</td>
-              </tr>
-            ))
-          ) : (
+      {/* Table models */}
+      <div className={styles.tableContainer}>
+        <table className={styles.table}>
+          <thead>
             <tr>
-              <td colSpan={3} className={styles.noData}>
-                {isFilterLoading 
-                  ? "Загрузка данных..." 
-                  : "Нет доступных моделей"}
-              </td>
+              <th>Марка</th>
+              <th>Модель</th>
+              <th>Поколение</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentModels.length > 0 ? (
+              currentModels.map((item, idx) => (
+                <tr 
+                  key={`${item.brand}-${item.model}-${item.generation}-${idx}`}
+                  className={selectedModel === item ? styles.selectedRow : ""}
+                  onClick={() => setSelectedModel(item)}
+                >
+                  <td>
+                    <div className={styles.brandContainer}>
+                      {item.brand}
+                      <label className={styles.customCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedModel === item}
+                          onChange={() => setSelectedModel(item)}
+                        />
+                        <span className={styles.checkmark}></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td>{item.model}</td>
+                  <td>{item.generation}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={3} className={styles.noData}>
+                  {isFilterLoading 
+                    ? "Загрузка данных..." 
+                    : "Нет доступных моделей"}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      
+      {/* Pagination controls */}
+      <div className={styles.paginationControls}>
+        <div className={styles.itemsPerPage}>
+          <span>{t('pagination.itemsPerPage', { defaultValue: 'Показывать по:' })}</span>
+          <select 
+            value={itemsPerPage} 
+            onChange={handleItemsPerPageChange}
+            className={styles.itemsPerPageSelect}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+        
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+        
+        {filteredModels.length > 0 && (
+          <div className={styles.resultsInfo}>
+            {t('admin.carModels.total', {
+              count: filteredModels.length,
+              defaultValue: `Всего: ${filteredModels.length}`
+            })}
+          </div>
+        )}
+      </div>
       
       <div className={styles.actionButtons}>
         <Button

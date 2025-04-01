@@ -1,0 +1,60 @@
+@use "@/styles/_variables" as vars;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 24px 0;
+  gap: 8px;
+}
+
+.pageButton {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+  padding: 0 12px;
+  
+  &:hover:not(:disabled) {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &.active {
+    background-color: vars.$primary-color;
+    color: white;
+    border-color: vars.$primary-color;
+    font-weight: 500;
+    
+    &:hover {
+      background-color: darken(vars.$primary-color, 5%);
+    }
+  }
+  
+  &.navButton {
+    font-weight: bold;
+  }
+}
+
+.ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  font-size: 16px;
+  color: #666;
+}

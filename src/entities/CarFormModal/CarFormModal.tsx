@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   CarCreationDto,
   CarFilterDto,
@@ -7,6 +7,7 @@ import {
 } from "@/shared/api/car/types";
 import Button from "@/shared/ui/Button/Button";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
+import InputField from "@/shared/ui/InputField/InputField";
 import styles from "./CarFormModal.module.scss";
 import { TransmissionType } from "@/shared/constants/enums/TransmissionType";
 import { BodyType } from "@/shared/constants/enums/BodyType";
@@ -25,61 +26,43 @@ interface CarFormModalProps {
   onUpdateCar: (id: string, data: CarCreationDto) => void;
 }
 
-// Custom validation rules
-const validateRequired = (value: any) => value ? true : "Поле обязательно";
-const validateYear = (value: number | undefined) => {
-  if (!value) return "Год обязателен";
-  const currentYear = new Date().getFullYear();
-  if (value < 1900) return "Год должен быть не ранее 1900";
-  if (value > currentYear + 1) return `Год не может быть позже ${currentYear + 1}`;
-  return true;
+// Translations
+const transmissionTypeTranslations = {
+  [TransmissionType.AUTOMATIC]: "Автоматическая",
+  [TransmissionType.MECHANICAL]: "Механическая",
+  [TransmissionType.ROBOT]: "Робот",
+  [TransmissionType.VARIATOR]: "Вариатор",
 };
-const validatePositiveNumber = (value: number | undefined) => {
-  if (!value && value !== 0) return "Поле обязательно";
-  if (value < 0) return "Значение не может быть отрицательным";
-  return true;
+
+const bodyTypeTranslations = {
+  [BodyType.SUV_3_DOORS]: "Внедорожник 3-дверный",
+  [BodyType.SUV_5_DOORS]: "Внедорожник 5-дверный",
+  [BodyType.SEDAN]: "Седан",
+  [BodyType.COUPE]: "Купе",
+  [BodyType.HATCHBACK_3_DOORS]: "Хэтчбек 3-дверный",
+  [BodyType.HATCHBACK_5_DOORS]: "Хэтчбек 5-дверный",
+  [BodyType.PICKUP_DOUBLE_CAB]: "Пикап с двойной кабиной",
+  [BodyType.PICKUP_SINGLE_CAB]: "Пикап с одинарной кабиной",
+  [BodyType.VAN]: "Фургон",
+  [BodyType.MINIVAN]: "Минивэн",
 };
-const validateMileage = (value: number | undefined) => {
-  if (!value && value !== 0) return "Пробег обязателен";
-  if (value < 0) return "Пробег не может быть отрицательным";
-  if (value > 1000000) return "Пробег не может превышать 1,000,000 км";
-  return true;
+
+const engineTypeTranslations = {
+  [EngineType.GASOLINE]: "Бензин",
+  [EngineType.DIESEL]: "Дизель",
+  [EngineType.HYBRID]: "Гибрид",
+  [EngineType.ELECTRIC]: "Электрический",
 };
-const validateOwners = (value: number | undefined) => {
-  if (!value && value !== 0) return "Количество владельцев обязательно";
-  if (value < 0) return "Количество владельцев не может быть отрицательным";
-  if (value > 20) return "Количество владельцев не может превышать 20";
-  return true;
+
+const driveTypeTranslations = {
+  [DriveType.FWD]: "Передний привод",
+  [DriveType.RWD]: "Задний привод",
+  [DriveType.AWD]: "Полный привод",
 };
-const validateEnginePower = (value: string | undefined) => {
-  if (!value) return "Мощность двигателя обязательна";
-  if (!/^\d+$/.test(value)) return "Мощность должна быть числом";
-  return true;
-};
-const validateEngineCapacity = (value: string | undefined) => {
-  if (!value) return "Объем двигателя обязателен";
-  const num = parseFloat(value);
-  if (isNaN(num)) return "Объем двигателя должен быть числом";
-  if (num < 0.1 || num > 10.0) return "Объем двигателя должен быть между 0.1 и 10.0 л";
-  return true;
-};
-const validateSeats = (value: number | undefined) => {
-  if (!value) return "Количество мест обязательно";
-  if (value < 1) return "Минимум 1 место";
-  if (value > 12) return "Максимум 12 мест";
-  return true;
-};
-const validatePrice = (value: number | undefined) => {
-  if (!value) return "Цена обязательна";
-  if (value <= 0) return "Цена должна быть положительной";
-  return true;
-};
-const validateVin = (value: string | undefined) => {
-  if (!value) return "VIN обязателен";
-  if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(value)) {
-    return "VIN должен содержать 17 символов (буквы и цифры, кроме I, O, Q)";
-  }
-  return true;
+
+const steeringPositionTranslations = {
+  [SteeringPosition.LEFT]: "Левый руль",
+  [SteeringPosition.RIGHT]: "Правый руль",
 };
 
 const CarFormModal: React.FC<CarFormModalProps> = ({
@@ -94,6 +77,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
   const { showSuccess, showError, showWarning } = useNotifications();
 
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -107,7 +91,9 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
   const [filter, setFilter] = useState<CarFilterDto>({});
   const { data: filterData, isLoading } = useGetAllFilters();
-  const [customErrors, setCustomErrors] = useState<{ [key: string]: string }>({});
+  const [customErrors, setCustomErrors] = useState<{ [key: string]: string }>(
+    {},
+  );
 
   const updateFilter = (field: keyof CarFilterDto, value: string) => {
     if (field === "brand") {
@@ -156,9 +142,10 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
     );
   };
 
-  const brandOptions = filter
-    ? filterData?.brands.map((brand) => ({ value: brand, labelKey: brand }))
-    : [];
+  const brandOptions =
+    filterData?.brands.map((brand) => ({ value: brand, labelKey: brand })) ||
+    [];
+
   const modelOptions =
     filterData && filter.brand
       ? filterData.models[filter.brand]?.map((model) => ({
@@ -166,6 +153,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
           labelKey: model,
         })) || []
       : [];
+
   const generationOptions =
     filterData && filter.model
       ? filterData.generations[filter.model]?.map((gen) => ({
@@ -174,31 +162,45 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
         })) || []
       : [];
 
+  // Options with translations
   const transmissionOptions = Object.values(TransmissionType).map((val) => ({
     value: val,
-    labelKey: val,
+    labelKey: transmissionTypeTranslations[val] || val,
   }));
+
   const bodyTypeOptions = Object.values(BodyType).map((val) => ({
     value: val,
-    labelKey: val,
+    labelKey: bodyTypeTranslations[val] || val,
   }));
+
   const engineTypeOptions = Object.values(EngineType).map((val) => ({
     value: val,
-    labelKey: val,
+    labelKey: engineTypeTranslations[val] || val,
   }));
+
   const driveTypeOptions = Object.values(DriveType).map((val) => ({
     value: val,
-    labelKey: val,
+    labelKey: driveTypeTranslations[val] || val,
   }));
+
   const steeringOptions = Object.values(SteeringPosition).map((val) => ({
     value: val,
-    labelKey: val,
+    labelKey: steeringPositionTranslations[val] || val,
   }));
 
   useEffect(() => {
     if (isOpen) {
       setCustomErrors({});
       if (mode === "edit" && car) {
+        // Set initial dropdown values when in edit mode
+        // if (car.brand && car.model && car.generation) {
+        //   setFilter({
+        //     brand: car.brand,
+        //     model: car.model,
+        //     generation: car.generation,
+        //   });
+        // }
+        
         reset({
           year: car.year,
           description: car.description || "",
@@ -214,6 +216,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
           steeringPosition: car.steeringPosition as SteeringPosition,
           seatsCount: car.seatsCount,
           price: car.price,
+          vin: "",
         });
       } else {
         reset({
@@ -241,57 +244,60 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
   const validateCarModel = () => {
     const errors = {};
-    
+
     if (mode === "create") {
       if (!filter.brand?.trim()) {
-        setCustomErrors(prev => ({ ...prev, brand: "Марка обязательна" }));
+        setCustomErrors((prev) => ({ ...prev, brand: "Марка обязательна" }));
         showWarning("Пожалуйста, выберите марку автомобиля");
         return false;
       }
       if (!filter.model?.trim()) {
-        setCustomErrors(prev => ({ ...prev, model: "Модель обязательна" }));
+        setCustomErrors((prev) => ({ ...prev, model: "Модель обязательна" }));
         showWarning("Пожалуйста, выберите модель автомобиля");
         return false;
       }
       if (!filter.generation?.trim()) {
-        setCustomErrors(prev => ({ ...prev, generation: "Поколение обязательно" }));
+        setCustomErrors((prev) => ({
+          ...prev,
+          generation: "Поколение обязательно",
+        }));
         showWarning("Пожалуйста, выберите поколение автомобиля");
         return false;
       }
     }
-    
+
     return true;
   };
 
   const validateDropdowns = (data: CarCreationDto) => {
     let valid = true;
     const newErrors = { ...customErrors };
-    
+
     if (!data.transmissionType) {
       newErrors.transmissionType = "Коробка передач обязательна";
       valid = false;
     }
-    
+
     if (!data.bodyType) {
       newErrors.bodyType = "Тип кузова обязателен";
       valid = false;
     }
-    
+
     if (!data.engineType) {
       newErrors.engineType = "Тип двигателя обязателен";
       valid = false;
     }
-    
+
     if (!data.driveType) {
       newErrors.driveType = "Тип привода обязателен";
       valid = false;
     }
-    
+
     if (!data.steeringPosition) {
       newErrors.steeringPosition = "Расположение руля обязательно";
       valid = false;
     }
-    
+
     setCustomErrors(newErrors);
     return valid;
   };
@@ -309,20 +315,23 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
           model: filter.model,
           generation: filter.generation,
         };
-        
+
         await onCreateCar(data);
-        showSuccess("Автомобиль успешно создан");
+        showSuccess(
+          `Автомобиль ${filter.brand} ${filter.model} успешно создан`,
+          "Новый автомобиль",
+        );
       } else if (mode === "edit" && car?.id) {
         await onUpdateCar(car.id, data);
-        showSuccess("Автомобиль успешно обновлен");
+        showSuccess(`Автомобиль успешно обновлен`, "Редактирование");
       }
-      
+
       onClose();
     } catch (error) {
       showError(
-        typeof error === "string" 
-          ? error 
-          : "Произошла ошибка при сохранении автомобиля"
+        typeof error === "string"
+          ? error
+          : "Произошла ошибка при сохранении автомобиля",
       );
     }
   };
@@ -340,6 +349,19 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
     });
   };
 
+  const handleCancelClick = () => {
+    if (
+      isDirty &&
+      window.confirm(
+        "У вас есть несохраненные изменения. Вы уверены, что хотите закрыть форму?",
+      )
+    ) {
+      onClose();
+    } else if (!isDirty) {
+      onClose();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -351,7 +373,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
               ? "Создать автомобиль"
               : "Редактировать автомобиль"}
           </h3>
-          <Button className={styles.closeButton} onClick={onClose}>
+          <Button className={styles.closeButton} onClick={handleCancelClick}>
             &times;
           </Button>
         </div>
@@ -364,9 +386,9 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
                   <label>Марка*</label>
                   {renderDropdown(
                     "brand",
-                    brandOptions ? brandOptions : [],
+                    brandOptions,
                     false,
-                    "Марка"
+                    "Выберите марку",
                   )}
                 </div>
 
@@ -376,7 +398,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
                     "model",
                     modelOptions,
                     isLoading || !filter.brand,
-                    "Модель"
+                    "Выберите модель",
                   )}
                 </div>
 
@@ -386,7 +408,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
                     "generation",
                     generationOptions,
                     isLoading || !filter.model,
-                    "Поколение"
+                    "Выберите поколение",
                   )}
                 </div>
               </>
@@ -396,83 +418,131 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Год*</label>
-              <input 
-                type="number" 
-                placeholder="Год" 
-                className={errors.year ? styles.inputError : ""}
-                {...register("year", {
+              <Controller
+                control={control}
+                name="year"
+                rules={{
                   required: "Год обязателен",
-                  min: { value: 1900, message: "Год должен быть не ранее 1900" },
-                  max: { 
-                    value: new Date().getFullYear() + 1, 
-                    message: `Год не может быть позже ${new Date().getFullYear() + 1}` 
-                  }
-                })}
+                  min: {
+                    value: 1900,
+                    message: "Год должен быть не ранее 1900",
+                  },
+                  max: {
+                    value: new Date().getFullYear() + 1,
+                    message: `Год не может быть позже ${new Date().getFullYear() + 1}`,
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    type="number"
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="Год выпуска"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.year && <span className={styles.error}>{errors.year.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Описание</label>
-              <input
-                type="text"
-                placeholder="Описание"
-                {...register("description")}
+              <Controller
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <InputField
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    placeholder="Описание автомобиля"
+                  />
+                )}
               />
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Цвет*</label>
-              <input 
-                type="text" 
-                placeholder="Цвет" 
-                className={errors.color ? styles.inputError : ""}
-                {...register("color", {
-                  required: "Цвет обязателен"
-                })}
+              <Controller
+                control={control}
+                name="color"
+                rules={{ required: "Цвет обязателен" }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    placeholder="Цвет автомобиля"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.color && <span className={styles.error}>{errors.color.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Пробег (км)*</label>
-              <input
-                type="number"
-                placeholder="Пробег"
-                className={errors.mileage ? styles.inputError : ""}
-                {...register("mileage", {
+              <Controller
+                control={control}
+                name="mileage"
+                rules={{
                   required: "Пробег обязателен",
-                  min: { value: 0, message: "Пробег не может быть отрицательным" },
-                  max: { value: 1000000, message: "Пробег не может превышать 1,000,000 км" }
-                })}
+                  min: {
+                    value: 0,
+                    message: "Пробег не может быть отрицательным",
+                  },
+                  max: {
+                    value: 1000000,
+                    message: "Пробег не может превышать 1,000,000 км",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    type="number"
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="Пробег автомобиля"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.mileage && <span className={styles.error}>{errors.mileage.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
-              <label>Владельцев*</label>
-              <input
-                type="number"
-                placeholder="Владельцев"
-                className={errors.ownersCount ? styles.inputError : ""}
-                {...register("ownersCount", {
+              <label>Количество владельцев*</label>
+              <Controller
+                control={control}
+                name="ownersCount"
+                rules={{
                   required: "Количество владельцев обязательно",
-                  min: { value: 0, message: "Количество владельцев не может быть отрицательным" },
-                  max: { value: 20, message: "Количество владельцев не может превышать 20" }
-                })}
+                  min: {
+                    value: 0,
+                    message: "Количество владельцев не может быть отрицательным",
+                  },
+                  max: {
+                    value: 20,
+                    message: "Количество владельцев не может превышать 20",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    type="number"
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="Количество владельцев"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.ownersCount && <span className={styles.error}>{errors.ownersCount.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Коробка передач*</label>
               <Dropdown
                 options={[
-                  { value: "", labelKey: "Не выбрано" },
+                  { value: "", labelKey: "Выберите коробку передач" },
                   ...transmissionOptions,
                 ]}
                 value={watchDropdownValue("transmissionType")}
-                onChange={(val) => handleDropdownChange("transmissionType", val)}
+                onChange={(val) =>
+                  handleDropdownChange("transmissionType", val)
+                }
                 error={customErrors.transmissionType}
               />
             </div>
@@ -481,7 +551,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
               <label>Тип кузова*</label>
               <Dropdown
                 options={[
-                  { value: "", labelKey: "Не выбрано" },
+                  { value: "", labelKey: "Выберите тип кузова" },
                   ...bodyTypeOptions,
                 ]}
                 value={watchDropdownValue("bodyType")}
@@ -492,26 +562,32 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Мощность (л.с.)*</label>
-              <input
-                type="text"
-                placeholder="Мощность"
-                className={errors.enginePower ? styles.inputError : ""}
-                {...register("enginePower", {
+              <Controller
+                control={control}
+                name="enginePower"
+                rules={{
                   required: "Мощность двигателя обязательна",
                   pattern: {
                     value: /^\d+$/,
-                    message: "Мощность должна быть числом"
-                  }
-                })}
+                    message: "Мощность должна быть числом",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    placeholder="Мощность двигателя"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.enginePower && <span className={styles.error}>{errors.enginePower.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Тип двигателя*</label>
               <Dropdown
                 options={[
-                  { value: "", labelKey: "Не выбрано" },
+                  { value: "", labelKey: "Выберите тип двигателя" },
                   ...engineTypeOptions,
                 ]}
                 value={watchDropdownValue("engineType")}
@@ -524,7 +600,7 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
               <label>Тип привода*</label>
               <Dropdown
                 options={[
-                  { value: "", labelKey: "Не выбрано" },
+                  { value: "", labelKey: "Выберите тип привода" },
                   ...driveTypeOptions,
                 ]}
                 value={watchDropdownValue("driveType")}
@@ -535,89 +611,128 @@ const CarFormModal: React.FC<CarFormModalProps> = ({
 
             <div className={styles.fieldGroup}>
               <label>Объём двигателя (л)*</label>
-              <input
-                type="text"
-                placeholder="Объём"
-                className={errors.engineCapacity ? styles.inputError : ""}
-                {...register("engineCapacity", {
+              <Controller
+                control={control}
+                name="engineCapacity"
+                rules={{
                   required: "Объем двигателя обязателен",
-                  validate: value => {
+                  validate: (value) => {
                     const num = parseFloat(value || "");
                     if (isNaN(num)) return "Объем двигателя должен быть числом";
-                    if (num < 0.1 || num > 10.0) return "Объем двигателя должен быть между 0.1 и 10.0 л";
+                    if (num < 0.1 || num > 10.0)
+                      return "Объем двигателя должен быть между 0.1 и 10.0 л";
                     return true;
-                  }
-                })}
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    placeholder="Объём двигателя"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.engineCapacity && (
-                <span className={styles.error}>{errors.engineCapacity.message}</span>
-              )}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Расположение руля*</label>
               <Dropdown
                 options={[
-                  { value: "", labelKey: "Не выбрано" },
+                  { value: "", labelKey: "Выберите расположение руля" },
                   ...steeringOptions,
                 ]}
                 value={watchDropdownValue("steeringPosition")}
-                onChange={(val) => handleDropdownChange("steeringPosition", val)}
+                onChange={(val) =>
+                  handleDropdownChange("steeringPosition", val)
+                }
                 error={customErrors.steeringPosition}
               />
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Количество мест*</label>
-              <input
-                type="number"
-                placeholder="Мест"
-                className={errors.seatsCount ? styles.inputError : ""}
-                {...register("seatsCount", {
+              <Controller
+                control={control}
+                name="seatsCount"
+                rules={{
                   required: "Количество мест обязательно",
                   min: { value: 1, message: "Минимум 1 место" },
-                  max: { value: 12, message: "Максимум 12 мест" }
-                })}
+                  max: { value: 12, message: "Максимум 12 мест" },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    type="number"
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="Количество мест"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.seatsCount && <span className={styles.error}>{errors.seatsCount.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>Цена*</label>
-              <input 
-                type="number" 
-                placeholder="Цена" 
-                className={errors.price ? styles.inputError : ""}
-                {...register("price", {
+              <Controller
+                control={control}
+                name="price"
+                rules={{
                   required: "Цена обязательна",
-                  min: { value: 1, message: "Цена должна быть положительной" }
-                })}
+                  min: { value: 1, message: "Цена должна быть положительной" },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    type="number"
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="Цена автомобиля"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.price && <span className={styles.error}>{errors.price.message}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
               <label>VIN*</label>
-              <input 
-                type="text" 
-                placeholder="VIN" 
-                className={errors.vin ? styles.inputError : ""}
-                {...register("vin", {
+              <Controller
+                control={control}
+                name="vin"
+                rules={{
                   required: "VIN обязателен",
                   pattern: {
                     value: /^[A-HJ-NPR-Z0-9]{17}$/,
-                    message: "VIN должен содержать 17 символов (буквы и цифры, кроме I, O, Q)"
-                  }
-                })}
+                    message:
+                      "VIN должен содержать 17 символов (буквы и цифры, кроме I, O, Q)",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    value={field.value || ""}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    placeholder="VIN номер"
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
-              {errors.vin && <span className={styles.error}>{errors.vin.message}</span>}
             </div>
 
             <div className={styles.formActions}>
-              <Button type="submit" disabled={!isDirty}>
-                {mode === "create" ? "Создать" : "Сохранить"}
+              <Button
+                type="submit"
+                disabled={!isDirty}
+                className={styles.submitButton}
+              >
+                {mode === "create"
+                  ? "Создать автомобиль"
+                  : "Сохранить изменения"}
               </Button>
-              <Button type="button" onClick={onClose} variant="secondary">
+              <Button
+                type="button"
+                onClick={handleCancelClick}
+                variant="secondary"
+                className={styles.cancelButton}
+              >
                 Отмена
               </Button>
             </div>

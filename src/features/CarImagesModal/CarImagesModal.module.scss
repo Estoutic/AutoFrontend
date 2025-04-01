@@ -1,4 +1,5 @@
 @use "@/styles/_variables" as vars;
+@use "sass:color";
 
 .modalOverlay {
   position: fixed;
@@ -15,26 +16,29 @@
 
 .modalContent {
   background-color: #fff;
-  width: 700px;
+  width: 800px;
   max-width: 90%;
-  max-height: 90%;
-  border-radius: 6px;
+  max-height: 90vh;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #ccc;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
 
   h3 {
     margin: 0;
     font-size: 20px;
     color: vars.$primary-color;
+    font-weight: 600;
   }
 
   .closeButton {
@@ -44,49 +48,190 @@
     cursor: pointer;
     color: #999;
     transition: color 0.3s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 
     &:hover {
       color: #666;
+      background-color: #f0f0f0;
     }
   }
 }
 
 .modalBody {
-  padding: 16px;
+  padding: 20px;
   overflow-y: auto;
   flex: 1;
 }
 
 .imagesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 
   .imageItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    .imageContainer {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      height: 160px;
 
-    img {
-      width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      margin-bottom: 8px;
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+
+        .imageOverlay {
+          opacity: 1;
+        }
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+        display: block;
+      }
+
+      .imageOverlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.7);
+        padding: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        justify-content: center;
+
+        .deleteButton {
+          width: 100%;
+          font-size: 13px;
+          background-color: transparent;
+          border: 1px solid #fff;
+          color: #fff;
+
+          &:hover {
+            background-color: rgba(255,255,255,0.2);
+          }
+        }
+      }
     }
   }
 }
 
 .uploadSection {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+  margin-top: 10px;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: vars.$primary-color;
+  }
+
+  .uploadControls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .fileInput {
+      flex: 1;
+      padding: 8px;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+      background-color: #f8f9fa;
+    }
+
+    .uploadButton {
+      white-space: nowrap;
+    }
+  }
+
+  .selectedFiles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f8ff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    button {
+      font-size: 13px;
+      padding: 4px 12px;
+    }
+  }
+}
+
+.loadingState, .errorState, .emptyState {
+  padding: 30px;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  border: 1px dashed #ccc;
+  margin: 20px 0;
+}
+
+.errorState {
+  color: #d32f2f;
+  background-color: rgba(211, 47, 47, 0.05);
+  border-color: #d32f2f;
+
+  p {
+    margin-bottom: 16px;
+  }
+}
+
+.emptyState {
+  padding: 40px;
+  color: #666;
+  
+  p:first-child {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  p:last-child {
+    font-size: 14px;
+    color: #999;
+  }
 }
 
 @media (max-width: vars.$mobile-width) {
-    .uploadSection {
-      flex-direction: column;
-      align-items: flex-start; 
+  .uploadControls {
+    flex-direction: column;
+    
+    .fileInput, .uploadButton {
+      width: 100%;
     }
   }
+  
+  .selectedFiles {
+    flex-direction: column;
+    gap: 8px;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

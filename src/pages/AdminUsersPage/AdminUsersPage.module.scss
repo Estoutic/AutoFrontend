@@ -6,7 +6,12 @@
   color: vars.$primary-color !important;
   display: flex;
   flex-direction: column;
+  h2{
+    border-bottom: 2px solid vars.$primary-color;
+    padding-bottom: 8px;
+  }
 }
+
 
 .table {
   width: 100%;

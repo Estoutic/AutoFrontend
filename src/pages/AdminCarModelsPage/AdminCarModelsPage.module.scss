@@ -8,6 +8,10 @@
   color: vars.$primary-color !important;
   display: flex;
   flex-direction: column;
+  h2{
+    border-bottom: 2px solid vars.$primary-color;
+    padding-bottom: 8px;
+  }
 }
 
 .customCheckbox {
@@ -65,10 +69,8 @@
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .filterContainer {
@@ -108,10 +110,16 @@
   white-space: nowrap;
 }
 
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 
   th,
   td {
@@ -122,15 +130,80 @@
 
   th {
     background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
+  
   tr {
     width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+  
+  .selectedRow {
+    background-color: #e8f4fd;
+    
+    &:hover {
+      background-color: #d5ebfa;
+    }
   }
 }
 
 .brandContainer {
   display: flex;
   justify-content: space-between;
+}
+
+.noData {
+  text-align: center;
+  padding: 20px !important;
+  color: #666;
+}
+
+// Pagination styles
+.paginationControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.itemsPerPage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  span {
+    white-space: nowrap;
+    color: #666;
+  }
+}
+
+.itemsPerPageSelect {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  color: #333;
+  
+  &:focus {
+    outline: none;
+    border-color: vars.$primary-color;
+  }
+}
+
+.resultsInfo {
+  color: #666;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .formContainer {
@@ -168,6 +241,11 @@
       border: 1px solid vars.$primary-color;
       border-radius: 4px;
       outline: none;
+      
+      &.inputError {
+        border-color: #d32f2f;
+        background-color: rgba(211, 47, 47, 0.05);
+      }
     }
   }
 
@@ -182,6 +260,11 @@
       min-width: 120px;
     }
   }
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
 }
 
 @media (max-width: vars.$mobile-width) {
@@ -207,6 +290,21 @@
     }
   }
 
+  .paginationControls {
+    flex-direction: column;
+    align-items: center;
+    
+    & > div {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+  
+  .resultsInfo {
+    order: 3;
+  }
+
   .formActions {
     flex-direction: column;
 
@@ -223,11 +321,6 @@
       width: 100%;
     }
   }
-}
-
-.actionButtons {
-  display: flex;
-  gap: 10px;
 }
 
 @media (max-width: 768px) {

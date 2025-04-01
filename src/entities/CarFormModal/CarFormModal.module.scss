@@ -8,103 +8,167 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
 .modalContent {
   background-color: #fff;
-  width: 600px;
+  width: 650px;
   max-width: 90%;
-  max-height: 90%; /* чтобы не вылезало за экран */
-  border-radius: 6px;
+  max-height: 90vh;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Шапка модалки */
 .modalHeader {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
 
   h3 {
     margin: 0;
     font-size: 20px;
     color: vars.$primary-color;
+    font-weight: 600;
   }
-}
 
-.closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-  color: #999;
-  transition: color 0.3s ease;
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 
-  &:hover {
-    color: #666;
+    &:hover {
+      color: #666;
+      background-color: #f0f0f0;
+    }
   }
 }
 
 .modalBody {
   padding: 16px 20px;
   overflow-y: auto;
-  flex: 1;
+  max-height: 70vh;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #999;
+  }
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .fieldGroup {
   display: flex;
   flex-direction: column;
-
+  
   label {
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     font-weight: 500;
     color: vars.$primary-color;
+    font-size: 14px;
   }
-
-  input {
-    padding: 12px;
-    border: 2px solid vars.$primary-color;
-    border-radius: 5px;
-    background: #fff;
-    font-size: 16px;
-    color: vars.$primary-color;
-    outline: none;
-    transition: border-color 0.3s ease;
-
+  
+  input, select {
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
     &:focus {
-      border-color: color.adjust(vars.$primary-color, $lightness: -10%);
+      outline: none;
+      border-color: vars.$primary-color;
+      box-shadow: 0 0 0 2px rgba(vars.$primary-color, 0.1);
+    }
+    
+    &.inputError {
+      border-color: #e53935;
+      background-color: rgba(229, 57, 53, 0.03);
     }
   }
-}
-
-.error {
-  color: red;
-  font-size: 12px;
-  margin-top: 4px;
+  
+  .error {
+    color: #e53935;
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  
+  
 }
 
 .formActions {
+  grid-column: 1 / -1;
   display: flex;
-  gap: 10px;
-  margin-top: 8px;
-
-  button {
-    flex: 1;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  
+  .submitButton, .cancelButton {
     padding: 10px 16px;
-    font-size: 16px;
+    flex: 1;
+    font-weight: 500;
+  }
+  
+  .submitButton {
+    background-color: vars.$primary-color;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: color.adjust(vars.$primary-color, $lightness: -10%);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  
+  .cancelButton {
+    border: 1px solid #ccc;
+    
+    &:hover {
+      background-color: #f0f0f0;
+    }
   }
 }

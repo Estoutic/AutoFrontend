@@ -4,6 +4,9 @@
 .container {
   padding: 0 10%;
   color: vars.$primary-color;
+  h2{
+    border-bottom: 2px solid vars.$primary-color;
+  }
 }
 
 .layout {
