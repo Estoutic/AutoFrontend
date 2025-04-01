@@ -6,7 +6,7 @@ interface InputFieldProps {
   value: string | number;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // Updated to accept the event object
   placeholder?: string;
-  type?: "text" | "number";
+  type?: "text" | "number"| "date";
   error?: string; // Added error prop
 }
 

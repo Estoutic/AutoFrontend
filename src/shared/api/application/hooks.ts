@@ -95,9 +95,20 @@ export const useGetApplications = (
   size = 10,
   sortBy = "id",
   sortOrder = "asc",
-  locale = "EU"
+  locale = "EU",
+  createdAfter?: string,
+  createdBefore?: string
 ) => {
-  const queryKey = applicationKeys.list({ status, page, size, sortBy, sortOrder, locale });
+  const queryKey = applicationKeys.list({ 
+    status, 
+    page, 
+    size, 
+    sortBy, 
+    sortOrder, 
+    locale,
+    createdAfter,
+    createdBefore
+  });
 
   const queryFn = () => applicationApi.getApplications(
     status,
@@ -106,6 +117,8 @@ export const useGetApplications = (
     sortBy,
     sortOrder,
     locale,
+    createdAfter,
+    createdBefore
   );
 
   return useQuery({

@@ -13,7 +13,7 @@ import { TestNotificationComponent } from "@/app/TestNotificationComponent";
 export const HomePage = () => {
   return (
     <main className={styles.home}>
-      <TestNotificationComponent/>
+      {/* <TestNotificationComponent/> */}
       <Hero />
       {/* <CarCard image={carImage} name="BMW X3" price="9 000 000 руб." /> */}
       <CarCarousel />

@@ -43,10 +43,11 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     setIsExiting(true);
     
     // Подождем пока анимация завершится, потом удалим
+    // Увеличиваем время до 600мс для более плавной анимации
     setTimeout(() => {
       console.log('Удаляем уведомление после анимации:', notification.id);
       onRemove(notification.id);
-    }, 500);
+    }, 600);
   };
 
   // Handle notification icon based on type
@@ -103,11 +104,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
                          '#bfdbfe'}`,
     position: 'relative',
     marginBottom: '10px',
-    opacity: isExiting ? '0' : '1',
-    transform: isExiting ? 'translateX(100%)' : 'translateX(0)',
-    transition: 'opacity 0.5s ease, transform 0.5s ease',
     overflow: 'hidden',
-    maxWidth: '100%'
+    maxWidth: '100%',
+    pointerEvents: 'auto', // Make the notification clickable
+    transition: 'transform 0.5s ease, opacity 0.5s ease',
+    transform: isExiting ? 'translateX(100%)' : 'translateX(0)',
+    opacity: isExiting ? '0' : '1'
   };
 
   // Функция для отладки закрытия уведомления при клике
@@ -122,6 +124,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     <div 
       style={notificationStyles}
       role="alert"
+      className={`notification ${notification.type} ${isExiting ? 'notification-exit' : 'notification-enter'}`}
     >
       <div style={{ marginRight: '12px', color: 
                  notification.type === 'error' ? '#dc2626' : 
@@ -148,7 +151,6 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
           {notification.message}
         </p>
       </div>
-      {/* Обновленная кнопка закрытия с улучшенной доступностью и взаимодействием */}
       <button 
         onClick={debugClick}
         style={{ 
@@ -157,24 +159,23 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
           cursor: 'pointer',
           color: '#9ca3af',
           marginLeft: '12px',
-          padding: '5px', // Увеличиваем область нажатия
+          padding: '5px',
           width: '30px',
           height: '30px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 100, // Увеличиваем z-index для предотвращения перекрытия
-          position: 'relative', // Делаем относительное позиционирование
-          borderRadius: '50%', // Делаем круглую кнопку
-          transition: 'background-color 0.2s, color 0.2s'
+          zIndex: 100,
+          position: 'relative',
+          borderRadius: '50%',
+          transition: 'background-color 0.2s, color 0.2s',
+          pointerEvents: 'auto' // Explicitly ensure button is clickable
         }}
         onMouseOver={(e) => {
-          // Меняем стили при наведении для лучшей видимости
           e.currentTarget.style.backgroundColor = '#f3f4f6';
           e.currentTarget.style.color = '#4b5563';
         }}
         onMouseOut={(e) => {
-          // Возвращаем исходные стили
           e.currentTarget.style.backgroundColor = 'transparent';
           e.currentTarget.style.color = '#9ca3af';
         }}

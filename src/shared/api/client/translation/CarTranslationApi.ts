@@ -1,47 +1,67 @@
 import { AxiosInstance } from "axios";
-import CustomClient from "../CustomApiClient";
 import { CarTranslationDto } from "../../translations/types";
+import { getDefaultCurrencyCode, isLocaleUsingMiles } from "../../translations/utils";
 
-export interface ICarTranslationApi {
-  createTranslation: string;
-  updateTranslation: (id: string) => string;
-  deleteTranslation: (id: string) => string;
-  getAllTranslations: (carId: string) => string;
-}
+export class CarTranslationApi {
+  private readonly httpClient: AxiosInstance;
+  private readonly basePath = "/car/translations";
 
-export class CarTranslationApi extends CustomClient<ICarTranslationApi> {
   constructor(httpClient: AxiosInstance) {
-    super(httpClient, {
-      createTranslation: "/car/translation",
-      updateTranslation: (id: string) => `/car/translation/${id}`,
-      deleteTranslation: (id: string) => `/car/translation/${id}`,
-      getAllTranslations: (carId: string) => `/car/translation/${carId}/all`,
-    });
+    this.httpClient = httpClient;
   }
 
-  /** Создание перевода (POST /car/translation) 
-   *  Возвращает UUID созданного перевода 
+  /**
+   * Get all translations for a car
+   */
+  async getAllTranslations(carId: string): Promise<CarTranslationDto[]> {
+    const response = await this.httpClient.get(`${this.basePath}/car/${carId}`);
+    return response.data;
+  }
+
+  /**
+   * Create a new translation
+   * Adds default currency code and isMiles flag based on locale if not provided
    */
   async createTranslation(dto: CarTranslationDto): Promise<string> {
-    const response = await this.client.post<string>(this.methods.createTranslation, dto);
+    // Add default currency and distance unit if not specified
+    const enrichedDto = this.enrichTranslationDto(dto);
+    
+    const response = await this.httpClient.post(this.basePath, enrichedDto);
     return response.data;
   }
 
-  /** Обновление перевода (PATCH /car/translation/{id}) */
+  /**
+   * Update an existing translation
+   * Adds default currency code and isMiles flag based on locale if not provided
+   */
   async updateTranslation(id: string, dto: CarTranslationDto): Promise<void> {
-    await this.client.patch<void>(this.methods.updateTranslation(id), dto);
+    // Add default currency and distance unit if not specified
+    const enrichedDto = this.enrichTranslationDto(dto);
+    
+    await this.httpClient.put(`${this.basePath}/${id}`, enrichedDto);
   }
 
-  /** Удаление перевода (DELETE /car/translation/{id}) */
+  /**
+   * Delete a translation
+   */
   async deleteTranslation(id: string): Promise<void> {
-    await this.client.delete<void>(this.methods.deleteTranslation(id));
+    await this.httpClient.delete(`${this.basePath}/${id}`);
   }
 
-  /** Получение всех переводов для автомобиля (GET /car/translation/{carId}/all) */
-  async getAllTranslations(carId: string): Promise<CarTranslationDto[]> {
-    const response = await this.client.get<CarTranslationDto[]>(
-      this.methods.getAllTranslations(carId)
-    );
-    return response.data;
+  /**
+   * Helper method to add default currency and distance unit based on locale
+   */
+  private enrichTranslationDto(dto: CarTranslationDto): CarTranslationDto {
+    const result = { ...dto };
+    
+    if (dto.locale && !dto.currencyCode) {
+      result.currencyCode = getDefaultCurrencyCode(dto.locale);
+    }
+    
+    if (dto.locale && dto.isMiles === undefined) {
+      result.isMiles = isLocaleUsingMiles(dto.locale);
+    }
+    
+    return result;
   }
 }

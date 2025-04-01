@@ -5,14 +5,16 @@ import { ReportDto, ReportFilterDto } from "@/shared/api/report/types";
 import styles from "./AdminReportsPage.module.scss";
 import { useMutation } from "react-query";
 import { adminApi } from "@/shared/api/client";
+import { useNotifications } from "@/shared/hooks/useNotifications";
 
-// Type guard to check if object has content property that is an array
 const isPaginatedResponse = (data: any): data is { content: ReportDto[] } => {
   return data && typeof data === 'object' && Array.isArray(data.content);
 };
 
 const AdminReportsPage: React.FC = () => {
+  const { showSuccess, showError, showInfo } = useNotifications();
   const [filter, setFilter] = useState<ReportFilterDto>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleCreatedAfterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -30,7 +32,7 @@ const AdminReportsPage: React.FC = () => {
     }));
   };
 
-  const { data, isLoading, isError } = useGetAllReports(filter);
+  const { data, isLoading, isError, error, refetch } = useGetAllReports(filter);
 
   // Get the reports array regardless of response format with proper type narrowing
   const getReports = (): ReportDto[] => {
@@ -57,33 +59,91 @@ const AdminReportsPage: React.FC = () => {
   // Mutation for deleting a report
   const deleteMutation = useDeleteReport();
 
-  const downloadReportMutation = useMutation(async (id: string) => {
-    const link = await adminApi.getReport(id);
-    return link;
-  });
+  const downloadReportMutation = useMutation(
+    async (id: string) => {
+      setIsSubmitting(true);
+      try {
+        const link = await adminApi.getReport(id);
+        return link;
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    {
+      onError: (error: any) => {
+        setIsSubmitting(false);
+      }
+    }
+  );
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("Удалить отчёт?")) {
-      deleteMutation.mutate(id, {
-        onSuccess: () => {
-          console.log("Отчёт удалён:", id);
-        },
-        onError: (err) => {
-          alert("Ошибка удаления отчёта: " + err);
-        },
-      });
+  const handleDelete = (id: string, reportName: string) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        console.log("Отчёт удалён:", id);
+        showSuccess(`Отчёт "${reportName}" успешно удален`, "Удаление отчёта");
+        refetch(); // Refresh the report list
+      },
+      onError: (err: any) => {
+        const errorMessage = err.response?.data?.message || err.message || "Неизвестная ошибка";
+        console.error("Ошибка удаления отчёта:", err);
+        showError(`Ошибка при удалении отчёта: ${errorMessage}`, "Ошибка удаления");
+      },
+    });
+  };
+
+  const confirmDelete = (id: string, reportName: string) => {
+    // Using the custom confirm dialog approach with notifications
+    if (window.confirm(`Вы уверены, что хотите удалить отчёт "${reportName}"?`)) {
+      handleDelete(id, reportName);
     }
   };
 
-  const handleDownload = (id: string) => {
+  const handleDownload = (id: string, reportName: string) => {
+    if (isSubmitting) {
+      showInfo("Пожалуйста, подождите, загрузка выполняется...");
+      return;
+    }
+
     downloadReportMutation.mutate(id, {
       onSuccess: (link) => {
-        window.open(link, "_blank");
+        if (link) {
+          // Create a direct download instead of opening in a new tab
+          const a = document.createElement('a');
+          a.href = link;
+          a.download = reportName || `report-${id}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          
+          showSuccess(`Скачивание отчёта "${reportName}" началось`, "Скачивание отчёта");
+        } else {
+          showError("Не удалось получить ссылку для скачивания", "Ошибка скачивания");
+        }
       },
-      onError: (err) => {
-        alert("Ошибка при получении ссылки для скачивания: " + err);
+      onError: (err: any) => {
+        const errorMessage = err.response?.data?.message || err.message || "Неизвестная ошибка";
+        console.error("Ошибка при получении ссылки для скачивания:", err);
+        showError(`Ошибка при скачивании отчёта: ${errorMessage}`, "Ошибка скачивания");
       },
     });
+  };
+
+  const handleApplyFilter = () => {
+    showInfo("Применяем фильтры...", "Фильтрация");
+    refetch();
+  };
+
+  const handleResetFilter = () => {
+    setFilter({});
+    showInfo("Фильтры сброшены", "Фильтрация");
+    // Find and reset date input elements
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach((input: Element) => {
+      if (input instanceof HTMLInputElement) {
+        input.value = "";
+      }
+    });
+    refetch();
   };
 
   return (
@@ -92,17 +152,31 @@ const AdminReportsPage: React.FC = () => {
       <div className={styles.filter}>
         <div className={styles.field}>
           <label>Создан после:</label>
-          <input type="date" onChange={handleCreatedAfterChange} />
+          <input 
+            type="date" 
+            onChange={handleCreatedAfterChange} 
+          />
         </div>
         <div className={styles.field}>
           <label>Создан до:</label>
-          <input type="date" onChange={handleCreatedBeforeChange} />
+          <input 
+            type="date" 
+            onChange={handleCreatedBeforeChange} 
+          />
+        </div>
+        <div className={styles.filterActions}>
+          <Button onClick={handleApplyFilter}>Применить</Button>
+          <Button variant="secondary" onClick={handleResetFilter}>Сбросить</Button>
         </div>
       </div>
+      
       {isLoading ? (
-        <div>Загрузка отчётов...</div>
+        <div className={styles.loadingState}>Загрузка отчётов...</div>
       ) : isError ? (
-        <div>Ошибка при загрузке отчётов</div>
+        <div className={styles.errorState}>
+          <p>Ошибка при загрузке отчётов</p>
+          <Button onClick={() => refetch()}>Попробовать снова</Button>
+        </div>
       ) : (
         <div className={styles.reportsList}>
           {reports.length > 0 ? (
@@ -118,17 +192,25 @@ const AdminReportsPage: React.FC = () => {
                   </p>
                 </div>
                 <div className={styles.itemActions}>
-                  <Button onClick={() => handleDownload(report.id)}>
-                    Скачать
-                  </Button>
-                  <Button variant="secondary" onClick={() => handleDelete(report.id)}>
-                    Удалить
+                  <Button 
+                    onClick={() => handleDownload(report.id, report.name)}
+                    disabled={downloadReportMutation.isLoading && downloadReportMutation.variables === report.id}
+                  >
+                    {downloadReportMutation.isLoading && downloadReportMutation.variables === report.id
+                      ? "Загружается..."
+                      : "Скачать"
+                    }
                   </Button>
                 </div>
               </div>
             ))
           ) : (
-            <div>Отчёты отсутствуют</div>
+            <div className={styles.emptyState}>
+              <p>Отчёты отсутствуют</p>
+              {Object.keys(filter).length > 0 && (
+                <p className={styles.filterHint}>Попробуйте изменить параметры фильтрации</p>
+              )}
+            </div>
           )}
         </div>
       )}

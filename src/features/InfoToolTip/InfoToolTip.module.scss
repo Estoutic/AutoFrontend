@@ -1,0 +1,43 @@
+.tooltipContainer {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    cursor: help;
+  }
+  
+  .infoIcon {
+    color: #3b82f6;
+    font-size: 0.85em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .tooltipContent {
+    position: absolute;
+    top: -5px;
+    left: 24px;
+    transform: translateY(-100%);
+    background-color: #1f2937;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 10;
+    min-width: 200px;
+    max-width: 250px;
+    white-space: normal;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+    &:after {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-width: 5px 5px 5px 0;
+      border-style: solid;
+      border-color: transparent #1f2937 transparent transparent;
+    }
+  }

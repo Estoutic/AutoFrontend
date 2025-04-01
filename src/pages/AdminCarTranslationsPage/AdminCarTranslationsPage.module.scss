@@ -1,12 +1,51 @@
 @use "@/styles/_variables" as vars;
-@use 'sass:color';
+@use "sass:color";
 
 .container {
   padding: 0 10%;
   color: vars.$primary-color;
 }
 
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  margin-top: 20px;
 
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.originalData {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  height: fit-content;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: vars.$primary-color;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+  }
+
+  .originalFields {
+    p {
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+.translationsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
 .translationsList {
   margin-bottom: 30px;
@@ -14,14 +53,57 @@
   flex-direction: column;
   gap: 12px;
 
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: vars.$primary-color;
+  }
+
   .translationItem {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    align-items: flex-start;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
     background-color: #fff;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: vars.$primary-color;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &.activeItem {
+      border-color: vars.$primary-color;
+      background-color: rgba(vars.$primary-color, 0.03);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .translationDetails {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .translationLocale {
+        font-size: 18px;
+        font-weight: 600;
+        color: vars.$primary-color;
+        margin-bottom: 4px;
+      }
+
+      .translationData {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        span {
+          font-size: 14px;
+        }
+      }
+    }
 
     .itemActions {
       display: flex;
@@ -31,48 +113,44 @@
 }
 
 .formContainer {
-  border: 1px solid #ccc;
-  padding: 20px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
   border-radius: 6px;
   background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   h3 {
     margin-top: 0;
-    margin-bottom: 16px;
-    font-size: 20px;
+    margin-bottom: 20px;
     color: vars.$primary-color;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
   }
 
   .fieldGroup {
     display: flex;
     flex-direction: column;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 
     label {
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-weight: 500;
       color: vars.$primary-color;
+      font-size: 14px;
     }
 
-    input,
-    select {
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid vars.$primary-color;
-      border-radius: 4px;
-      outline: none;
-      transition: border-color 0.3s ease;
-
-      &:focus {
-      border-color: color.adjust(vars.$primary-color,$lightness: 10%);
-
-      }
+    .errorText {
+      color: #e53935;
+      font-size: 12px;
+      margin-top: 4px;
+      padding-left: 2px;
     }
   }
 
   .formActions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    margin-top: 24px;
 
     button {
       flex: 1;
@@ -81,9 +159,68 @@
     }
   }
 }
+
+.loadingState, .errorState, .emptyState {
+  padding: 30px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  margin: 20px 0;
+}
+
+.errorState {
+  color: #e53935;
+  background-color: rgba(229, 57, 53, 0.05);
+  border-color: #e53935;
+
+  p {
+    margin-bottom: 15px;
+  }
+
+  .errorDetails {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+}
+
+.emptyState {
+  color: #666;
+  
+  p:first-child {
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  p:last-child {
+    font-size: 14px;
+    color: #999;
+  }
+}
+
+.errorMessage {
+  color: #e53935;
+  padding: 16px;
+  background-color: rgba(229, 57, 53, 0.05);
+  border-left: 4px solid #e53935;
+  margin: 20px 0;
+}
+
 @media (max-width: vars.$mobile-width) {
   .container {
     padding: 0 5%;
   }
+  
+  .translationItem {
+    flex-direction: column;
+    
+    .itemActions {
+      margin-top: 16px;
+      width: 100%;
+      
+      button {
+        flex: 1;
+      }
+    }
+  }
 }
-

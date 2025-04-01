@@ -12,10 +12,12 @@ import {
   useGetAllUsers,
 } from "@/shared/api/admin/hooks";
 import Button from "@/shared/ui/Button/Button";
+import { useNotifications } from "@/shared/hooks/useNotifications";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const AdminUsersPage: React.FC = () => {
+  const { showSuccess, showError } = useNotifications();
   const canCreate = haveSuperAdminRights();
   const canDeactivate = haveAdminRights();
   const canView = haveManagerRights();
@@ -40,28 +42,45 @@ export const AdminUsersPage: React.FC = () => {
   const [newRole, setNewRole] = useState("ADMIN");
 
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [backendError, setBackendError] = useState("");
 
   const handleCreateUser = () => {
+    // Reset all error states
     setEmailError("");
+    setPasswordError("");
     setBackendError("");
 
-    if (!newEmail.trim() || !newPassword.trim()) {
-      setBackendError("Введите Email и Password!");
-      return;
-    }
-    if (!emailRegex.test(newEmail)) {
+    // Validate form fields
+    let hasError = false;
+
+    if (!newEmail.trim()) {
+      setEmailError("Email обязателен");
+      hasError = true;
+    } else if (!emailRegex.test(newEmail)) {
       setEmailError("Введите корректный Email");
+      hasError = true;
+    }
+
+    if (!newPassword.trim()) {
+      setPasswordError("Пароль обязателен");
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
+
     const userDto: UserDto = {
       email: newEmail,
       password: newPassword,
       roles: [newRole],
     };
+
     createUser(userDto, {
       onSuccess: (id) => {
         console.log("Пользователь создан, ID =", id);
+        showSuccess(`Пользователь ${newEmail} успешно создан`, "Новый пользователь");
         setNewEmail("");
         setNewPassword("");
         setNewRole("ADMIN");
@@ -69,29 +88,33 @@ export const AdminUsersPage: React.FC = () => {
       },
       onError: (err: any) => {
         console.error("Ошибка создания пользователя:", err);
-        setBackendError(
-          "Ошибка при создании пользователя" + err.response.data.message,
-        );
+        const errorMessage = err.response?.data?.message || "Неизвестная ошибка";
+        setBackendError(errorMessage);
+        showError(`Ошибка при создании пользователя: ${errorMessage}`);
       },
     });
   };
 
   const handleDeactivateUser = () => {
     if (!selectedUser) {
-      alert("Сначала выберите пользователя");
+      showError("Сначала выберите пользователя");
       return;
     }
     if (!selectedUser.id) {
       console.error("У выбранного пользователя нет id!");
+      showError("У выбранного пользователя отсутствует ID");
       return;
     }
     deactivateUser(selectedUser.id, {
       onSuccess: () => {
         console.log("Пользователь деактивирован:", selectedUser.id);
+        showSuccess(`Пользователь ${selectedUser.email} деактивирован`, "Деактивация пользователя");
         setSelectedUser(null);
       },
-      onError: (err) => {
+      onError: (err: any) => {
         console.error("Ошибка при деактивации пользователя:", err);
+        const errorMessage = err.response?.data?.message || "Неизвестная ошибка";
+        showError(`Ошибка при деактивации пользователя: ${errorMessage}`);
       },
     });
   };
@@ -165,19 +188,26 @@ export const AdminUsersPage: React.FC = () => {
               placeholder="Email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
+              className={emailError ? styles.inputError : ""}
             />
-            {emailError && (
-              <span className={styles.errorMessage}>{emailError}</span>
-            )}
           </div>
+          {emailError && (
+            <div className={styles.errorText}>{emailError}</div>
+          )}
+          
           <div className={styles.formGroup}>
             <input
               type="password"
               placeholder="Пароль"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              className={passwordError ? styles.inputError : ""}
             />
           </div>
+          {passwordError && (
+            <div className={styles.errorText}>{passwordError}</div>
+          )}
+          
           <div className={styles.formGroup}>
             <select
               value={newRole}
@@ -187,12 +217,25 @@ export const AdminUsersPage: React.FC = () => {
               <option value="MANAGER">MANAGER</option>
             </select>
           </div>
+          
           {backendError && (
-            <div className={styles.errorMessage}>{backendError}</div>
+            <div className={styles.backendError}>{backendError}</div>
           )}
+          
           <div className={styles.formActions}>
             <Button onClick={handleCreateUser}>Создать</Button>
-            <Button variant="secondary" onClick={() => setShowForm(false)}>
+            <Button 
+              variant="secondary" 
+              onClick={() => {
+                setShowForm(false);
+                setEmailError("");
+                setPasswordError("");
+                setBackendError("");
+                setNewEmail("");
+                setNewPassword("");
+                setNewRole("ADMIN");
+              }}
+            >
               Отмена
             </Button>
           </div>

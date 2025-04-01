@@ -6,8 +6,6 @@
   color: vars.$primary-color !important;
   display: flex;
   flex-direction: column;
-
-
 }
 
 .table {
@@ -31,27 +29,6 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-
-  // button {
-  //   background-color: #fff;
-  //   color: #000;
-  //   border: 1px solid vars.$primary-color;
-  //   padding: 8px 16px;
-  //   border-radius: 4px;
-  //   cursor: pointer;
-  //   font-size: 16px;
-  //   transition: background-color 0.3s ease;
-
-  //   &:hover {
-  //     background-color: vars.$primary-color;
-  //     color: #fff;
-  //   }
-
-  //   &:disabled {
-  //     opacity: 0.5;
-  //     cursor: not-allowed;
-  //   }
-  // }
 }
 
 .formContainer {
@@ -78,39 +55,42 @@
       border: 1px solid vars.$primary-color;
       border-radius: 4px;
       outline: none;
+      
+      &.inputError {
+        border-color: #e53935;
+        background-color: rgba(229, 57, 53, 0.05);
+      }
     }
   }
 
+  // Error text styling
+  .errorText {
+    color: #e53935;
+    font-size: 14px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+
+  // Backend error styling
+  .backendError {
+    color: #e53935;
+    font-size: 14px;
+    margin: 10px 0;
+    padding: 8px 12px;
+    background-color: rgba(229, 57, 53, 0.1);
+    border-left: 3px solid #e53935;
+    border-radius: 2px;
+  }
+
   .formActions {
-    margin-top: 10px;
+    margin-top: 15px;
     display: flex;
     gap: 10px;
 
     button {
       flex: 1;
     }
-    //   flex: 1;
-    //   margin-right: 10px;
-    //   padding: 8px 16px;
-    //   border: none;
-    //   border-radius: 4px;
-    //   cursor: pointer;
-    //   font-size: 16px;
-
-    //   &:first-of-type {
-    //     background-color: vars.$primary-color;
-    //     color: #fff;
-
-    //     &:hover {
-    //       background-color: color.adjust(vars.$primary-color, $lightness: -10%);
-    //     }
-    //   }
-
-    //   &:last-of-type {
-    //     background-color: #ccc;
-    //     color: #333;
-    //   }
-    // }
   }
 }
 

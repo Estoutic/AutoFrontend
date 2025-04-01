@@ -39,19 +39,15 @@ export const NotificationContainer: React.FC = () => {
 
   // Используем портал для рендеринга уведомлений
   return createPortal(
-    <div className="notification-container" style={{
-      position: 'fixed',
-      top: '20px',
-      right: '20px',
-      zIndex: 9999,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-      maxWidth: '400px',
-      width: 'calc(100% - 40px)'
-    }}>
+    <div className="notification-container">
       {notifications.length > 0 && (
-        <div style={{ padding: '10px', background: '#f0f0f0', borderRadius: '4px', marginBottom: '10px' }}>
+        <div style={{ 
+          padding: '10px', 
+          background: '#f0f0f0', 
+          borderRadius: '4px', 
+          marginBottom: '10px',
+          pointerEvents: 'auto' // Make this header clickable
+        }}>
           <strong>Активные уведомления: {notifications.length}</strong>
         </div>
       )}

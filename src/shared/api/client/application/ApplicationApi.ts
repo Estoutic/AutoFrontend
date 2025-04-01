@@ -26,7 +26,7 @@ export class ApplicationApi extends CustomClient<IApplicationApi> {
    * Возвращает UUID (string) созданной заявки
    */
   addApplication(applicationCreationDto: ApplicationCreationDto): Promise<string> {
-    console.log(applicationCreationDto);
+    console.log("Creating application:", applicationCreationDto);
     
     return this.client
       .post<string>(this.methods.addApplication, applicationCreationDto)
@@ -68,7 +68,8 @@ export class ApplicationApi extends CustomClient<IApplicationApi> {
   }
 
   /**
-   * GET /application/filter?status=...&page=...&size=...&sortBy=...
+   * GET /application/filter
+   * С добавленными параметрами для фильтрации по дате создания
    */
   getApplications(
     status?: ApplicationStatus,
@@ -77,7 +78,20 @@ export class ApplicationApi extends CustomClient<IApplicationApi> {
     sortBy: string = "id",
     sortOrder: string = "asc",
     locale: string = "EU",
+    createdAfter?: string,
+    createdBefore?: string
   ): Promise<any> {
+    console.log("Getting applications with filters:", {
+      status,
+      page,
+      size,
+      sortBy,
+      sortOrder,
+      locale,
+      createdAfter,
+      createdBefore
+    });
+    
     return this.client
       .get(this.methods.getApplications, {
         params: {
@@ -87,6 +101,8 @@ export class ApplicationApi extends CustomClient<IApplicationApi> {
           sortBy,
           sortOrder,
           locale,
+          createdAfter,
+          createdBefore
         },
       })
       .then((res) => res.data);
