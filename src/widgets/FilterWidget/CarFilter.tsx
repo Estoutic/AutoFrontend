@@ -17,18 +17,32 @@ import { useGetAllFilters } from "@/shared/api/carModel/hooks";
 interface CarFilterProps {
   filter: CarFilterDto;
   onChange: (newFilter: CarFilterDto) => void;
-  onApplyFilter: () => void; // Prop для обработки нажатия кнопки Показать
-  onClearFilters: () => void; // Prop для обработки нажатия кнопки Очистить
+  onApplyFilter: () => void;
+  onClearFilters: () => void;
 }
 
 const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, onClearFilters }) => {
   const { t } = useTranslation();
   const { data: filterData, isLoading } = useGetAllFilters();
 
+  // Updated handleChange function to properly handle string to number conversions
   const handleChange = (key: keyof CarFilterDto, value: string | number) => {
+    // Define numeric fields
+    const numericFields: Array<keyof CarFilterDto> = [
+      'priceFrom', 'priceTo', 'yearFrom', 'yearTo', 
+      'enginePowerFrom', 'enginePowerTo', 
+      'engineCapacityFrom', 'engineCapacityTo',
+      'mileageFrom', 'mileageTo'
+    ];
+    
+    // Process value based on field type
+    const processedValue = typeof value === 'string' && numericFields.includes(key)
+      ? value === '' ? null : Number(value) // Convert to number or null
+      : value;
+      
     onChange({
       ...filter,
-      [key]: value,
+      [key]: processedValue,
     });
   };
 
@@ -48,12 +62,10 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
             }
             value={filter.brand || ""}
             onChange={(val) => {
-              console.log(val);
-              
               handleChange("brand", val);
-              // При изменении бренда можно опционально сбросить модель и поколение
-              // handleChange("model", "");
-              // handleChange("generation", "");
+              // Reset dependent fields
+              handleChange("model", "");
+              handleChange("generation", "");
             }}
             placeholder={t("carFilter.brandPlaceholder")}
             disabled={isLoading}
@@ -70,7 +82,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
             value={filter.model || ""}
             onChange={(val) => {
               handleChange("model", val);
-              // handleChange("generation", "");
+              handleChange("generation", "");
             }}
             placeholder={t("carFilter.modelPlaceholder")}
             disabled={isLoading || !filter.brand}
@@ -95,13 +107,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.priceFrom ?? ""}
-            onChange={(val) => handleChange("priceFrom", +val)}
+            onChange={(val) => handleChange("priceFrom", val)}
             placeholder={t("carFilter.priceFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.priceTo ?? ""}
-            onChange={(val) => handleChange("priceTo", +val)}
+            onChange={(val) => handleChange("priceTo", val)}
             placeholder={t("carFilter.priceToPlaceholder")}
           />
         </div>
@@ -110,13 +122,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.yearFrom ?? ""}
-            onChange={(val) => handleChange("yearFrom", +val)}
+            onChange={(val) => handleChange("yearFrom", val)}
             placeholder={t("carFilter.yearFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.yearTo ?? ""}
-            onChange={(val) => handleChange("yearTo", +val)}
+            onChange={(val) => handleChange("yearTo", val)}
             placeholder={t("carFilter.yearToPlaceholder")}
           />
         </div>
@@ -145,13 +157,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.enginePowerFrom ?? ""}
-            onChange={(val) => handleChange("enginePowerFrom", +val)}
+            onChange={(val) => handleChange("enginePowerFrom", val)}
             placeholder={t("carFilter.enginePowerFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.enginePowerTo ?? ""}
-            onChange={(val) => handleChange("enginePowerTo", +val)}
+            onChange={(val) => handleChange("enginePowerTo", val)}
             placeholder={t("carFilter.enginePowerToPlaceholder")}
           />
         </div>
@@ -167,13 +179,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.engineCapacityFrom ?? ""}
-            onChange={(val) => handleChange("engineCapacityFrom", +val)}
+            onChange={(val) => handleChange("engineCapacityFrom", val)}
             placeholder={t("carFilter.engineCapacityFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.engineCapacityTo ?? ""}
-            onChange={(val) => handleChange("engineCapacityTo", +val)}
+            onChange={(val) => handleChange("engineCapacityTo", val)}
             placeholder={t("carFilter.engineCapacityToPlaceholder")}
           />
         </div>
@@ -189,13 +201,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.mileageFrom ?? ""}
-            onChange={(val) => handleChange("mileageFrom", +val)}
+            onChange={(val) => handleChange("mileageFrom", val)}
             placeholder={t("carFilter.mileageFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.mileageTo ?? ""}
-            onChange={(val) => handleChange("mileageTo", +val)}
+            onChange={(val) => handleChange("mileageTo", val)}
             placeholder={t("carFilter.mileageToPlaceholder")}
           />
         </div>
