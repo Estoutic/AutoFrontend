@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./CarFilter.module.scss";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import InputField from "@/shared/ui/InputField/InputField";
@@ -25,8 +25,45 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
   const { t } = useTranslation();
   const { data: filterData, isLoading } = useGetAllFilters();
 
-  // Updated handleChange function to properly handle string to number conversions
-  const handleChange = (key: keyof CarFilterDto, value: string | number) => {
+  // Debug: log filter data when it changes
+  useEffect(() => {
+    if (filterData) {
+      console.log("Filter data loaded:", filterData);
+      console.log("Available brands:", filterData.brands);
+      if (filter.brand) {
+        console.log("Models for selected brand:", filterData.models[filter.brand]);
+      }
+      if (filter.model) {
+        console.log("Generations for selected model:", filterData.generations[filter.model]);
+      }
+    }
+  }, [filterData, filter.brand, filter.model]);
+
+  // Unified filter update function
+  const updateFilterField = (field: keyof CarFilterDto, value: string) => {
+    if (field === "brand") {
+      onChange({
+        ...filter,
+        brand: value,
+        model: "",
+        generation: ""
+      });
+    } else if (field === "model") {
+      onChange({
+        ...filter,
+        model: value,
+        generation: ""
+      });
+    } else {
+      onChange({
+        ...filter,
+        [field]: value
+      });
+    }
+  };
+
+  // Handle number field changes
+  const handleNumberChange = (key: keyof CarFilterDto) => (value: string | number) => {
     // Define numeric fields
     const numericFields: Array<keyof CarFilterDto> = [
       'priceFrom', 'priceTo', 'yearFrom', 'yearTo', 
@@ -35,16 +72,38 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
       'mileageFrom', 'mileageTo'
     ];
     
-    // Process value based on field type
-    const processedValue = typeof value === 'string' && numericFields.includes(key)
-      ? value === '' ? null : Number(value) // Convert to number or null
-      : value;
+    let processedValue: string | number | null = value;
+    
+    // Convert empty strings to null for numeric fields
+    if (typeof value === 'string' && numericFields.includes(key)) {
+      processedValue = value === '' ? null : Number(value);
+    }
       
     onChange({
       ...filter,
       [key]: processedValue,
     });
   };
+  
+  // Handle direct input from an event
+  const handleInputEvent = (key: keyof CarFilterDto) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleNumberChange(key)(e.target.value);
+  };
+
+  // Prepare brand options ensuring they are not undefined
+  const brandOptions = filterData?.brands
+    ? filterData.brands.map(brand => ({ value: brand, labelKey: brand }))
+    : [];
+
+  // Prepare model options based on selected brand
+  const modelOptions = (filterData?.models && filter.brand)
+    ? (filterData.models[filter.brand]?.map(model => ({ value: model, labelKey: model })) || [])
+    : [];
+
+  // Prepare generation options based on selected model
+  const generationOptions = (filterData?.generations && filter.model)
+    ? (filterData.generations[filter.model]?.map(gen => ({ value: gen, labelKey: gen })) || [])
+    : [];
 
   return (
     <div className={styles.filterContainer}>
@@ -53,103 +112,90 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
       </h2>
 
       <div className={styles.filterGrid}>
+        {/* Brand dropdown */}
         <div className={styles.inputContainer}>
           <Dropdown
-            options={
-              filterData
-                ? filterData.brands.map((brand) => ({ value: brand, labelKey: brand }))
-                : []
-            }
+            options={brandOptions}
             value={filter.brand || ""}
-            onChange={(val) => {
-              handleChange("brand", val);
-              // Reset dependent fields
-              handleChange("model", "");
-              handleChange("generation", "");
-            }}
+            onChange={(val) => updateFilterField("brand", val)}
             placeholder={t("carFilter.brandPlaceholder")}
             disabled={isLoading}
           />
         </div>
+        
+        {/* Model dropdown */}
         <div className={styles.inputContainer}>
           <Dropdown
-            options={
-              filterData && filter.brand
-                ? filterData.models[filter.brand]?.map((model) => ({ value: model, labelKey: model })) ||
-                  []
-                : []
-            }
+            options={modelOptions}
             value={filter.model || ""}
-            onChange={(val) => {
-              handleChange("model", val);
-              handleChange("generation", "");
-            }}
+            onChange={(val) => updateFilterField("model", val)}
             placeholder={t("carFilter.modelPlaceholder")}
             disabled={isLoading || !filter.brand}
           />
         </div>
+        
+        {/* Generation dropdown */}
         <div className={styles.inputContainer}>
           <Dropdown
-            options={
-              filterData && filter.model
-                ? filterData.generations[filter.model]?.map((gen) => ({ value: gen, labelKey: gen })) ||
-                  []
-                : []
-            }
+            options={generationOptions}
             value={filter.generation || ""}
-            onChange={(val) => handleChange("generation", val)}
+            onChange={(val) => updateFilterField("generation", val)}
             placeholder={t("carFilter.generationPlaceholder")}
             disabled={isLoading || !filter.model}
           />
         </div>
 
+        {/* Price range */}
         <div className={styles.intervalContainer}>
           <InputField
             type="number"
             value={filter.priceFrom ?? ""}
-            onChange={(val) => handleChange("priceFrom", val)}
+            onChange={handleInputEvent("priceFrom")}
             placeholder={t("carFilter.priceFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.priceTo ?? ""}
-            onChange={(val) => handleChange("priceTo", val)}
+            onChange={handleInputEvent("priceTo")}
             placeholder={t("carFilter.priceToPlaceholder")}
           />
         </div>
 
+        {/* Year range */}
         <div className={styles.intervalContainer}>
           <InputField
             type="number"
             value={filter.yearFrom ?? ""}
-            onChange={(val) => handleChange("yearFrom", val)}
+            onChange={handleInputEvent("yearFrom")}
             placeholder={t("carFilter.yearFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.yearTo ?? ""}
-            onChange={(val) => handleChange("yearTo", val)}
+            onChange={handleInputEvent("yearTo")}
             placeholder={t("carFilter.yearToPlaceholder")}
           />
         </div>
 
+        {/* Other fields... */}
         <Dropdown
           options={TRANSMISSION_OPTIONS}
           value={filter.transmission || ""}
-          onChange={(val) => handleChange("transmission", val)}
+          onChange={(val) => updateFilterField("transmission", val)}
           placeholder={t("carFilter.transmissionPlaceholder")}
         />
+        
         <Dropdown
           options={BODY_OPTIONS}
           value={filter.bodyType || ""}
-          onChange={(val) => handleChange("bodyType", val)}
+          onChange={(val) => updateFilterField("bodyType", val)}
           placeholder={t("carFilter.bodyTypePlaceholder")}
         />
 
         <Dropdown
           options={ENGINE_OPTIONS}
           value={filter.engineType || ""}
-          onChange={(val) => handleChange("engineType", val)}
+          onChange={(val) => updateFilterField("engineType", val)}
           placeholder={t("carFilter.engineTypePlaceholder")}
         />
 
@@ -157,13 +203,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.enginePowerFrom ?? ""}
-            onChange={(val) => handleChange("enginePowerFrom", val)}
+            onChange={handleInputEvent("enginePowerFrom")}
             placeholder={t("carFilter.enginePowerFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.enginePowerTo ?? ""}
-            onChange={(val) => handleChange("enginePowerTo", val)}
+            onChange={handleInputEvent("enginePowerTo")}
             placeholder={t("carFilter.enginePowerToPlaceholder")}
           />
         </div>
@@ -171,7 +217,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
         <Dropdown
           options={DRIVE_OPTIONS}
           value={filter.drive || ""}
-          onChange={(val) => handleChange("drive", val)}
+          onChange={(val) => updateFilterField("drive", val)}
           placeholder={t("carFilter.drivePlaceholder")}
         />
 
@@ -179,13 +225,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.engineCapacityFrom ?? ""}
-            onChange={(val) => handleChange("engineCapacityFrom", val)}
+            onChange={handleInputEvent("engineCapacityFrom")}
             placeholder={t("carFilter.engineCapacityFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.engineCapacityTo ?? ""}
-            onChange={(val) => handleChange("engineCapacityTo", val)}
+            onChange={handleInputEvent("engineCapacityTo")}
             placeholder={t("carFilter.engineCapacityToPlaceholder")}
           />
         </div>
@@ -193,7 +239,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
         <Dropdown
           options={STEERING_OPTIONS}
           value={filter.steeringPosition || ""}
-          onChange={(val) => handleChange("steeringPosition", val)}
+          onChange={(val) => updateFilterField("steeringPosition", val)}
           placeholder={t("carFilter.steeringPositionPlaceholder")}
         />
 
@@ -201,13 +247,13 @@ const CarFilter: React.FC<CarFilterProps> = ({ filter, onChange, onApplyFilter, 
           <InputField
             type="number"
             value={filter.mileageFrom ?? ""}
-            onChange={(val) => handleChange("mileageFrom", val)}
+            onChange={handleInputEvent("mileageFrom")}
             placeholder={t("carFilter.mileageFromPlaceholder")}
           />
           <InputField
             type="number"
             value={filter.mileageTo ?? ""}
-            onChange={(val) => handleChange("mileageTo", val)}
+            onChange={handleInputEvent("mileageTo")}
             placeholder={t("carFilter.mileageToPlaceholder")}
           />
         </div>

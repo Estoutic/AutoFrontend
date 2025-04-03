@@ -4,7 +4,20 @@ import styles from "./Hero.module.scss";
 import carImage from "@/assets/car.png";
 import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
-export const Hero = () => {
+interface ContactLinkProps {
+  icon: React.ReactNode;
+  text: string;
+  href: string;
+}
+
+const ContactLink: React.FC<ContactLinkProps> = ({ icon, text, href }) => (
+  <a href={href} className={styles.contactLink}>
+    {icon}
+    <span>{text}</span>
+  </a>
+);
+
+export const Hero: React.FC = () => {
   const { t } = useTranslation();
   
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -72,14 +85,16 @@ export const Hero = () => {
           <div className={[styles.text, styles.secondText].join(" ")}>
             <p ref={descriptionRef}>{t("hero.description")}</p>
             <div className={styles.contacts} ref={contactsRef}>
-              <div>
-                <FaPhoneAlt />
-                <span>{t("hero.phone")}</span>
-              </div>
-              <div>
-                <FaEnvelope />
-                <span>{t("hero.email")}</span>
-              </div>
+              <ContactLink 
+                icon={<FaPhoneAlt />} 
+                text={t("hero.phone")} 
+                href="tel:+79150182837" 
+              />
+              <ContactLink 
+                icon={<FaEnvelope />} 
+                text={t("hero.email")} 
+                href="mailto:drujba_narodov1@mail.ru" 
+              />
             </div>
           </div>
 

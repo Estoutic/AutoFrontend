@@ -13,6 +13,7 @@ import AdminCarTranslationsPage from "@/pages/AdminCarTranslationsPage/AdminCarT
 import AdminApplicationsPage from "@/pages/AdminApplicationsPage/AdminApplicationsPage";
 import AdminReportsPage from "@/pages/AdminReportsPage/AdminReportsPage";
 import { RootLayout } from "@/shared/layouts/RootLayout/RootLayout";
+import { useYandexMetrika } from "@/shared/hooks/useYandexMetrika";
 
 export const router = createBrowserRouter([
   {
@@ -69,3 +70,4 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+

@@ -1,13 +1,13 @@
 import React from "react";
 import styles from "./InputField.module.scss";
 
-// Define two possible onChange types
-type ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => void;
-type ValueChangeHandler = (value: string) => void;
+// Define both possible types of handlers
+type EventHandler = (event: React.ChangeEvent<HTMLInputElement>) => void;
+type ValueHandler = (value: string | number) => void;
 
 interface InputFieldProps {
   value: string | number;
-  onChange: ChangeEventHandler | ValueChangeHandler; // Accept either type
+  onChange: EventHandler | ValueHandler;
   placeholder?: string;
   type?: "text" | "number" | "date";
   error?: string;
@@ -22,23 +22,24 @@ const InputField: React.FC<InputFieldProps> = ({
   error,
   disabled = false,
 }) => {
-  // Handle the change event
+  // Convert null/undefined to empty string for display
+  const displayValue = value === null || value === undefined ? "" : value;
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Check the number of arguments that onChange expects
+    // Check if onChange is expecting a React.ChangeEvent (has 'currentTarget' in its params)
+    // or just a direct value (Function.length will be 1 for functions with one parameter)
     if (onChange.length === 1) {
-      // If it expects 1 argument, it could be either type
-      // We'll try to detect if it's a React event handler or value handler based on its name
-      const handlerName = onChange.name;
-      if (handlerName && handlerName.includes("bound ")) {
-        // Likely a bound method that expects an event
-        (onChange as ChangeEventHandler)(e);
-      } else {
-        // Likely an arrow function that expects just the value
-        (onChange as ValueChangeHandler)(e.target.value);
+      // If it expects one parameter, it could be either a direct value or an event
+      try {
+        // Try to call it as an event handler first
+        (onChange as EventHandler)(e);
+      } catch (err) {
+        // If that fails, try calling it as a value handler
+        (onChange as ValueHandler)(e.target.value);
       }
     } else {
-      // Default to passing the entire event if we can't determine
-      (onChange as ChangeEventHandler)(e);
+      // For any other case, pass the event (most common usage)
+      (onChange as EventHandler)(e);
     }
   };
 
@@ -47,7 +48,7 @@ const InputField: React.FC<InputFieldProps> = ({
       <input
         type={type}
         className={`${styles.input} ${error ? styles.error : ''}`}
-        value={value === undefined ? "" : value}
+        value={displayValue}
         onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}

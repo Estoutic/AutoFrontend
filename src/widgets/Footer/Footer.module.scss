@@ -1,17 +1,32 @@
+// Footer.module.scss
 @use "@/styles/_variables.scss" as vars;
 
+// Styles for main layout to ensure footer is always at the bottom
+:global {
+  html, body, #root {
+    height: 100%;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+}
+
 .footer {
-  // width: 100vw;
-  // bottom: 0;
-  // position: absolute;
   display: flex;
   flex-direction: column;
-
   margin-top: 40px;
   background: vars.$primary-color;
   gap: 40px;
   max-width: 100%;
   padding: 40px 10%;
+  flex-shrink: 0; // Prevent the footer from shrinking
 }
 
 .info {
@@ -25,6 +40,11 @@
 .logo {
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 
   img {
     height: 50px;
@@ -41,10 +61,24 @@
 }
 
 .socialIcon {
+  cursor: pointer;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    filter: brightness(1.2);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+
   img {
     height: 25px;
   }
 }
+
 .contactIcon {
   display: inline-flex;
   img {
@@ -59,17 +93,35 @@
   gap: 100px;
   justify-content: flex-start;
 }
+
 .contactList {
   display: flex;
   flex-direction: column;
   gap: 20px;
   justify-content: flex-end;
 }
+
 .contactField {
   display: flex;
   color: white;
   gap: 10px;
   align-items: center;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateX(5px);
+  }
+}
+
+.contactLink {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: underline;
+  }
 }
 
 .nav {
@@ -82,10 +134,32 @@
     text-decoration: none;
     font-size: vars.$font-size-paragraph;
     font-weight: 400;
-    transition: 0.3s ease-in-out;
-
+    position: relative;
+    transition: color 0.3s ease-in-out;
+    padding: 5px 0;
+    
+    // Enhanced hover animation with underline effect
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: white;
+      transition: width 0.3s ease-in-out;
+    }
+    
     &:hover {
-      color: vars.$secondary-color;
+      color: rgba(255, 255, 255, 0.8);
+      
+      &::after {
+        width: 100%;
+      }
+    }
+    
+    &:active {
+      transform: scale(0.98);
     }
   }
 }
@@ -96,11 +170,13 @@
     align-items: center;
     gap: 20px;
   }
+  
   .navigationList {
     flex-direction: column;
     gap: 20px;
     align-items: center;
   }
+  
   .nav {
     display: flex;
     gap: 20px;
@@ -108,8 +184,8 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-  .contactList{
+  
+  .contactList {
     align-items: center;
-
   }
 }

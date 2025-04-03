@@ -40,17 +40,10 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
     lastName: "",
     contact: "",
     contactDetails: "",
-    carId: undefined, // Initialize without depending on car prop
+    carId: car?.id,
   });
 
   const { mutate: addApplication, isLoading } = useAddApplication();
-
-  // Update carId when car changes
-  useEffect(() => {
-    if (car && car.id) {
-      setFormData(prev => ({ ...prev, carId: car.id }));
-    }
-  }, [car]);
 
   useEffect(() => {
     if (isOpen) {
@@ -73,21 +66,12 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Ensure carId is set
-    const submissionData = {
-      ...formData,
-      carId: car.id,
-    };
-
     addApplication(
-      submissionData,
+      { ...formData, carId: car.id },
       {
         onSuccess: (newId) => {
           console.log(t("carRequestModal.applicationCreated"), newId);
           setViewMode("success");
-          if (onSubmit) {
-            onSubmit(submissionData);
-          }
         },
         onError: (err) => {
           console.log(t("carRequestModal.error"), err);
@@ -106,9 +90,9 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
 
         {viewMode === "form" ? (
           <>
-            <Button className={styles.closeButton} variant="secondary" onClick={onClose}>
-              ✕
-            </Button>
+                  <Button className={styles.closeButton} variant="secondary" onClick={onClose}>
+          ✕
+        </Button>
             <Text variant="blue">
               {t("carRequestModal.enterYourData")}
             </Text>

@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "@/styles/_variables" as vars;
 
 .pagination {
@@ -40,7 +41,7 @@
     font-weight: 500;
     
     &:hover {
-      background-color: darken(vars.$primary-color, 5%);
+      background-color: color.adjust(vars.$primary-color, $lightness: -5%);
     }
   }
   

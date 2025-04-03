@@ -183,23 +183,26 @@
       opacity: 1;
       animation: fadeInUp 0.8s ease forwards;
     }
+  }
 
-    div {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 18px;
-      margin-top: 15px;
-      transition: transform 0.3s ease;
+  .contactLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    margin-top: 15px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    color: inherit;
+    text-decoration: none;
 
-      &:hover {
-        transform: translateX(5px);
-      }
+    &:hover {
+      transform: translateX(5px);
+      color: vars.$primary-color;
+    }
 
-      svg {
-        color: vars.$primary-color;
-        font-size: 20px;
-      }
+    svg {
+      color: vars.$primary-color;
+      font-size: 20px;
     }
   }
 

@@ -1,4 +1,3 @@
-// src/shared/ui/Dropdown/Dropdown.tsx
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./Dropdown.module.scss";
 import { useTranslation } from "react-i18next";
@@ -24,7 +23,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Находим выбранный вариант для отображения
+  // Find the selected option for display
   const selectedOption = value 
     ? options.find(option => option.value === value)
     : null;
@@ -40,7 +39,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     setIsOpen(false);
   };
 
-  // Закрываем выпадающий список при клике вне компонента
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -54,6 +53,13 @@ const Dropdown: React.FC<DropdownProps> = ({
     };
   }, []);
 
+  // Debug: log options and value
+  useEffect(() => {
+    console.log("Dropdown options:", options);
+    console.log("Dropdown value:", value);
+    console.log("Selected option:", selectedOption);
+  }, [options, value, selectedOption]);
+
   return (
     <div className={styles.dropdownWrapper} ref={dropdownRef}>
       <div 
@@ -61,7 +67,9 @@ const Dropdown: React.FC<DropdownProps> = ({
         onClick={toggleDropdown}
       >
         <div className={styles.selectedValue}>
-          {selectedOption ? t(selectedOption.labelKey) : placeholder || ''}
+          {selectedOption 
+            ? (selectedOption.labelKey.startsWith('carFilter.') ? t(selectedOption.labelKey) : selectedOption.labelKey)
+            : placeholder || ''}
         </div>
         <div className={styles.arrowIcon}>
           <svg 
@@ -79,15 +87,19 @@ const Dropdown: React.FC<DropdownProps> = ({
       
       {isOpen && (
         <div className={styles.dropdownMenu}>
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={`${styles.option} ${option.value === value ? styles.selected : ''}`}
-              onClick={() => handleOptionClick(option.value)}
-            >
-              {t(option.labelKey)}
-            </div>
-          ))}
+          {options.length > 0 ? (
+            options.map((option) => (
+              <div
+                key={option.value}
+                className={`${styles.option} ${option.value === value ? styles.selected : ''}`}
+                onClick={() => handleOptionClick(option.value)}
+              >
+                {option.labelKey.startsWith('carFilter.') ? t(option.labelKey) : option.labelKey}
+              </div>
+            ))
+          ) : (
+            <div className={styles.emptyOption}>{t('carFilter.noOptions')}</div>
+          )}
         </div>
       )}
       
