@@ -68,7 +68,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       >
         <div className={styles.selectedValue}>
           {selectedOption 
-            ? (selectedOption.labelKey.startsWith('carFilter.') ? t(selectedOption.labelKey) : selectedOption.labelKey)
+            ? (selectedOption.labelKey.startsWith('carFilter.') ||  selectedOption.labelKey.startsWith('carRequestModal.') ? t(selectedOption.labelKey) : selectedOption.labelKey)
             : placeholder || ''}
         </div>
         <div className={styles.arrowIcon}>
@@ -94,7 +94,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 className={`${styles.option} ${option.value === value ? styles.selected : ''}`}
                 onClick={() => handleOptionClick(option.value)}
               >
-                {option.labelKey.startsWith('carFilter.') ? t(option.labelKey) : option.labelKey}
+                {option.labelKey.startsWith('carFilter.') ||  option.labelKey.startsWith('carRequestModal.') ? t(option.labelKey) : option.labelKey}
               </div>
             ))
           ) : (

@@ -13,12 +13,7 @@ import {
 } from "@/shared/api/application/types";
 import { useTranslation } from "react-i18next";
 
-const CONTACT_TYPE_OPTIONS = [
-  { value: "CALL", labelKey: "carRequestModal.contactType.call" },
-  { value: "EMAIL", labelKey: "carRequestModal.contactType.email" },
-  { value: "WHATSAPP", labelKey: "carRequestModal.contactType.whatsapp" },
-  { value: "TELEGRAM", labelKey: "carRequestModal.contactType.telegram" },
-];
+
 
 interface CarRequestModalProps {
   isOpen: boolean;
@@ -34,6 +29,14 @@ const CarRequestModal: React.FC<CarRequestModalProps> = ({
   onSubmit,
 }) => {
   const { t } = useTranslation();
+
+  const CONTACT_TYPE_OPTIONS = [
+    { value: "CALL", labelKey: "carRequestModal.contactType.call" },
+    { value: "EMAIL", labelKey: "carRequestModal.contactType.email" },
+    { value: "WHATSAPP", labelKey: "carRequestModal.contactType.whatsapp" },
+    { value: "TELEGRAM", labelKey: "carRequestModal.contactType.telegram" },
+  ];
+  
   const [viewMode, setViewMode] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState<ApplicationCreationDto>({
     firstName: "",

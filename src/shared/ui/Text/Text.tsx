@@ -8,7 +8,7 @@ interface TextProps {
 }
 
 const Text = ({ children, variant = "blue" }: TextProps) => {
-  return <div className={`${styles.text} ${styles[variant]}`}>{children}</div>;
+  return <div className={`${styles.text} ${styles[variant]} `}>{children}</div>;
 };
 
 export default Text;
